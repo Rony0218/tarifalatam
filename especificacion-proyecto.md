@@ -1,47 +1,75 @@
 # Especificación del proyecto
 
-> Plantilla. Complétenla en el grupo y manténganla actualizada. Claude la lee antes de generar
+> Complétenla en el grupo y manténganla actualizada. Claude la lee antes de generar
 > código: lo que escriban aquí manda sobre cualquier otra suposición.
 
 ## 1. Grupo
 
 | Integrante | Rol (datos / modelado / app / negocio) |
 |---|---|
-| | |
-| | |
-| | |
+| Rony Guerrero | Por definir |
+| Carolina Jiménez | Por definir |
+| Jesica Tarazona | Por definir |
+| Dulce Vargas | Por definir |
+| Rafael Jaramillo | Por definir |
 
-Nombre de la "startup": _______________   Repositorio (público): _______________
+Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://github.com/Rony0218/ab-hoteles-2026>
 
 ## 2. Caso de negocio
 
-- **Pregunta de negocio** (una frase, que alguien sin formación técnica entienda):
-- **¿Quién usará el resultado y qué decisión tomará con él?**
-- **¿Qué cuesta equivocarse?** (cuál error es peor y por qué):
+- **Pregunta de negocio** (una frase, que alguien sin formación técnica entienda): ¿Cuánto debería cobrar
+  por noche un inmueble de Airbnb en América Latina, según sus características, su barrio y su ciudad?
+- **¿Quién usará el resultado y qué decisión tomará con él?** El anfitrión, para fijar su tarifa por noche
+  (él conserva la decisión final). El inversionista, para estimar si un inmueble que piensa comprar para
+  alquilar se pagaría.
+- **¿Qué cuesta equivocarse?** (cuál error es peor y por qué): Sugerir un precio **muy bajo** hace perder
+  ingreso en cada noche reservada. Sugerir uno **muy alto** deja el inmueble vacío y la plataforma lo baja en
+  las búsquedas. Para el inversionista es peor **sobrestimar**: compraría un inmueble que no rinde lo esperado.
 
 ## 3. Datos
 
-- **Fuente** (enlace de Kaggle, empresa, etc.):
-- **Filas / columnas:**
-- **Variable objetivo** (columna que queremos predecir o describir):
-- **Tipo de problema:** ☐ clasificación  ☐ regresión  ☐ clusterización
-- **¿Una misma entidad (cliente, paciente, empresa) aparece en varias filas?** ☐ no  ☐ sí → la partición
-  será por: _______________
-- **Datos personales o confidenciales presentes:** ☐ no  ☐ sí → se eliminarán/anonimizarán así:
-- **Licencia o permiso de uso de los datos:**
+- **Fuente** (enlace de Kaggle, empresa, etc.): Inside Airbnb, <https://insideairbnb.com/get-the-data/>,
+  archivos `listings.csv.gz` de septiembre de 2026 de Río de Janeiro, São Paulo, Ciudad de México, Buenos
+  Aires, Bogotá, Santiago y Belice (enlaces exactos en el `README.md`).
+- **Filas / columnas:** 194.628 anuncios (182.986 con precio) / 90 columnas por ciudad.
+- **Variable objetivo** (columna que queremos predecir o describir): `price`, precio por noche publicado,
+  convertido a USD con la tasa oficial del día del corte de cada ciudad. Se modela en logaritmo.
+- **Tipo de problema:** ☐ clasificación  ☒ regresión  ☐ clusterización
+- **¿Una misma entidad (cliente, paciente, empresa) aparece en varias filas?** ☐ no  ☒ sí → la partición
+  será por: **`host_id`** (anfitrión). Hay ≈ 89.000 anfitriones y uno puede tener muchos anuncios.
+- **Datos personales o confidenciales presentes:** ☐ no  ☒ sí → se eliminarán/anonimizarán así: se borran
+  al inicio `host_name`, `host_about`, `host_location`, `host_url`, `host_profile_url`, `host_profile_id`,
+  `host_picture_url`, `host_thumbnail_url`, `listing_url` y `picture_url`. `host_id` se conserva solo para
+  partir los datos, nunca como variable del modelo. Los archivos crudos no se suben al repo (`data/raw/*` está
+  en `.gitignore`).
+- **Licencia o permiso de uso de los datos:** Creative Commons Atribución 4.0 Internacional (se cita a
+  Inside Airbnb como fuente).
 
 ## 4. Métrica
 
-- **Métrica principal:** _______________   **Por qué esa y no otra:**
-- **Métricas secundarias:**
-- **Línea base** (qué resultado obtiene una regla simple o un modelo trivial):
+- **Métrica principal:** **MAE en USD por noche**   **Por qué esa y no otra:** se lee directo en dinero
+  ("el precio sugerido se equivoca en promedio X dólares"), que es como lo entiende el anfitrión. No se usa
+  RMSE como principal porque los pocos precios extremos lo dominarían.
+- **Métricas secundarias:** MAPE (un error de 20 USD no pesa igual en Bogotá que en Río) y R².
+- **Línea base** (qué resultado obtiene una regla simple o un modelo trivial): la mediana del precio por
+  ciudad y tipo de habitación (`room_type`). El valor se calcula en el EDA con el conjunto de entrenamiento.
 
 ## 5. Riesgos
 
-- Fuga de información posible:
-- Sesgos o equidad:
-- Datos faltantes o de mala calidad:
-- Límites de lo que el modelo puede decir:
+- **Fuga de información posible:** `price_quote_checkin_date`, `price_quote_checkout_date`,
+  `price_quote_total_price`, `price_quote_price_per_night` y `price_quote_raw` contienen el precio;
+  `estimated_revenue_l365d` es precio × ocupación. Se eliminan. `estimated_occupancy_l365d` y las variables
+  de disponibilidad son consecuencia del precio: el auditor de fuga debe revisarlas antes de usarlas.
+- **Sesgos o equidad:** las ciudades tienen tamaños muy distintos (Río 48 mil, Belice 3,7 mil); el modelo
+  puede ajustarse mejor a las grandes. Se reporta el error por ciudad. La tasa de cambio elegida afecta los
+  precios en dólares, sobre todo en Buenos Aires por la inflación de Argentina.
+- **Datos faltantes o de mala calidad:** el precio viene como texto (`"$1,234.00"`) en seis monedas; entre
+  3,5 % y 8,5 % de los anuncios no tiene precio, según la ciudad (se excluyen); en Bogotá, unas 14 columnas
+  vienen 100 % vacías (`bathrooms`, `host_since`, `host_response_rate`…; el número de baños se rescata de
+  `bathrooms_text`); el 21 % de los anuncios no tiene reseñas; hay precios extremos.
+- **Límites de lo que el modelo puede decir:** predice el precio **publicado**, no el que realmente se
+  cobró; solo cubre siete ciudades grandes (no ciudades intermedias como Medellín o Cartagena); es una foto
+  de septiembre de 2026, sin efecto de temporada.
 
 ## 6. Entregables y fechas
 
@@ -56,4 +84,7 @@ Nombre de la "startup": _______________   Repositorio (público): ______________
 
 | Fecha | Decisión | Motivo |
 |---|---|---|
-| | | |
+| 2026-10-30 | Se descarta el dataset de hoteles de Kaggle (*Hotel Booking Demand*) | Está en la lista de datasets prohibidos del curso (`criterios-dataset.md`, "hoteles (reservas de playa en Portugal)") |
+| 2026-10-30 | Se usan los anuncios de Inside Airbnb de las siete ciudades de América Latina disponibles | Ninguna ciudad sola llega al mínimo de 50.000 filas; juntas suman 194.628. No hay datos abiertos de países completos |
+| 2026-10-30 | Los precios se convierten a USD con la tasa del día del corte de cada ciudad | Hay seis monedas distintas y el modelo necesita una sola escala |
+| 2026-10-30 | Quedan pendientes de decidir en grupo: incluir o no Buenos Aires y Belice | Buenos Aires por la inflación; Belice por su tamaño pequeño y ser el único país angloparlante |
