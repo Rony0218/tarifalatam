@@ -30,7 +30,7 @@ specs/           # lo que genera Spec Kit por pieza de trabajo: spec.md, plan.md
 data/raw/        # datos originales: NUNCA se modifican
 data/processed/
 notebooks/       # numerados por etapa; solo orquestan, sin lógica reutilizable
-src/proyecto/    # data/ features/ models/ tracking/ inference/
+src/tarifalatam/    # data/ features/ models/ tracking/ inference/
 tests/           # pytest
 models/          # model.joblib + ficha_modelo.md
 app/streamlit_app.py

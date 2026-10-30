@@ -13,7 +13,7 @@
 | Dulce Vargas | Por definir |
 | Rafael Jaramillo | Por definir |
 
-Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://github.com/Rony0218/ab-hoteles-2026>
+Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://github.com/Rony0218/tarifalatam>
 
 ## 2. Caso de negocio
 

@@ -7,8 +7,8 @@ Contrato (el mismo que el del ejemplo del curso):
 
 Uso:
 
-    from proyecto.inference.predict import load_model, predict_with_scores
-    from proyecto.inference.schema import load_schema
+    from tarifalatam.inference.predict import load_model, predict_with_scores
+    from tarifalatam.inference.schema import load_schema
     model, schema = load_model("models/model.joblib"), load_schema("models/input_schema.json")
     resultado = predict_with_scores(filas_nuevas, model, schema)
 

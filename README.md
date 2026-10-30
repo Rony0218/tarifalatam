@@ -16,7 +16,7 @@ Estructura obligatoria del curso. Cada carpeta tiene un propósito:
 | `data/raw/` | Datos originales, intocables |
 | `data/processed/` | Datos limpios generados por el código |
 | `notebooks/` | Un notebook por etapa; solo orquestan |
-| `src/proyecto/` | Código reutilizable (data, features, models, tracking, inference) |
+| `src/tarifalatam/` | Código reutilizable (data, features, models, tracking, inference) |
 | `tests/` | Pruebas con `pytest` |
 | `models/` | `model.joblib` y `ficha_modelo.md` |
 | `app/` | `streamlit_app.py` |

@@ -26,7 +26,7 @@
 
 Una fila por decisión del EDA. **Una función, una prueba.** Se marca como vacío lo imposible; no se borran filas sin criterio.
 
-| # (de la tabla del EDA) | Columna(s) | Problema | Regla exacta (con el umbral o valor) | Función en `src/proyecto/data/cleaning.py` | Prueba en `tests/test_cleaning.py` |
+| # (de la tabla del EDA) | Columna(s) | Problema | Regla exacta (con el umbral o valor) | Función en `src/tarifalatam/data/cleaning.py` | Prueba en `tests/test_cleaning.py` |
 |---|---|---|---|---|---|
 | 1 | | | | | |
 | 2 | | | | | |
@@ -49,8 +49,8 @@ Una fila por decisión del EDA. **Una función, una prueba.** Se marca como vac�
 | Entrada | `data/raw/_______________` (nunca se modifica) |
 | Salida: entrenamiento | `data/processed/train.csv` (o `.parquet`) |
 | Salida: prueba (cerrada) | `data/processed/test.csv` (o `.parquet`) |
-| Código de limpieza | `src/proyecto/data/cleaning.py` |
-| Código de partición | `src/proyecto/data/split.py` |
+| Código de limpieza | `src/tarifalatam/data/cleaning.py` |
+| Código de partición | `src/tarifalatam/data/split.py` |
 | Notebook que orquesta | `notebooks/03_preprocesamiento.ipynb` (solo llama a las funciones) |
 
 ## 6. Pruebas que deben existir

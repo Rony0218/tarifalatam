@@ -16,8 +16,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from proyecto.inference.predict import InputValidationError, decide_min_cost, predict_with_scores, validate_inputs
-from proyecto.inference.schema import build_schema, load_schema
+from tarifalatam.inference.predict import InputValidationError, decide_min_cost, predict_with_scores, validate_inputs
+from tarifalatam.inference.schema import build_schema, load_schema
 
 NUMERIC, CATEGORICAL, CLASSES = ["edad", "ingreso"], ["ciudad"], ["bajo", "alto"]
 ROOT = Path(__file__).resolve().parents[1]

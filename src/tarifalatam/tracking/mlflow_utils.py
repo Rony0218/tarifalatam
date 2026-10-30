@@ -1,7 +1,7 @@
 """Conexión y registro de ejecuciones en MLflow: Databricks si hay conexión, local si no.
 
 Cómo usarlo en un notebook (ver `.env.example` para la conexión):
-    from proyecto.tracking.mlflow_utils import configure_mlflow, set_experiment, log_run
+    from tarifalatam.tracking.mlflow_utils import configure_mlflow, set_experiment, log_run
     where = configure_mlflow()                 # 'databricks (...)' o 'local' (respaldo automático)
     set_experiment("mi-proyecto-optimizacion")  # en Databricks va a EXPERIMENT_DIR si lo definiste
     log_run("ensayo-1", {"depth": 6}, {"cost": 0.48}, tags={"etapa": "06_optimizacion"})
@@ -18,7 +18,7 @@ from pathlib import Path
 import mlflow
 from dotenv import load_dotenv
 
-# src/proyecto/tracking/mlflow_utils.py -> la raíz del repositorio está tres niveles arriba de `proyecto`
+# src/tarifalatam/tracking/mlflow_utils.py -> la raíz del repositorio está tres niveles arriba de `tarifalatam`
 ROOT = Path(__file__).resolve().parents[3]
 LOCAL_DB = ROOT / "mlflow_local.db"  # se genera sola; no se versiona
 PLACEHOLDER_PROFILE = "nombre-de-tu-perfil"  # valor de .env.example sin completar

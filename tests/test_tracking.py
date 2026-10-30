@@ -1,6 +1,6 @@
 import mlflow
 
-from proyecto.tracking import mlflow_utils as mu
+from tarifalatam.tracking import mlflow_utils as mu
 
 
 def test_force_local_uses_sqlite_and_logs_a_run(tmp_path):

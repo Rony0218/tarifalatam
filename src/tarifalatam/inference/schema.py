@@ -5,7 +5,7 @@ El esquema es un archivo (`models/input_schema.json`) que viaja con el modelo. L
 
 Uso típico, en el notebook de inferencia:
 
-    from proyecto.inference.schema import build_schema
+    from tarifalatam.inference.schema import build_schema
     schema = build_schema(train, numeric=[...], categorical=[...], class_names=["no", "si"],
                           cost_matrix=None, valid_range={"edad": (0, 120)}, path="../models/input_schema.json")
 

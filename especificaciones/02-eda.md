@@ -48,7 +48,7 @@ Marquen lo que aplica a su dataset. Lo que no aplique se tacha **con una razón*
 ## 4. Decisiones (mínimo 5)
 
 > Cada una con **cifra**, acción **concreta** y **motivo**. Se copian tal cual a `reports/01_eda.md`.
-> Cada decisión se convierte en una función de `src/proyecto/data/` y en una prueba (ver `03-preprocesamiento.md`).
+> Cada decisión se convierte en una función de `src/tarifalatam/data/` y en una prueba (ver `03-preprocesamiento.md`).
 
 | # | Hallazgo (con cifra) | Decisión | Motivo | Función que la implementa |
 |---|---|---|---|---|

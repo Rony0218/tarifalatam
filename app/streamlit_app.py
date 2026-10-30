@@ -23,10 +23,10 @@ MODEL_PATH = ROOT / "models" / "model.joblib"
 SCHEMA_PATH = ROOT / "models" / "input_schema.json"
 UNKNOWN = "(no sé)"
 
-# El paquete de src/ puede llamarse `proyecto` o el nombre que le hayas puesto: lo buscamos.
+# El paquete de src/ puede llamarse `tarifalatam` o el nombre que le hayas puesto: lo buscamos.
 SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
-PACKAGE = next((p.name for p in sorted(SRC.iterdir()) if p.is_dir() and (p / "__init__.py").exists()), "proyecto")
+PACKAGE = next((p.name for p in sorted(SRC.iterdir()) if p.is_dir() and (p / "__init__.py").exists()), "tarifalatam")
 predict_module = importlib.import_module(f"{PACKAGE}.inference.predict")
 schema_module = importlib.import_module(f"{PACKAGE}.inference.schema")
 
