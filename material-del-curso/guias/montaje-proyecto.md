@@ -1,6 +1,6 @@
 # Montaje del proyecto del grupo (clase 2 · ~50 minutos)
 
-Al terminar esta guía, tu grupo tiene **un repositorio propio, listo para trabajar**: estructura del
+Al terminar esta guía, tu grupo tiene **un repositorio propio, listo para trabajar con IA**: estructura del
 curso, entorno de Python, conexión con Databricks (o su respaldo local; **se prueba hoy y se usa desde la clase 4**), la **especificación** del
 proyecto llena y un primer *commit* en GitHub.
 
@@ -39,6 +39,7 @@ Al final, **todos** ejecutan el paso 10 en su propio equipo.
 | 9 | Dataset en `data/raw/` | 3 |
 | 10 | Verificar el entorno | 3 |
 | 11 | Primer commit y push | 2 |
+| 12 | Entorno de desarrollo con IA (Spec Kit y subagentes) | 20 |
 
 ---
 
@@ -311,6 +312,20 @@ git push
 
 ---
 
+## Paso 12 · Entorno de desarrollo con IA (20 min)
+
+Con el repo ya subido, se prepara **cómo trabajará Claude con tu grupo**: la **constitución** del proyecto, los comandos de
+**Spec Kit** (`/speckit-…`: especificación → plan → tareas → código) y los **subagentes** que revisan fuga, pruebas y código de
+la IA. Todo viene **ya instalado** en la rama `feature/estudiantes`; solo hay que ajustarlo.
+
+Sigue la guía **`entorno-ia-specify.md`** (pasos 12.1 a 12.4): ajustar la constitución, comprobar que `/speckit-…` aparece,
+conocer los subagentes y, si da el tiempo, crear uno propio. Abre Claude Code **dentro de la carpeta del repo**.
+
+✔ **Comprobación:** la constitución tiene el nombre de tu proyecto y tu unidad de análisis, `/speckit` y `/agents` muestran
+los comandos y los subagentes, y los cambios están en un commit y subidos.
+
+---
+
 ## Listo cuando…
 
 - [ ] **1.** Tengo un repositorio **público** en GitHub, creado desde la rama `feature/estudiantes` (la estructura de la plantilla está en la raíz), y **todos** clonamos el repo **del grupo**.
@@ -321,6 +336,7 @@ git push
 - [ ] **6.** `especificacion-proyecto.md` está completa (secciones 1 a 6) y todos la leímos.
 - [ ] **7.** El dataset está en `data/raw/`, **sin modificar** y sin subirse a GitHub.
 - [ ] **8.** `verificar_entorno.py` termina con **0 por arreglar** y mi primer **commit está en GitHub**.
+- [ ] **9.** La constitución del proyecto está ajustada, `/speckit-…` y los subagentes aparecen en Claude Code, y todo está en un commit (paso 12).
 
 ## Errores comunes
 

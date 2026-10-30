@@ -9,6 +9,8 @@ Estructura obligatoria del curso. Cada carpeta tiene un propósito:
 
 | Carpeta | Contenido |
 |---|---|
+| `.specify/` y `.claude/` | Entorno de IA: constitución del proyecto, Spec Kit (`/speckit-…`) y subagentes |
+| `specs/` | Lo que genera Spec Kit: `spec.md`, `plan.md`, `tasks.md` de cada pieza (aparece al usarlo) |
 | `especificaciones/` | Guías que se llenan **antes** de programar cada etapa |
 | `data/raw/` | Datos originales, intocables |
 | `data/processed/` | Datos limpios generados por el código |

@@ -14,11 +14,19 @@ Este archivo lo lees al inicio de cada conversación. Sigue estas reglas siempre
 - Cada etapa tiene su especificación en `especificaciones/` (`02-eda.md`, `03-preprocesamiento.md`…). Si la
   de la etapa en curso tiene secciones vacías, **pídeme que las llene antes de escribir código**. Una vez llena,
   implementa exactamente lo que dice (reglas, umbrales, forma de partir, pruebas) y avísame si algo no se puede.
+- Los principios del proyecto están en `.specify/memory/constitution.md`: **léela** y avísame si un pedido la contradice.
+- Trabajamos con Spec Kit: especificación → plan → tareas → código. **No escribas código de una pieza nueva sin que yo
+  haya leído y aprobado su `plan.md` y su `tasks.md`.** Marca cada tarea de `tasks.md` como hecha solo cuando su prueba pasa.
+- Para revisar uso los subagentes de `.claude/agents/` (`auditor-de-fuga`, `escritor-de-pruebas`, `revisor-de-codigo-ia`);
+  sus informes no reemplazan que yo entienda el código.
 
 ## Estructura obligatoria del repositorio
 
 ```text
 README.md  CLAUDE.md  especificacion-proyecto.md  especificaciones/  requirements.txt  .env.example  .gitignore
+.specify/        # Spec Kit: constitución (memory/constitution.md), plantillas y scripts
+.claude/         # skills de Spec Kit (/speckit-…) y subagentes (agents/)
+specs/           # lo que genera Spec Kit por pieza de trabajo: spec.md, plan.md, tasks.md
 data/raw/        # datos originales: NUNCA se modifican
 data/processed/
 notebooks/       # numerados por etapa; solo orquestan, sin lógica reutilizable

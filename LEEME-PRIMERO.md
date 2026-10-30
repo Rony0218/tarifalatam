@@ -8,7 +8,7 @@ pensada para que **cada grupo la clone una sola vez** y la convierta en su propi
 | Dónde | Qué es |
 |---|---|
 | La **raíz** de este repositorio | La plantilla de tu proyecto: `src/`, `notebooks/`, `tests/`, `app/`, `reports/`, `scripts/`, `CLAUDE.md`, `especificacion-proyecto.md`, `.env.example`… **Esto es lo que vas a completar** |
-| `material-del-curso/guias/` | Instalación, Git, trabajo con IA, Databricks, Streamlit y el montaje del proyecto |
+| `material-del-curso/guias/` | Instalación, Git, trabajo con IA, Databricks, Streamlit, el montaje del proyecto y el entorno de IA (Spec Kit y subagentes) |
 | `material-del-curso/evaluacion/` | Rúbrica, hitos, criterios del dataset, ficha de caso, guía de exposición y aporte individual |
 | `material-del-curso/kit/` | Prompts por etapa, checklist de revisión del código de IA y guía de EDA |
 | `material-del-curso/presentaciones/` | Las presentaciones de cada clase, para abrir en el navegador |
