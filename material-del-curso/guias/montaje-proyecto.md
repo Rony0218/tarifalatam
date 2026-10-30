@@ -1,4 +1,4 @@
-# Montaje del proyecto del grupo (clase 2 · ~50 minutos)
+# Montaje del proyecto del grupo (clase 2 · ~40 minutos con el entorno de IA)
 
 Al terminar esta guía, tu grupo tiene **un repositorio propio, listo para trabajar con IA**: estructura del
 curso, entorno de Python, conexión con Databricks (o su respaldo local; **se prueba hoy y se usa desde la clase 4**), la **especificación** del
@@ -25,6 +25,10 @@ Varios pasos se pueden hacer a la vez. Una propuesta:
 Al final, **todos** ejecutan el paso 10 en su propio equipo.
 
 ## Tiempos orientativos
+
+> **Para que alcance en clase** (el bloque de entorno dura ~40 min incluido el paso 12), traigan hecho **de la víspera**: el **repositorio
+> vacío** (paso 1) y el **entorno de Python** instalado (`instalacion.md`). El paso 6 (carpeta de Databricks) y la conexión pueden
+> terminarse de tarea esta noche; hoy basta con `MLFLOW_FORCE_LOCAL=1`.
 
 | Paso | Qué | Min |
 |---|---|---|
