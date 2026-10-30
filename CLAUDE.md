@@ -11,11 +11,14 @@ Este archivo lo lees al inicio de cada conversación. Sigue estas reglas siempre
   optimización, validación, tracking en Databricks, app en Streamlit, reporte y presentación.
 - El caso, el dataset, la métrica y el tipo de problema están en `especificacion-proyecto.md`.
   **Léelo antes de generar código** y avísame si algo del pedido lo contradice.
+- Cada etapa tiene su especificación en `especificaciones/` (`02-eda.md`, `03-preprocesamiento.md`…). Si la
+  de la etapa en curso tiene secciones vacías, **pídeme que las llene antes de escribir código**. Una vez llena,
+  implementa exactamente lo que dice (reglas, umbrales, forma de partir, pruebas) y avísame si algo no se puede.
 
 ## Estructura obligatoria del repositorio
 
 ```text
-README.md  CLAUDE.md  especificacion-proyecto.md  requirements.txt  .env.example  .gitignore
+README.md  CLAUDE.md  especificacion-proyecto.md  especificaciones/  requirements.txt  .env.example  .gitignore
 data/raw/        # datos originales: NUNCA se modifican
 data/processed/
 notebooks/       # numerados por etapa; solo orquestan, sin lógica reutilizable

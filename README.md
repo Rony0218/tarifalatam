@@ -9,6 +9,7 @@ Estructura obligatoria del curso. Cada carpeta tiene un propósito:
 
 | Carpeta | Contenido |
 |---|---|
+| `especificaciones/` | Guías que se llenan **antes** de programar cada etapa |
 | `data/raw/` | Datos originales, intocables |
 | `data/processed/` | Datos limpios generados por el código |
 | `notebooks/` | Un notebook por etapa; solo orquestan |
@@ -39,4 +40,4 @@ clonan **este** repositorio. Para arrancar, sigue `material-del-curso/guias/mont
 |---|---|
 | | |
 
-Especificación del proyecto: [`especificacion-proyecto.md`](especificacion-proyecto.md)
+Especificación del proyecto: [`especificacion-proyecto.md`](especificacion-proyecto.md) · Especificaciones por etapa: [`especificaciones/`](especificaciones/)

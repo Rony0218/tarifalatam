@@ -17,6 +17,9 @@ limpieza **reproducible por script**.
 
 ## 0. Antes de empezar
 
+- **Llena primero las especificaciones de hoy**: `especificaciones/02-eda.md` (antes del EDA) y
+  `especificaciones/03-preprocesamiento.md` (antes de pedirle código a Claude). Son tu lista de trabajo y el
+  contrato que Claude implementa.
 - Tu dataset está en `data/raw/`. **Ese archivo no se modifica nunca**: toda limpieza se hace en
   código y se guarda aparte en `data/processed/`.
 - Si el dataset trae **datos personales** (nombres, documentos, teléfonos, correos), no los
