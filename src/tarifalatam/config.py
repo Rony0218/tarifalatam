@@ -151,3 +151,118 @@ MAX_NIGHTS_CAP = 1125
 MAX_BEDROOMS = 10
 # Precio válido: entre 0,1 y 20 veces la mediana de su ciudad (692 anuncios > 20 x, 61 < 0,1 x)
 PRICE_RATIO_BOUNDS = (0.1, 20.0)
+
+# ---------------------------------------------------------------------------------------------------------------
+# Etapas 4 a 6: variables, torneo y optimización (especificaciones/04-features-torneo-optimizacion.md, aprobada por
+# el grupo el 2026-10-31). Las 65 columnas del entrenamiento están en exactamente una de estas cuatro listas.
+# ---------------------------------------------------------------------------------------------------------------
+TRAIN_PATH = PROCESSED_DIR / "train.csv.gz"  # la prueba (test.csv.gz) no se abre hasta la etapa 7
+FOLDS_PATH = PROCESSED_DIR / "folds.csv"  # pliegues por anfitrión: se calculan una vez en el notebook 04
+
+# El objetivo en sus tres escalas: nunca entra al modelo como variable
+TARGET_COLUMNS = ["log_price_usd", "price_usd", "price_local"]
+
+# Prohibidas (18): el objetivo, identificadores, metadatos de la descarga y columnas redundantes (sección 1.1)
+FORBIDDEN_FEATURES = TARGET_COLUMNS + [
+    "id",  # identifica el anuncio: solo sirve para unir los pliegues
+    "host_id",  # identifica al anfitrión: solo sirve para partir (constitución, principio II)
+    "scrape_id",  # metadatos de la descarga: dicen la ciudad y la fecha del corte, no el inmueble
+    "last_scraped",
+    "calendar_last_scraped",
+    "source",  # 100 % vacía en el entrenamiento
+    "bathrooms_text",  # ya convertida en bathrooms_count y bathroom_shared (decisión 6 del EDA)
+    "amenities",  # texto con 15.938 nombres distintos: solo entra a través de la idea 2
+    "neighbourhood_group_cleansed",  # 69,8 % vacía: solo existe en São Paulo y Belice
+    "minimum_minimum_nights",  # las seis variantes del calendario repiten minimum_nights y maximum_nights
+    "maximum_minimum_nights",
+    "minimum_maximum_nights",
+    "maximum_maximum_nights",
+    "minimum_nights_avg_ntm",
+    "maximum_nights_avg_ntm",
+]
+
+# Sospechosas (23): consecuencia del precio o de la demanda. Solo se miden "con y sin" (sección 1.2); nunca van al
+# torneo, a la optimización ni a la app, porque el inversionista evalúa inmuebles nuevos.
+SUSPICIOUS_FEATURES = [
+    "estimated_occupancy_l365d",
+    "availability_30",
+    "availability_60",
+    "availability_90",
+    "availability_365",
+    "availability_eoy",
+    "has_availability",
+    "number_of_reviews",
+    "number_of_reviews_ltm",
+    "number_of_reviews_l30d",
+    "number_of_reviews_ly",
+    "reviews_per_month",
+    "first_review",
+    "last_review",
+    "has_reviews",
+    "review_scores_rating",
+    "review_scores_accuracy",
+    "review_scores_cleanliness",
+    "review_scores_checkin",
+    "review_scores_communication",
+    "review_scores_location",
+    "review_scores_value",
+    "host_is_superhost",  # Airbnb lo otorga por notas, estancias y cancelaciones: un anfitrión nuevo no lo tiene
+]
+
+# Referencia (13): lo que describe el inmueble, dónde está y sus reglas de estadía (sección 1.3)
+REFERENCE_CATEGORICAL = ["city", "neighbourhood_cleansed", "room_type", "property_type"]
+REFERENCE_NUMERIC = [
+    "latitude",
+    "longitude",
+    "accommodates",
+    "bedrooms",
+    "beds",
+    "bathrooms_count",
+    "minimum_nights",
+    "maximum_nights",
+]
+REFERENCE_BINARY = ["bathroom_shared"]
+
+# Perfil del anfitrión (11): insumo de la idea 4
+HOST_PROFILE_COLUMNS = [
+    "host_listings_count",
+    "calculated_host_listings_count",
+    "calculated_host_listings_count_entire_homes",
+    "calculated_host_listings_count_private_rooms",
+    "calculated_host_listings_count_shared_rooms",
+    "hosts_time_as_host_years",
+    "hosts_time_as_host_months",
+    "hosts_time_as_user_years",
+    "hosts_time_as_user_months",
+    "host_has_profile_pic",
+    "host_identity_verified",
+]
+
+# Idea 2: indicadores por nombre EXACTO (sin variantes, decisión del grupo). En el entrenamiento: Pool 18,2 %,
+# Air conditioning 40,3 %, Free parking on premises 25,8 %, Gym 12,5 %, Elevator 47,6 %, Hot tub 2,9 %.
+# Buscar la palabra no sirve: "Pool table" (4.802 anuncios) es una mesa de billar.
+AMENITY_FLAGS = {
+    "amenity_pool": "Pool",
+    "amenity_air_conditioning": "Air conditioning",
+    "amenity_free_parking": "Free parking on premises",
+    "amenity_gym": "Gym",
+    "amenity_elevator": "Elevator",
+    "amenity_hot_tub": "Hot tub",
+}
+
+# Decisión 11 del EDA: barrios y tipos de propiedad con menos de 30 anuncios pasan a "Other" (en el EDA, 146 de 371
+# barrios y 73 de 123 tipos tenían menos de 30). El umbral se aplica dentro del Pipeline, con el entrenamiento
+RARE_MIN_COUNT = 30
+
+# Validación común: 5 pliegues por anfitrión, barajados con semilla 42, los mismos en las etapas 4, 5 y 6
+N_FOLDS = 5
+FOLD_SEED = 42
+
+# Optimización: 25 % de los anfitriones reservados (semilla 7), 30 ensayos por finalista e intervalo del 95 %
+# con 1.000 remuestreos de anfitriones completos
+RESERVE_SIZE = 0.25
+RESERVE_SEED = 7
+N_TRIALS = 30
+BOOTSTRAP_N = 1000
+NIGHTS_SCALE = 30  # la diferencia de MAE se lee como "USD por cada 30 noches reservadas" (escala, no pronóstico)
+EXPERIMENT_NAME = "tarifalatam-optimizacion"

@@ -54,8 +54,8 @@ finalistas, US3 = optimización registrada y comprobada) y, dentro de cada una, 
 
 **Purpose**: datos disponibles para los notebooks y una tabla de juguete para las pruebas
 
-- [ ] T001 Copiar (no mover) `data/raw/*` y `data/processed/*` desde el checkout principal a las mismas rutas del worktree, y verificar con `git status --short data/` que no aparecen como cambios (están en `.gitignore`). Comprobar que `data/processed/train.csv.gz` existe. **No abrir `test.csv.gz`**. · P5 · Responsable:
-- [ ] T002 [P] Ampliar `tests/fixtures.py` con `make_train_rows(n_hosts=30, seed=0, **overrides) -> pd.DataFrame`: una tabla de juguete con **las 65 columnas** de `data-model.md` (sección 1), 3 ciudades (`rio-de-janeiro`, `bogota`, `belize`), varios anuncios por anfitrión, `amenities` como lista JSON (incluye `"Pool"`, `"Pool table"`, `"Air conditioning"` y una lista vacía `[]`), columnas `t`/`f`, fechas de reseñas con algunos vacíos, `last_scraped` y un objetivo `log_price_usd` coherente con `price_usd`. Comentario: "datos inventados a mano solo para pruebas". No cambiar `make_listings` (lo usan las pruebas de H1) · P5 · Responsable:
+- [X] T001 Copiar (no mover) `data/raw/*` y `data/processed/*` desde el checkout principal a las mismas rutas del worktree, y verificar con `git status --short data/` que no aparecen como cambios (están en `.gitignore`). Comprobar que `data/processed/train.csv.gz` existe. **No abrir `test.csv.gz`**. · P5 · Responsable:
+- [X] T002 [P] Ampliar `tests/fixtures.py` con `make_train_rows(n_hosts=30, seed=0, **overrides) -> pd.DataFrame`: una tabla de juguete con **las 65 columnas** de `data-model.md` (sección 1), 3 ciudades (`rio-de-janeiro`, `bogota`, `belize`), varios anuncios por anfitrión, `amenities` como lista JSON (incluye `"Pool"`, `"Pool table"`, `"Air conditioning"` y una lista vacía `[]`), columnas `t`/`f`, fechas de reseñas con algunos vacíos, `last_scraped` y un objetivo `log_price_usd` coherente con `price_usd`. Comentario: "datos inventados a mano solo para pruebas". No cambiar `make_listings` (lo usan las pruebas de H1) · P5 · Responsable:
 
 ---
 
@@ -65,17 +65,17 @@ finalistas, US3 = optimización registrada y comprobada) y, dentro de cada una, 
 
 **⚠️ CRITICAL**: ninguna historia empieza antes de terminar esta fase
 
-- [ ] T003 [P] Escribir `tests/test_columns.py` (debe fallar antes de T004 y T005):
+- [X] T003 [P] Escribir `tests/test_columns.py` (debe fallar antes de T004 y T005):
   - `test_column_lists_are_disjoint_and_cover_the_65_columns`: `FORBIDDEN_FEATURES`, `SUSPICIOUS_FEATURES`, las tres listas de referencia y `HOST_PROFILE_COLUMNS` no se cruzan, suman 18 + 23 + 13 + 11 = 65 y coinciden con las columnas de `make_train_rows()`.
   - `test_check_feature_columns_rejects_each_forbidden_column`: parametrizada con las 18 prohibidas; el mensaje nombra la columna.
   - `test_check_feature_columns_rejects_suspicious_unless_allowed`.
 
   · P1 · Responsable:
-- [ ] T004 Ampliar `src/tarifalatam/config.py` (sin tocar lo de H1) con las constantes de `contracts/model-functions.md`: `TRAIN_PATH`, `FOLDS_PATH`, `TARGET_COLUMNS`, `FORBIDDEN_FEATURES` (18), `SUSPICIOUS_FEATURES` (23), `REFERENCE_CATEGORICAL` (`city`, `neighbourhood_cleansed`, `room_type`, `property_type`), `REFERENCE_NUMERIC` (`latitude`, `longitude`, `accommodates`, `bedrooms`, `beds`, `bathrooms_count`, `minimum_nights`, `maximum_nights`), `REFERENCE_BINARY` (`bathroom_shared`), `HOST_PROFILE_COLUMNS` (11), `AMENITY_FLAGS` (`amenity_pool`: `"Pool"`, `amenity_air_conditioning`: `"Air conditioning"`, `amenity_free_parking`: `"Free parking on premises"`, `amenity_gym`: `"Gym"`, `amenity_elevator`: `"Elevator"`, `amenity_hot_tub`: `"Hot tub"`), `RARE_MIN_COUNT = 30`, `N_FOLDS = 5`, `FOLD_SEED = 42`, `RESERVE_SIZE = 0.25`, `RESERVE_SEED = 7`, `N_TRIALS = 30`, `BOOTSTRAP_N = 1000`, `NIGHTS_SCALE = 30` y `EXPERIMENT_NAME = "tarifalatam-optimizacion"`. Cada lista lleva un comentario con su motivo y la referencia a `especificaciones/04-features-torneo-optimizacion.md` · P1 · Responsable:
-- [ ] T005 Crear `src/tarifalatam/features/columns.py` con `check_feature_columns(columns, allow_suspicious=False)`: error en español que nombra cada columna prohibida (o sospechosa, si no se permiten). Verificar con `pytest tests/test_columns.py` · P1 · Responsable:
-- [ ] T006 [P] Escribir `tests/test_load.py` (debe fallar antes de T007): `test_load_train_reads_the_65_columns` (guarda `make_train_rows()` como `.csv.gz` en `tmp_path` y lo lee) y `test_load_train_fails_on_missing_or_extra_columns` (el mensaje nombra la columna) · P1 · Responsable:
-- [ ] T007 Crear `src/tarifalatam/data/load.py` con `load_train(path=TRAIN_PATH)`, según `contracts/model-functions.md`: solo lee y compara las columnas con las cuatro listas de `config.py`. No crear ninguna función que lea la prueba. Verificar con `pytest tests/test_load.py` · P1 · Responsable:
-- [ ] T008 [P] Escribir `tests/test_folds.py` (debe fallar antes de T009):
+- [X] T004 Ampliar `src/tarifalatam/config.py` (sin tocar lo de H1) con las constantes de `contracts/model-functions.md`: `TRAIN_PATH`, `FOLDS_PATH`, `TARGET_COLUMNS`, `FORBIDDEN_FEATURES` (18), `SUSPICIOUS_FEATURES` (23), `REFERENCE_CATEGORICAL` (`city`, `neighbourhood_cleansed`, `room_type`, `property_type`), `REFERENCE_NUMERIC` (`latitude`, `longitude`, `accommodates`, `bedrooms`, `beds`, `bathrooms_count`, `minimum_nights`, `maximum_nights`), `REFERENCE_BINARY` (`bathroom_shared`), `HOST_PROFILE_COLUMNS` (11), `AMENITY_FLAGS` (`amenity_pool`: `"Pool"`, `amenity_air_conditioning`: `"Air conditioning"`, `amenity_free_parking`: `"Free parking on premises"`, `amenity_gym`: `"Gym"`, `amenity_elevator`: `"Elevator"`, `amenity_hot_tub`: `"Hot tub"`), `RARE_MIN_COUNT = 30`, `N_FOLDS = 5`, `FOLD_SEED = 42`, `RESERVE_SIZE = 0.25`, `RESERVE_SEED = 7`, `N_TRIALS = 30`, `BOOTSTRAP_N = 1000`, `NIGHTS_SCALE = 30` y `EXPERIMENT_NAME = "tarifalatam-optimizacion"`. Cada lista lleva un comentario con su motivo y la referencia a `especificaciones/04-features-torneo-optimizacion.md` · P1 · Responsable:
+- [X] T005 Crear `src/tarifalatam/features/columns.py` con `check_feature_columns(columns, allow_suspicious=False)`: error en español que nombra cada columna prohibida (o sospechosa, si no se permiten). Verificar con `pytest tests/test_columns.py` · P1 · Responsable:
+- [X] T006 [P] Escribir `tests/test_load.py` (debe fallar antes de T007): `test_load_train_reads_the_65_columns` (guarda `make_train_rows()` como `.csv.gz` en `tmp_path` y lo lee) y `test_load_train_fails_on_missing_or_extra_columns` (el mensaje nombra la columna) · P1 · Responsable:
+- [X] T007 Crear `src/tarifalatam/data/load.py` con `load_train(path=TRAIN_PATH)`, según `contracts/model-functions.md`: solo lee y compara las columnas con las cuatro listas de `config.py`. No crear ninguna función que lea la prueba. Verificar con `pytest tests/test_load.py` · P1 · Responsable:
+- [X] T008 [P] Escribir `tests/test_folds.py` (debe fallar antes de T009):
   - `test_make_folds_keeps_each_host_in_one_fold`
   - `test_make_folds_puts_each_listing_in_exactly_one_fold`
   - `test_make_folds_is_deterministic_with_the_same_seed`
@@ -86,7 +86,7 @@ finalistas, US3 = optimización registrada y comprobada) y, dentro de cada una, 
   - `test_reserve_hosts_has_no_shared_hosts_and_loses_no_rows`
 
   · P1 · Responsable:
-- [ ] T009 Crear `src/tarifalatam/data/folds.py` con `make_folds`, `save_folds`, `load_folds`, `fold_indices` y `reserve_hosts`, según `contracts/model-functions.md` y `research.md` (puntos 2 y 3): `GroupKFold(n_splits=5, shuffle=True, random_state=42)` por `host_id`; `GroupShuffleSplit(n_splits=1, test_size=0.25, random_state=7)`; reutilizar `assert_disjoint_hosts` de `split.py`, **sin modificar `split.py`**. Verificar con `pytest tests/test_folds.py` · P1 · Responsable:
+- [X] T009 Crear `src/tarifalatam/data/folds.py` con `make_folds`, `save_folds`, `load_folds`, `fold_indices` y `reserve_hosts`, según `contracts/model-functions.md` y `research.md` (puntos 2 y 3): `GroupKFold(n_splits=5, shuffle=True, random_state=42)` por `host_id`; `GroupShuffleSplit(n_splits=1, test_size=0.25, random_state=7)`; reutilizar `assert_disjoint_hosts` de `split.py`, **sin modificar `split.py`**. Verificar con `pytest tests/test_folds.py` · P1 · Responsable:
 
 **Checkpoint**: `pytest` en verde (las 76 pruebas de H1 y las nuevas). Las historias pueden empezar.
 
