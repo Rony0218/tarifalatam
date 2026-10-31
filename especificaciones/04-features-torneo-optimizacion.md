@@ -257,20 +257,22 @@ El torneo **descarta, no corona**: la optimización puede cambiar el orden.
 
 ## 7. Pruebas automáticas que deben existir
 
-- ☐ **Columnas prohibidas:** las listas de `config.py` no se cruzan; una función que revisa las columnas del modelo falla si
+- ☒ **Columnas prohibidas:** las listas de `config.py` no se cruzan; una función que revisa las columnas del modelo falla si
   le llega una prohibida; y un `Pipeline` ajustado con datos donde `price_usd`, `id` y `host_id` predicen perfecto **no** las
   usa (sus nombres de salida no las contienen).
-- ☐ **Versión para la app:** sus columnas no incluyen ninguna sospechosa.
-- ☐ **Carga:** `load_train()` devuelve las 65 columnas esperadas con sus tipos.
-- ☐ **Pliegues:** ningún anfitrión en dos pliegues, cada anuncio en exactamente uno, y la misma semilla da los mismos pliegues.
-- ☐ **Una prueba por idea** (`tests/test_features.py`): división por cero, vacíos, que no modifica el original y, en las
-  ideas que aprenden (1 y 5), que usan solo lo visto al ajustar.
-- ☐ **Métricas:** con predicción perfecta el MAE y el sesgo dan 0 y el R² da 1; un caso calculado a mano para MAE, MAPE y
+- ☒ **Versión para la app:** sus columnas no incluyen ninguna sospechosa.
+- ☒ **Carga:** `load_train()` devuelve las 65 columnas esperadas con sus tipos. *(La prueba verifica las 65 columnas; los tipos
+  no se prueban uno por uno.)*
+- ☒ **Pliegues:** ningún anfitrión en dos pliegues, cada anuncio en exactamente uno, y la misma semilla da los mismos pliegues.
+- ☒ **Una prueba por idea** (`tests/test_features.py`): división por cero, vacíos, que no modifica el original y, en las
+  ideas que aprenden (1 y 5), que usan solo lo visto al ajustar. *(La idea 5 es el `TargetEncoder` de scikit-learn; la
+  prueba verifica que queda dentro del `Pipeline`, que es lo que garantiza que se ajuste solo con el entrenamiento.)*
+- ☒ **Métricas:** con predicción perfecta el MAE y el sesgo dan 0 y el R² da 1; un caso calculado a mano para MAE, MAPE y
   sesgo (incluido el signo).
-- ☐ **Evaluación por pliegue:** una fila por pliegue, con los pliegues dados (no otros).
-- ☐ **Entidades reservadas:** no comparten anfitriones con la búsqueda.
-- ☐ **Intervalo por anfitrión:** con una diferencia constante el intervalo es esa constante; remuestrea anfitriones, no filas.
-- ☐ `pytest` en verde desde la raíz (hoy 76 pruebas).
+- ☒ **Evaluación por pliegue:** una fila por pliegue, con los pliegues dados (no otros).
+- ☒ **Entidades reservadas:** no comparten anfitriones con la búsqueda.
+- ☒ **Intervalo por anfitrión:** con una diferencia constante el intervalo es esa constante; remuestrea anfitriones, no filas.
+- ☒ `pytest` en verde desde la raíz (194 pruebas el 2026-10-31: las 76 de H1 y 118 nuevas).
 
 ## 8. Entradas y salidas
 
@@ -309,31 +311,32 @@ El grupo aprobó el borrador completo, sin cambios. Respuestas a las preguntas q
 
 **Etapa 4 · Variables**
 
-- ☐ Pliegues calculados una sola vez y reutilizados en las tres etapas (con su comprobación por anfitrión).
-- ☐ Tabla de ideas medidas (referencia + cada idea) con MAE ± ruido, mejora / ruido, pliegues que gana y decisión.
-- ☐ Ideas descartadas anotadas con su cifra en `reports/04_features.md`.
-- ☐ Medición con y sin las columnas sospechosas, y constancia de que la versión con ellas no sigue.
-- ☐ Lista final de variables escrita y su código en `src/tarifalatam/features/` con pruebas.
+- ☒ Pliegues calculados una sola vez y reutilizados en las tres etapas (con su comprobación por anfitrión).
+- ☒ Tabla de ideas medidas (referencia + cada idea) con MAE ± ruido, mejora / ruido, pliegues que gana y decisión.
+- ☒ Ideas descartadas anotadas con su cifra en `reports/04_features.md`.
+- ☒ Medición con y sin las columnas sospechosas, y constancia de que la versión con ellas no sigue.
+- ☒ Lista final de variables escrita y su código en `src/tarifalatam/features/` con pruebas.
 
 **Etapa 5 · Torneo**
 
-- ☐ Línea base + al menos 3 modelos en los mismos pliegues, con una fila guardada por modelo y pliegue.
-- ☐ MAE (principal) y MAPE, R², RMSE y sesgo (técnicas), más el error por ciudad.
-- ☐ Comparación pareada de los 3 mejores y la diferencia traducida a dinero.
-- ☐ 1–2 finalistas justificados en `reports/05_torneo.md`, y por qué no hay campeón.
+- ☒ Línea base + al menos 3 modelos en los mismos pliegues, con una fila guardada por modelo y pliegue.
+- ☒ MAE (principal) y MAPE, R², RMSE y sesgo (técnicas), más el error por ciudad.
+- ☒ Comparación pareada de los 3 mejores y la diferencia traducida a dinero.
+- ☒ 1–2 finalistas justificados en `reports/05_torneo.md`, y por qué no hay campeón.
 
 **Etapa 6 · Optimización**
 
-- ☐ Presupuesto y espacio de búsqueda escritos antes de empezar, y respetados.
-- ☐ 25 % de los anfitriones reservados que la búsqueda nunca vio.
-- ☐ Un ensayo = una ejecución en el MLflow local, con parámetros, métricas y etiquetas (comprobado con `mlflow ui`).
-- ☐ Comprobación honesta con intervalo por anfitrión, decisión según la regla y `reports/06_best_params.json`.
-- ☐ `reports/06_optimizacion.md` completado.
+- ☒ Presupuesto y espacio de búsqueda escritos antes de empezar, y respetados.
+- ☒ 25 % de los anfitriones reservados que la búsqueda nunca vio.
+- ☒ Un ensayo = una ejecución en el MLflow local, con parámetros, métricas y etiquetas. *(Comprobado el 2026-10-31 con
+  `mlflow.search_runs`: 60 ejecuciones completas, ninguna métrica vacía. Falta que el grupo lo vea en `mlflow ui`.)*
+- ☒ Comprobación honesta con intervalo por anfitrión, decisión según la regla y `reports/06_best_params.json`.
+- ☒ `reports/06_optimizacion.md` completado.
 
 **Para las tres**
 
-- ☐ `test.csv.gz` sin abrir.
-- ☐ Toda cifra de los informes sale de un notebook ejecutado (ninguna inventada).
-- ☐ `pytest` en verde desde la raíz.
+- ☒ `test.csv.gz` sin abrir. *(Ningún archivo de `src/` ni los notebooks 04 a 06 lo leen.)*
+- ☒ Toda cifra de los informes sale de un notebook ejecutado (ninguna inventada).
+- ☒ `pytest` en verde desde la raíz (194 pruebas).
 - ☐ Revisión con `auditor-de-fuga` y `revisor-de-codigo-ia` antes de dar las etapas por cerradas.
 - ☐ Quien no escribió el código sabe responder las 8 preguntas de la guía (sección 5).
