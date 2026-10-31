@@ -76,7 +76,9 @@ ideas y conjunto final, más la medición con sospechosas), 4 candidatos en la e
 
 \* **Nota del principio III.** Los anfitriones reservados se usan para dos decisiones: parámetros optimizados contra los de
 partida y, si hay dos finalistas, finalista contra finalista. Eso agrega un poco de optimismo. Se acepta y se declara en
-`reports/06_optimizacion.md`; el auditor de fuga debe revisarlo.
+`reports/06_optimizacion.md`; el auditor de fuga debe revisarlo. *(Auditoría del 2026-10-31: al final fueron cuatro usos,
+porque hubo dos finalistas y un desempate del grupo. Esos anfitriones además estaban en los pliegues de las etapas 4 y 5.
+Queda declarado en `reports/06_optimizacion.md`.)*
 
 **Re-chequeo después del diseño (fase 1):** sin cambios y sin violaciones. El diseño agrega un solo archivo de datos
 (`folds.csv`), dentro de `data/processed/`.

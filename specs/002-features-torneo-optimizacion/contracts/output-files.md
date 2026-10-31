@@ -38,11 +38,12 @@ Una fila por ensayo: `model`, `trial`, `state` (`completo` / `fallido`), los hip
 
 ```json
 {
-  "finalista": "<nombre del modelo que pasa a la etapa 7>",
+  "finalista": "<modelo que pasa a la etapa 7>",
   "parametros": {"<hiperparámetro>": "<valor>"},
   "origen_parametros": "partida | optimizados",
   "comprobacion": {
     "anfitriones_reservados": 0,
+    "anuncios_reservados": 0,
     "mae_partida": 0.0,
     "mae_optimizado": 0.0,
     "diferencia_media": 0.0,
@@ -51,15 +52,31 @@ Una fila por ensayo: `model`, `trial`, `state` (`completo` / `fallido`), los hip
     "semilla": 42
   },
   "regla": "Se usan los optimizados solo si todo el intervalo está por debajo de cero",
-  "comparacion_finalistas": null,
+  "comparacion_finalistas": {
+    "finalista_a": "<nombre>",
+    "finalista_b": "<nombre>",
+    "mae_a": 0.0,
+    "mae_b": 0.0,
+    "diferencia_media": 0.0,
+    "intervalo_95": [0.0, 0.0],
+    "segundos_por_pliegue": {"<nombre>": 0.0},
+    "motivo_regla": "<texto de choose_finalist>"
+  },
+  "regla_elegiria": "<lo que elige la regla>",
+  "decision_del_grupo": "<null si coincide con la regla; si no, la nota de la excepción (config.STAGE7_GROUP_NOTE)>",
+  "como_se_arma": "make_model('<nombre>', parametros) de src/tarifalatam/models/tuning.py, dentro de build_pipeline",
+  "parametros_fijos": {"<parámetro>": "<valor>"},
   "tracking": "local",
   "experimento": "tarifalatam-optimizacion",
-  "ensayos": 30
+  "ensayos": 60,
+  "ensayos_por_finalista": 30
 }
 ```
 
-Los ceros son marcadores del tipo de dato, no cifras. `comparacion_finalistas` lleva el mismo bloque que `comprobacion` si hubo
-dos finalistas.
+Los ceros son marcadores del tipo de dato, no cifras. Con un solo finalista, `comparacion_finalistas` es `null`. `comprobacion`
+es la del modelo que pasa a la etapa 7. `ensayos` es el total de todos los finalistas. Todo el archivo lo escribe el notebook 06
+(actualizado tras la revisión del 2026-10-31; antes no traía `regla_elegiria`, `decision_del_grupo`, `como_se_arma` ni
+`parametros_fijos`).
 
 ## Ejecuciones en el MLflow local (`mlflow_local.db`, experimento `tarifalatam-optimizacion`)
 
@@ -76,5 +93,5 @@ dos finalistas.
   riesgos, lista final de variables).
 - `reports/05_torneo.md`: tabla de negocio y técnicas, error por ciudad, comparación pareada, diferencia en dinero, finalistas y
   por qué no hay campeón.
-- `reports/06_optimizacion.md`: espacio de búsqueda, presupuesto, resultados, comprobación, decisión y la nota sobre el doble uso
+- `reports/06_optimizacion.md`: espacio de búsqueda, presupuesto, resultados, comprobación, decisión, la excepción del grupo y la nota sobre el uso repetido
   de los anfitriones reservados.

@@ -338,5 +338,6 @@ El grupo aprobó el borrador completo, sin cambios. Respuestas a las preguntas q
 - ☒ `test.csv.gz` sin abrir. *(Ningún archivo de `src/` ni los notebooks 04 a 06 lo leen.)*
 - ☒ Toda cifra de los informes sale de un notebook ejecutado (ninguna inventada).
 - ☒ `pytest` en verde desde la raíz (194 pruebas).
-- ☐ Revisión con `auditor-de-fuga` y `revisor-de-codigo-ia` antes de dar las etapas por cerradas.
+- ☒ Revisión con `auditor-de-fuga` y `revisor-de-codigo-ia` antes de dar las etapas por cerradas. *(2026-10-31: sin fuga
+  ni cifras inválidas; hallazgos atendidos en `reports/04_features.md`, sección "Revisión de los subagentes".)*
 - ☐ Quien no escribió el código sabe responder las 8 preguntas de la guía (sección 5).

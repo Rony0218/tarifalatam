@@ -1,6 +1,6 @@
 # Informe de la optimización
 
-> Resultado de `notebooks/06_optimizacion.ipynb`, ejecutado el 2026-10-31 (17 minutos). La mejor puntuación de una búsqueda
+> Resultado de `notebooks/06_optimizacion.ipynb`, ejecutado el 2026-10-31 (15 minutos). La mejor puntuación de una búsqueda
 > es **optimista**: se comprueba en anfitriones que la búsqueda no vio. Un ensayo por fila en
 > `reports/06_optimizacion_tabla.csv`; la decisión en `reports/06_best_params.json`. Especificación:
 > `especificaciones/04-features-torneo-optimizacion.md`, sección 6. Guía: `material-del-curso/kit/guia-modelado-y-optimizacion.md`,
@@ -50,9 +50,13 @@ frente a 38,86 con los parámetros de partida).
   `bias`, `r2_log`, `fit_seconds`, ninguna vacía) y las etiquetas `etapa=06_optimizacion`, `modelo`,
   `variables=sin_sospechosas`, `datos=train.csv.gz` y `estado`. El notebook comprueba que hay exactamente una ejecución por
   ensayo.
-- **Mejor ejecución:** `lightgbm-ensayo-30` (id `3d4a1c1d2b024f81b589928e8a84836b`), MAE medio de 39,69 USD en los pliegues de
-  búsqueda. Del bosque, `random_forest-ensayo-26` (id `bfe81f41531b4f80b20e8e0abca25c9d`), con 40,03 USD.
+- **Mejor ejecución:** `lightgbm-ensayo-30` (id `90ef5cae5e464f63af43f4114c1ca61a`), MAE medio de 39,69 USD en los pliegues de
+  búsqueda. Del bosque, `random_forest-ensayo-26` (id `fe25f4298b6440078e5c7d28cefdd3e5`), con 40,03 USD.
 - **Para verlo:** `mlflow ui --backend-store-uri sqlite:///mlflow_local.db` desde la raíz del repositorio.
+- **Corrida final:** después de la revisión se corrigió el desempate y el notebook se volvió a ejecutar. Las cifras de error
+  salieron idénticas; los tiempos cambian un poco entre corridas. La base de la primera corrida quedó en
+  `mlruns/mlflow_local_primera_corrida_2026-10-31.db` (fuera de Git). Así el experimento actual tiene exactamente las 60
+  ejecuciones de la corrida final.
 
 ## Resultados de la búsqueda
 
@@ -60,8 +64,8 @@ frente a 38,86 con los parámetros de partida).
 
 | Finalista | Tiempo de la búsqueda | MAE de partida (mismos pliegues) | Mejor ensayo (optimista) | Parámetros del mejor ensayo |
 |---|---|---|---|---|
-| Bosque aleatorio | 6,9 min | 40,17 | 40,03 ± 2,46 (ensayo 26) | `max_depth` 24 · `min_samples_leaf` 4 · `max_features` 0,444 (200 árboles) |
-| LightGBM | 9,6 min | 40,26 | 39,69 ± 2,50 (ensayo 30) | `n_estimators` 522 · `learning_rate` 0,0167 · `num_leaves` 215 · `min_child_samples` 19 · `subsample` 0,928 · `colsample_bytree` 0,542 · `reg_lambda` 2,886 |
+| Bosque aleatorio | 6,4 min | 40,17 | 40,03 ± 2,46 (ensayo 26) | `max_depth` 24 · `min_samples_leaf` 4 · `max_features` 0,444 (200 árboles) |
+| LightGBM | 7,6 min | 40,26 | 39,69 ± 2,50 (ensayo 30) | `n_estimators` 522 · `learning_rate` 0,0167 · `num_leaves` 215 · `min_child_samples` 19 · `subsample` 0,928 · `colsample_bytree` 0,542 · `reg_lambda` 2,886 |
 
 - **Lo que comparten los 5 mejores ensayos de cada finalista** (observación, no una medición de importancia):
   - **LightGBM:** tasa de aprendizaje baja (0,017–0,023), muchas hojas (133–215), cada árbol mira poco más de la mitad de las
@@ -96,26 +100,53 @@ USD. Diferencia (bosque − LightGBM) de +0,17 USD, con intervalo [−0,20 ; +0,
 
 - **Modelo que pasa a la etapa 7: LightGBM con los parámetros optimizados** (los del ensayo 30, en
   `reports/06_best_params.json`). **Decisión del grupo del 2026-10-31 (tarea T047).**
-- **Cómo se desempató.** La regla aprobada dice: si el intervalo cruza el cero, pasa "el más simple y rápido".
-  - El notebook desempató con el tiempo de ajuste del **torneo**, es decir, con los parámetros de partida: LightGBM 0,66 s y
-    bosque 3,31 s por pliegue. Por eso su salida y el JSON dicen "pasa el más rápido de ajustar (lightgbm)".
-  - Con los parámetros **optimizados** es al revés: en la búsqueda, el bosque ajusta en 2,42 s por pliegue y LightGBM en
-    5,11 s.
-  - El grupo eligió LightGBM por dos motivos: tiene el MAE más bajo en los reservados (38,52) y es más simple de operar. Un
-    modelo de boosting suele guardarse en un archivo más liviano que 200 árboles profundos, y la app carga `models/model.joblib`
-    desde el repositorio. El tamaño del archivo **no se midió**; hay que comprobarlo al exportar el modelo.
+- **Es una excepción a la regla escrita, decidida después de ver el resultado.** La regla aprobada dice: si el intervalo cruza
+  el cero, pasa "el más simple y rápido".
+  - La regla se aplica con `choose_finalist`, que compara el tiempo de ajuste de las configuraciones elegidas (las optimizadas),
+    medido en los pliegues de búsqueda: bosque 2,41 s y LightGBM 3,09 s por pliegue. **La regla elige el bosque**
+    (`regla_elegiria` en el JSON).
+  - El grupo eligió LightGBM por dos motivos. Primero, tiene el MAE más bajo en los reservados (38,52 frente a 38,70), aunque
+    es justo la diferencia que el intervalo no distingue del ruido. Segundo, se considera más simple de operar: un modelo de
+    boosting suele guardarse en un archivo más liviano que 200 árboles profundos, y la app carga `models/model.joblib` desde el
+    repositorio. El tamaño del archivo **no se midió**; hay que comprobarlo al exportar el modelo.
+  - El modelo elegido está en `config.STAGE7_MODEL`, y el notebook escribe la nota de la excepción en el campo
+    `decision_del_grupo` del JSON.
+  - **Historia:** la primera corrida desempataba con los tiempos del **torneo** (parámetros de partida), donde LightGBM era
+    más rápido, y su JSON decía "pasa el más rápido de ajustar (lightgbm)". La revisión lo detectó. Se corrigió el notebook y
+    se volvió a ejecutar (en la primera corrida, LightGBM optimizado había tardado 5,11 s por pliegue; ver el commit
+    `664d4b0`).
+- **Cómo se arma el modelo en la etapa 7.** Con `make_model("lightgbm", parametros)` de `src/tarifalatam/models/tuning.py`,
+  no con `LGBMRegressor(**parametros)`. `make_model` agrega `subsample_freq=1`, sin el cual LightGBM ignora `subsample`, y fija
+  `random_state=42`. El JSON lo indica en `como_se_arma` y `parametros_fijos`.
 - **Lo que no pudimos concluir:**
   - No hay un ganador claro entre los dos finalistas optimizados: la diferencia de 0,17 USD está dentro del ruido.
-  - La mejora de LightGBM por optimizar (0,34 USD por noche, menos del 1 %) es real según la regla, pero pequeña.
-  - Los mismos anfitriones reservados se usaron para dos decisiones: optimizados contra partida, y finalista contra finalista.
-    Eso agrega un poco de optimismo al MAE de 38,52; la cifra honesta la dará la prueba en la etapa 7.
+  - La mejora de LightGBM por optimizar (0,34 USD por noche, menos del 1 %) es real según la regla, pero pequeña. Pasa por muy
+    poco: el límite superior del intervalo es −0,01. Con otra semilla de reserva podría haber tocado el cero, y entonces se
+    habrían usado los parámetros de partida.
+  - **El 38,52 es optimista: no es el rendimiento esperado.** Los mismos anfitriones reservados se usaron en **cuatro**
+    decisiones, no en dos: optimizados contra partida en cada finalista (dos), finalista contra finalista, y la elección del
+    grupo. Además, esos anfitriones no eran nuevos para las etapas 4 y 5, porque estaban dentro de sus pliegues. La cifra
+    honesta la dará la prueba en la etapa 7.
 
 ## Para la clase siguiente
 
-- **Etapa 7 (validación):** entrenar LightGBM con los parámetros de `reports/06_best_params.json` y las 13 columnas de la
-  referencia, con **todo** el entrenamiento, y abrir `test.csv.gz` **una sola vez**. Reportar el MAE con su intervalo por
-  anfitrión, el error por ciudad (Belice) y el sesgo. Recordar que la regla de precios extremos también quitó filas de la prueba
-  (`reports/01_eda.md`).
+- **Etapa 7 (validación):**
+  - Entrenar con `build_pipeline(make_model("lightgbm", parametros), "boosting")`, con los parámetros de
+    `reports/06_best_params.json`, las 13 columnas de la referencia y **todo** el entrenamiento.
+  - Abrir `test.csv.gz` **una sola vez**. Reportar el MAE con su intervalo por anfitrión, el error por ciudad (Belice) y el
+    sesgo.
+  - Declarar tres límites heredados de la etapa 3 (`reports/01_eda.md`):
+    - la regla de precios extremos también quitó filas de la prueba, así que la prueba no tiene precios extremos;
+    - los límites de precio por ciudad se calcularon con todo el entrenamiento, antes de los pliegues (efecto mínimo, porque
+      son medianas de miles de anuncios);
+    - los umbrales de limpieza se fijaron mirando los siete archivos.
 - **Clase 4:** pasar el seguimiento a Databricks (quitar `force_local`) y registrar el modelo. Medir el tamaño de
   `models/model.joblib` antes de subirlo.
-- **Revisión pendiente:** `auditor-de-fuga` y `revisor-de-codigo-ia` sobre el código de las etapas 4 a 6 (tareas T048 y T049).
+
+## Revisión de los subagentes (2026-10-31)
+
+El código de las etapas 4 a 6 se revisó con `auditor-de-fuga` (T048) y `revisor-de-codigo-ia` (T049). El auditor no encontró
+fuga hacia la prueba ni columnas prohibidas o sospechosas en los modelos del torneo y la optimización. Todo lo que aprende de
+los datos está dentro del `Pipeline`, los pliegues y los reservados mantienen a cada anfitrión entero, y el intervalo
+remuestrea anfitriones. Lo que encontró y lo que se hizo está en la tabla de `reports/04_features.md`, sección "Revisión de
+los subagentes".

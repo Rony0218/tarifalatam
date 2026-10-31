@@ -269,7 +269,7 @@ EXPERIMENT_NAME = "tarifalatam-optimizacion"
 
 # Resultado de la etapa 4 (notebooks/04_features.ipynb, 2026-10-31; detalle en reports/04_features.md): ninguna idea
 # cumple mejora / ruido > 1, y el grupo decidió aplicar la regla sin excepciones. El torneo y la optimización usan la
-# referencia (13 columnas). Las amenidades (idea 2) ganaron en los 5 pliegues, pero con mejora / ruido de 0,49.
+# referencia (13 columnas). Las amenidades (idea 2) ganaron en los 5 pliegues, pero con mejora / ruido de 0,48 (0,485).
 FINAL_IDEAS = ()
 
 # Resultado de la etapa 5 (notebooks/05_torneo.ipynb, 2026-10-31; detalle en reports/05_torneo.md): el bosque aleatorio

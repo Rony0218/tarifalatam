@@ -25,9 +25,9 @@
 
 | Modelo | MAE, USD (± ruido) | Mejor / peor pliegue | Segundos de ajuste por pliegue (varían entre corridas) |
 |---|---|---|---|
-| Bosque aleatorio | **39,67 ± 1,60** | 38,18 / 42,12 | 3,31 |
-| LightGBM | 39,90 ± 1,73 | 38,29 / 42,47 | 0,66 |
-| Ridge | 43,64 ± 1,88 | 41,80 / 45,93 | 0,65 |
+| Bosque aleatorio | **39,67 ± 1,60** | 38,18 / 42,12 | 3,48 |
+| LightGBM | 39,90 ± 1,73 | 38,29 / 42,47 | 0,59 |
+| Ridge | 43,64 ± 1,88 | 41,80 / 45,93 | 0,55 |
 | Línea base | 55,90 ± 2,55 | 53,17 / 58,91 | 0,07 |
 
 ## Métricas técnicas
@@ -104,8 +104,8 @@ pequeña (0,23 USD por noche) y apenas supera el ruido (1,13).
 
 | Finalista | Por qué (consistencia, métrica, tiempo, interpretabilidad) | Qué podría cambiar con la optimización |
 |---|---|---|
-| **Bosque aleatorio** | El menor MAE (39,67) y el menor sesgo (−13,01). Gana a LightGBM en 4 de 5 pliegues, con diferencia / ruido de 1,13: cumple, por poco, el criterio de consistencia | Su forma (profundidad, hojas mínimas, variables por corte) puede afinarse. Es el más lento de ajustar (3,31 s por pliegue) |
-| **LightGBM** | A 0,23 USD del bosque, con el mejor MAPE (32,70 %), y unas 5 veces más rápido de ajustar (0,66 s por pliegue) | Tiene más hiperparámetros que afinar (tasa de aprendizaje, árboles, hojas, submuestreo), así que el orden podría cambiar |
+| **Bosque aleatorio** | El menor MAE (39,67) y el menor sesgo (−13,01). Gana a LightGBM en 4 de 5 pliegues, con diferencia / ruido de 1,13: cumple, por poco, el criterio de consistencia | Su forma (profundidad, hojas mínimas, variables por corte) puede afinarse. Es el más lento de ajustar (3,48 s por pliegue) |
+| **LightGBM** | A 0,23 USD del bosque, con el mejor MAPE (32,70 %), y unas 6 veces más rápido de ajustar (0,59 s por pliegue) | Tiene más hiperparámetros que afinar (tasa de aprendizaje, árboles, hojas, submuestreo), así que el orden podría cambiar |
 
 **Modelos descartados y por qué:**
 

@@ -277,7 +277,8 @@ los parámetros elegidos, el intervalo y la regla aplicada.
 - El modelo aprende `log(price_usd)`; el error se mide en USD con la exponencial de la predicción, sin corrección de
   retransformación, porque se acerca a la mediana, que es lo que premia el MAE.
 - Usar los mismos anfitriones reservados para dos decisiones (optimizados contra partida y, si hay dos, finalista contra finalista)
-  agrega un poco de optimismo; se acepta y se declara en `reports/06_optimizacion.md`.
+  agrega un poco de optimismo; se acepta y se declara en `reports/06_optimizacion.md`. *(Al final fueron cuatro usos: dos
+  finalistas, la comparación entre ellos y el desempate del grupo; ver la auditoría del 2026-10-31.)*
 - **Quién implementa cada tarea** lo decide el grupo al aprobar `tasks.md`: cada integrante con su cuenta de GitHub.
 - Los datos de `data/raw/` y `data/processed/` se copian al worktree desde el checkout principal; nunca se mueven ni se modifican, y
   no se suben a GitHub.

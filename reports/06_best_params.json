@@ -31,12 +31,26 @@
     "mae_b": 38.52331318457415,
     "diferencia_media": 0.17275859625073786,
     "intervalo_95": [
-      -0.198535681775078,
-      0.550686956269823
+      -0.19853568177507708,
+      0.5506869562698234
     ],
-    "motivo": "el intervalo cruza el cero: empate; pasa el más rápido de ajustar (lightgbm)"
+    "segundos_por_pliegue": {
+      "random_forest": 2.412861759999578,
+      "lightgbm": 3.0946160799998323
+    },
+    "motivo_regla": "el intervalo cruza el cero: empate; pasa el más rápido de ajustar con su configuración elegida (random_forest: 2.41 s por pliegue frente a 3.09 s)"
+  },
+  "regla_elegiria": "random_forest",
+  "decision_del_grupo": "Excepción a la regla escrita, decidida por el grupo el 2026-10-31 después de ver el resultado (T047): los dos finalistas optimizados empatan en los anfitriones reservados y la regla elegiría al más rápido de ajustar; el grupo eligió LightGBM porque tiene el MAE más bajo en los reservados (dentro del ruido) y lo considera más simple de operar en la app, que carga models/model.joblib desde el repositorio.",
+  "como_se_arma": "make_model('lightgbm', parametros) de src/tarifalatam/models/tuning.py, dentro de build_pipeline",
+  "parametros_fijos": {
+    "subsample_freq": 1,
+    "random_state": 42,
+    "n_jobs": -1,
+    "verbose": -1
   },
   "tracking": "local",
   "experimento": "tarifalatam-optimizacion",
-  "ensayos": 60
+  "ensayos": 60,
+  "ensayos_por_finalista": 30
 }

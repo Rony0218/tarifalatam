@@ -262,8 +262,8 @@ la regla.
 
 **Purpose**: revisión, registro de decisiones y validación final
 
-- [ ] T048 [P] Ejecutar el subagente `auditor-de-fuga` sobre `src/tarifalatam/features/`, `src/tarifalatam/models/`, `src/tarifalatam/data/folds.py` y los notebooks 04 a 06; atender sus hallazgos y anotarlos en `reports/04_features.md` (sección de riesgos) · Responsable:
-- [ ] T049 [P] Ejecutar el subagente `revisor-de-codigo-ia` sobre el código nuevo y corregir lo que encuentre (con una prueba por corrección) · Responsable:
+- [X] T048 [P] Ejecutar el subagente `auditor-de-fuga` sobre `src/tarifalatam/features/`, `src/tarifalatam/models/`, `src/tarifalatam/data/folds.py` y los notebooks 04 a 06; atender sus hallazgos y anotarlos en `reports/04_features.md` (sección de riesgos) · Responsable:
+- [X] T049 [P] Ejecutar el subagente `revisor-de-codigo-ia` sobre el código nuevo y corregir lo que encuentre (con una prueba por corrección) · Responsable:
 - [X] T050 Ejecutar `pytest` desde la raíz y la validación de `quickstart.md` (incluido el `grep` de `test.csv` y la comprobación de que la barrera de columnas falla con `price_usd`) · Responsable:
 - [X] T051 Marcar los criterios de cierre de la sección 10 de `especificaciones/04-features-torneo-optimizacion.md` que se cumplan, y agregar a la sección 7 de `especificacion-proyecto.md` las decisiones nuevas con su cifra (variables finales, finalistas, parámetros elegidos) · Responsable:
 - [ ] T052 (GRUPO) Cada integrante explica al menos una función de su paquete con `material-del-curso/kit/checklist-revision-ia.md` · Responsable:
