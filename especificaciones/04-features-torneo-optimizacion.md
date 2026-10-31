@@ -6,14 +6,14 @@
 > Guía: `material-del-curso/kit/guia-modelado-y-optimizacion.md`, secciones 0 a 4 · Ejemplo (la forma, no las cifras):
 > `material-del-curso/ejemplo-creditsight/notebooks/04_features.ipynb` a `06_optimizacion.ipynb` y `src/creditsight/models/`.
 
-**Grupo:** TarifaLatam   **Fecha:** 2026-10-31   **Estado:** ☒ borrador  ☐ cerrada
+**Grupo:** TarifaLatam   **Fecha:** 2026-10-31   **Estado:** ☐ borrador  ☒ aprobada por el grupo (2026-10-31)  ☐ cerrada
 
 > **Cómo se llenó este borrador.** Sale de `especificacion-proyecto.md`, la constitución (versión 0.3.0),
 > `reports/01_eda.md`, la clasificación de columnas de `reports/04_features.md` (auditoría de fuga del 2026-10-30) y
 > `especificaciones/03-preprocesamiento.md`. Las únicas cifras nuevas se midieron el 2026-10-31 en
 > `data/processed/train.csv.gz` (columnas, vacíos y amenidades); **la prueba no se abrió**.
-> **Todo lo marcado *(pendiente de aprobación del grupo)* es una propuesta**: no se implementa hasta que el grupo la apruebe
-> o la cambie. Lo ya aprobado (por ejemplo, la decisión 11 del EDA) se indica como tal.
+> **El grupo aprobó el borrador completo el 2026-10-31, sin cambios.** Las propuestas quedan como decisiones y se marcan
+> *(aprobado por el grupo el 2026-10-31)*; las respuestas a las preguntas están en la sección 9.
 
 ## 0. Datos de entrada
 
@@ -22,11 +22,11 @@
   Bogotá 12.205 · Belice 2.604.
 - **`ID_COL` = `host_id`**, **`TARGET` = `log_price_usd`**. El modelo aprende el logaritmo; el error se mide en USD con
   `exp(predicción)`. No se aplica corrección de retransformación: `exp` de la predicción en logaritmo se acerca a la
-  mediana del precio, que es lo que premia el MAE. *(pendiente de aprobación del grupo)*
+  mediana del precio, que es lo que premia el MAE. *(aprobado por el grupo el 2026-10-31)*
 - **`train.joblib` no existe.** Los esqueletos de los notebooks 04 a 06 leen `data/processed/train.joblib`, pero el
-  notebook 03 guarda `train.csv.gz`. **Propuesta:** una función `load_train()` en `src/tarifalatam/data/` lee
+  notebook 03 guarda `train.csv.gz`. **Decisión:** una función `load_train()` en `src/tarifalatam/data/` lee
   `train.csv.gz` con tipos fijos, y los notebooks 04 a 06 la usan en lugar de `joblib.load`. No se crea `train.joblib`
-  (sería una segunda copia que puede quedar desactualizada). *(pendiente de aprobación del grupo)*
+  (sería una segunda copia que puede quedar desactualizada). *(aprobado por el grupo el 2026-10-31)*
 - **`test.csv.gz` no se abre** en estas tres etapas, ni siquiera para contar filas. Se usa una sola vez, en la etapa 7
   (constitución, principio III). No se escribe ninguna función que lea la prueba antes de esa etapa.
 - **En un worktree:** `data/raw/` y `data/processed/` están en `.gitignore`. Se copian desde el checkout principal; nunca
@@ -50,7 +50,7 @@ y una prueba automática las verifica (sección 7).
 | `bathrooms_text` | Ya convertida en `bathrooms_count` y `bathroom_shared` (decisión 6 del EDA): usarla duplicaría la información |
 | `amenities` (texto crudo) | Lista de texto con 15.938 nombres distintos en el entrenamiento. No entra cruda: solo a través de las variables de la idea 2 |
 
-**Propuesta: también fuera, por redundantes** *(pendiente de aprobación del grupo)*:
+**También fuera, por redundantes** *(aprobado por el grupo el 2026-10-31)*:
 
 | Columna(s) | Por qué |
 |---|---|
@@ -66,7 +66,7 @@ Lista de la auditoría de fuga (`reports/04_features.md`):
 - **Reseñas:** `number_of_reviews`, `number_of_reviews_ltm`, `number_of_reviews_l30d`, `number_of_reviews_ly`,
   `reviews_per_month`, `first_review`, `last_review`, `has_reviews` y las siete `review_scores_*` (`rating`, `accuracy`,
   `cleanliness`, `checkin`, `communication`, `location`, `value`).
-- **Propuesta: agregar `host_is_superhost`** *(pendiente de aprobación del grupo)*. Airbnb lo otorga por las notas, las
+- **Se agrega `host_is_superhost`** *(aprobado por el grupo el 2026-10-31)*. Airbnb lo otorga por las notas, las
   estancias y las cancelaciones del anfitrión: es consecuencia de la demanda, y un anfitrión nuevo no lo tiene.
 
 **Regla.** Se miden **con y sin** ellas (sección 3.4). **Solo la versión sin ellas puede ir al torneo, a la optimización y a
@@ -74,11 +74,11 @@ la app**, porque el inversionista evalúa inmuebles nuevos, sin reseñas ni ocup
 saber cuánto pesan.
 
 `first_review` y `last_review` son fechas. Para medirlas se convierten en días hasta el corte de su ciudad (`last_scraped`
-se usa como fecha de referencia, no como variable). *(pendiente de aprobación del grupo)*
+se usa como fecha de referencia, no como variable). *(aprobado por el grupo el 2026-10-31)*
 
 ### 1.3 Permitidas: se conocen al predecir
 
-**Referencia (fila 0 de la tabla de ideas)** *(pendiente de aprobación del grupo)*: lo que describe el inmueble, dónde está y
+**Referencia (fila 0 de la tabla de ideas)** *(aprobado por el grupo el 2026-10-31)*: lo que describe el inmueble, dónde está y
 sus reglas de estadía. Vacíos medidos en el entrenamiento.
 
 | Grupo | Columna | Tipo | Vacíos | Tratamiento dentro del `Pipeline` |
@@ -101,12 +101,12 @@ pliegue (regla 5 de `CLAUDE.md`). Las columnas del anfitrión (`host_*`, `hosts_
 no están en la referencia: se miden como idea 4.
 
 **Todo cálculo de variables va dentro del `Pipeline`** (también los que no aprenden de los datos), para que el modelo
-guardado reciba las columnas crudas y la app no tenga que repetir ningún cálculo. *(pendiente de aprobación del grupo)*
+guardado reciba las columnas crudas y la app no tenga que repetir ningún cálculo. *(aprobado por el grupo el 2026-10-31)*
 
 ## 2. Ideas de variables
 
 Cada idea es una hipótesis: se escribe **antes** de medirla qué es, por qué podría ayudar y si se conoce al predecir.
-*(Las cinco ideas están pendientes de aprobación del grupo; pueden agregar, quitar o cambiar ideas antes de medir.)*
+*(Las cinco ideas fueron aprobadas por el grupo el 2026-10-31.)*
 
 | # | Idea | Cómo se calcula | Por qué podría ayudar | ¿Se conoce al predecir? |
 |---|---|---|---|---|
@@ -121,9 +121,8 @@ Cada idea es una hipótesis: se escribe **antes** de medirla qué es, por qué p
 - **Idea 1:** Belice es un país entero (sus anuncios cubren todo el territorio): una distancia a un único centro dice poco
   allí. Por eso se mira el error por ciudad. Inside Airbnb desplaza un poco las coordenadas (`reports/01_eda.md`).
 - **Idea 2:** el texto de las amenidades tiene variantes. Buscar la palabra no sirve: "pool" aparece en 748 nombres distintos,
-  incluido `Pool table` (4.802 anuncios), que es una mesa de billar, y hay variantes reales como `Shared pool` (2.849). La
-  propuesta usa solo los nombres exactos de la tabla; **el grupo decide si agrega variantes** (lista escrita por indicador)
-  antes de medir. Cada indicador es una pregunta más en el formulario de la app.
+  incluido `Pool table` (4.802 anuncios), que es una mesa de billar, y hay variantes reales como `Shared pool` (2.849). Se
+  usan solo los nombres exactos de la tabla, sin variantes (decisión del grupo del 2026-10-31). Cada indicador es una pregunta más en el formulario de la app.
 - **Idea 4:** si se conserva, la app debe preguntar por el anfitrión, no solo por el inmueble.
 - **Idea 5:** es la única que aprende del objetivo. Calculada fuera del `Pipeline` sería fuga; la prueba de la sección 7 lo
   vigila.
@@ -134,9 +133,9 @@ Cada idea es una hipótesis: se escribe **antes** de medirla qué es, por qué p
 
 - `GroupKFold(n_splits=5, shuffle=True, random_state=42)` por `host_id` sobre todo el entrenamiento (scikit-learn 1.9.1 acepta
   `shuffle` y `random_state` en `GroupKFold`).
-- **Propuesta:** el notebook 04 los calcula con una función `make_folds(train)` y los guarda en `data/processed/folds.csv`
+- **Decisión:** el notebook 04 los calcula con una función `make_folds(train)` y los guarda en `data/processed/folds.csv`
   (`id` y `fold`); los notebooks 05 y 06 los leen con `load_folds()`. Así **todas** las comparaciones de las tres etapas usan
-  exactamente los mismos pliegues. *(pendiente de aprobación del grupo)*
+  exactamente los mismos pliegues. *(aprobado por el grupo el 2026-10-31)*
 - Comprobaciones con `assert`: ningún anfitrión cae en dos pliegues y cada anuncio está en exactamente uno.
 - `group_cv()` de `src/tarifalatam/data/split.py` **no se cambia**: con ella se midió la línea base de H1
   (55,96 ± 1,94 USD, sin barajar). En el torneo la línea base se vuelve a medir con los pliegues nuevos, para que la
@@ -146,7 +145,7 @@ Cada idea es una hipótesis: se escribe **antes** de medirla qué es, por qué p
 
 `LGBMRegressor(n_estimators=300, learning_rate=0.05, num_leaves=31, random_state=42, n_jobs=-1, verbose=-1)` sobre
 `log_price_usd`: es rápido con 118.513 filas y acepta vacíos. Son **los mismos parámetros del LightGBM del torneo**
-(sección 5). *(pendiente de aprobación del grupo)*
+(sección 5). *(aprobado por el grupo el 2026-10-31)*
 
 ### 3.3 Qué se mide en cada variante
 
@@ -160,11 +159,11 @@ Cada idea es una hipótesis: se escribe **antes** de medirla qué es, por qué p
 
 Después de decidir las ideas: conjunto final **+** las sospechosas de la sección 1.2, con el mismo modelo y los mismos
 pliegues. Se reporta cuánto baja el MAE. No se aplica la regla de decisión: esa versión **nunca** se usa en el torneo, la
-optimización ni la app. *(pendiente de aprobación del grupo)*
+optimización ni la app. *(aprobado por el grupo el 2026-10-31)*
 
 ## 4. Regla de decisión (escrita antes de medir)
 
-**Propuesta** *(pendiente de aprobación del grupo)*:
+**Regla aprobada por el grupo el 2026-10-31:**
 
 > Se conserva una idea **solo si** (a) **mejora / ruido > 1** y (b) **todas sus columnas se conocen al momento de
 > predecir** para un inmueble nuevo.
@@ -193,7 +192,7 @@ por modelo y pliegue en `reports/05_torneo_tabla.csv`.
 | Bosque aleatorio | `RandomForestRegressor(n_estimators=200, min_samples_leaf=3, max_features=0.5, n_jobs=-1, random_state=42)` sobre `log_price_usd` | Imputación y codificación ordinal (categorías raras → "Other") |
 | LightGBM | Los parámetros de la sección 3.2, sobre `log_price_usd` | Codificación ordinal (categorías raras → "Other"); los vacíos los maneja el modelo |
 
-*(Candidatos y parámetros pendientes de aprobación del grupo.)* El preprocesamiento puede variar por familia de modelo, pero
+*(Candidatos y parámetros aprobados por el grupo el 2026-10-31.)* El preprocesamiento puede variar por familia de modelo, pero
 las **columnas de entrada son las mismas** para todos.
 
 ### 5.2 Métricas
@@ -202,7 +201,7 @@ las **columnas de entrada son las mismas** para todos.
 |---|---|---|
 | **MAE (USD por noche)** · principal | Promedio de \|precio predicho − precio real\| en USD | Decide quién gana: "el precio sugerido se equivoca en promedio X dólares" |
 | MAPE | Promedio de \|predicho − real\| / real, en % | Compara ciudades con precios distintos |
-| R² | Sobre `log_price_usd` (la escala que aprende el modelo) *(pendiente: el grupo puede pedirlo también en USD)* | Qué parte de la variación explica |
+| R² | Sobre `log_price_usd` (la escala que aprende el modelo) *(aprobado por el grupo el 2026-10-31)* | Qué parte de la variación explica |
 | RMSE (USD) | Raíz del promedio de los errores al cuadrado | Castiga los errores grandes |
 | Sesgo medio (USD) | Promedio de (predicho − real) | Positivo = sobrestima: es el error **más caro para el inversionista** (`especificacion-proyecto.md`, sección 2) |
 | **Error por ciudad** | MAE (y sesgo) de cada ciudad en cada pliegue → `reports/05_torneo_por_ciudad.csv` | Vigilar que el modelo no sirva solo para las ciudades grandes; Belice tiene 2.604 anuncios y su cifra será más ruidosa |
@@ -213,12 +212,12 @@ las **columnas de entrada son las mismas** para todos.
 - **Comparación pareada** de los 3 mejores (guía, sección 2.4): diferencia media, pliegues que gana y diferencia / ruido (con
   la desviación de las diferencias pliegue a pliegue).
 - **Diferencia en dinero:** la diferencia de MAE frente a la línea base × 30 noches = USD por cada 30 noches reservadas de un
-  anuncio. Es una escala para entender la cifra, no un pronóstico de ingresos. *(pendiente de aprobación del grupo)*
+  anuncio. Es una escala para entender la cifra, no un pronóstico de ingresos. *(aprobado por el grupo el 2026-10-31)*
 - Si un modelo **no** supera a la línea base, se escribe y se explica por qué.
 
 ### 5.4 Elegir 1–2 finalistas (no un campeón)
 
-En este orden *(pendiente de aprobación del grupo)*:
+En este orden *(aprobado por el grupo el 2026-10-31)*:
 
 1. **Consistencia:** gana en al menos 4 de 5 pliegues al siguiente y su diferencia / ruido es mayor que 1.
 2. **MAE** medio.
@@ -230,10 +229,10 @@ El torneo **descarta, no corona**: la optimización puede cambiar el orden.
 
 ## 6. Optimización con seguimiento (notebook 06)
 
-| Punto | Propuesta *(pendiente de aprobación del grupo)* |
+| Punto | Decisión *(aprobado por el grupo el 2026-10-31)* |
 |---|---|
 | Qué se optimiza | Solo los finalistas del torneo |
-| Presupuesto | **30 ensayos por finalista**, fijados antes de empezar (si el grupo prefiere 30 en total: 15 por finalista) |
+| Presupuesto | **30 ensayos por finalista**, fijados antes de empezar |
 | Entidades reservadas | **25 % de los anfitriones** del entrenamiento con `GroupShuffleSplit(n_splits=1, test_size=0.25, random_state=7)`; `assert` de que no comparten ningún anfitrión con la búsqueda |
 | Validación de la búsqueda | Los pliegues de `folds.csv` restringidos a los anfitriones de búsqueda (cada anfitrión sigue entero en un pliegue) |
 | Método | Optuna con `TPESampler(seed=42)`, minimizando el MAE medio en USD |
@@ -244,7 +243,7 @@ El torneo **descarta, no corona**: la optimización puede cambiar el orden.
 | Qué se registra por ensayo | Una ejecución por ensayo con `log_run`, nombre `<modelo>-ensayo-<nn>` (por ejemplo `lightgbm-ensayo-07`): hiperparámetros; MAE medio y su desviación entre pliegues, MAPE, R², RMSE, sesgo y segundos; etiquetas `etapa=06_optimizacion`, `modelo`, `variables=sin_sospechosas` y `datos=train.csv.gz` |
 | Lo que no se reporta como resultado | La mejor puntuación de la búsqueda: es optimista (el máximo de muchas estimaciones con ruido) |
 
-**Comprobación honesta** *(pendiente de aprobación del grupo)*:
+**Comprobación honesta** *(aprobado por el grupo el 2026-10-31)*:
 
 1. Se entrenan dos modelos con **todos** los datos de búsqueda: parámetros de **partida** (los del torneo) y **optimizados**.
 2. Se predicen las entidades reservadas. Diferencia por anuncio = \|error optimizado\| − \|error de partida\|, en USD.
@@ -292,17 +291,19 @@ El torneo **descarta, no corona**: la optimización puede cambiar el orden.
 `models/model.joblib` y la app; adaptar `src/tarifalatam/inference/`, que hoy es la plantilla de **clasificación** (etapas 9
 y 10).
 
-## 9. Preguntas para el grupo (antes de pasar a Spec Kit)
+## 9. Decisiones del grupo (2026-10-31)
 
-1. ¿Aprueban las listas de columnas de la sección 1, incluidas las dos propuestas: sacar `neighbourhood_group_cleansed` y
-   las seis variantes de noches mínimas/máximas, y tratar `host_is_superhost` como sospechosa?
-2. ¿Aprueban las cinco ideas? ¿Agregan variantes a los indicadores de amenidades (por ejemplo `Shared pool`)?
-3. ¿Aprueban la regla de decisión de la sección 4 tal como está?
-4. ¿Aprueban los candidatos y sus parámetros, y el R² sobre el logaritmo?
-5. ¿El presupuesto es 30 ensayos **por finalista** o 30 **en total**?
-6. ¿Guardan los pliegues en `data/processed/folds.csv` o prefieren recalcularlos en cada notebook con la misma función?
-7. ¿Aprueban traducir la diferencia de MAE a "USD por cada 30 noches reservadas"?
-8. ¿Quién implementa cada parte? Se reparte al aprobar `tasks.md` (cada integrante con su cuenta de GitHub).
+El grupo aprobó el borrador completo, sin cambios. Respuestas a las preguntas que planteaba:
+
+1. **Columnas:** se aprueban las listas de la sección 1. Salen `neighbourhood_group_cleansed` y las seis variantes de noches
+   mínimas y máximas; `host_is_superhost` se trata como sospechosa.
+2. **Ideas:** se aprueban las cinco. Los indicadores de amenidades usan solo los nombres exactos, sin variantes.
+3. **Regla de decisión:** la de la sección 4, tal como está.
+4. **Candidatos:** los cuatro de la sección 5.1 con sus parámetros; el R² se calcula sobre el logaritmo.
+5. **Presupuesto:** 30 ensayos **por finalista**.
+6. **Pliegues:** se guardan en `data/processed/folds.csv`.
+7. **Dinero:** la diferencia de MAE se traduce a "USD por cada 30 noches reservadas".
+8. **Quién implementa:** se reparte al aprobar `tasks.md` (cada integrante con su cuenta de GitHub). *Pendiente.*
 
 ## 10. Criterios de cierre
 
