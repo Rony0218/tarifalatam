@@ -105,7 +105,7 @@ US3 = registro de exclusiones y rastro escrito).
   - `test_median_baseline_by_city_and_room_type`.
   - `test_median_baseline_falls_back_to_city_median`: combinación no vista → mediana de la ciudad.
   - `test_baseline_cv_mae_fits_only_on_train_folds`: un anuncio extremo en un solo pliegue de validación no cambia la mediana aprendida.
-- [ ] T009 [P] [US1] Crear `tests/test_pipeline.py`:
+- [X] T009 [P] [US1] Crear `tests/test_pipeline.py`:
   - `test_build_datasets_output_contract`: con siete `.csv.gz` de juguete en `tmp_path` y tasas inventadas en la prueba, verifica el contrato de `contracts/processed-files.md`.
     - Siempre presentes: `id`, `host_id`, `city`, `room_type`, `price_local`, `price_usd`, `log_price_usd`, `bathrooms_count`, `bathroom_shared`, `has_reviews`.
     - Nunca presentes: personales, texto libre, fuga, vacías y `price`.
@@ -141,7 +141,7 @@ US3 = registro de exclusiones y rastro escrito).
   - `MedianBaseline` con `fit(train)` y `predict(df)`: mediana de `price_usd` por `city` × `room_type`, y respaldo con la mediana de la ciudad.
   - `baseline_cv_mae(train, n_splits=5) -> dict` con `per_fold`, `mean` y `std`: usa `group_cv` y `groups=train[GROUP_COL]`.
   - Verificar con `pytest tests/test_baseline.py`.
-- [ ] T013 [US1] Implementar `build_datasets(raw_dir=RAW_DIR, rates=FX_RATES) -> (train, test, bounds)` en `src/tarifalatam/data/pipeline.py`:
+- [X] T013 [US1] Implementar `build_datasets(raw_dir=RAW_DIR, rates=FX_RATES) -> (train, test, bounds)` en `src/tarifalatam/data/pipeline.py`:
   - Aplica los 15 pasos en el orden exacto de la tabla de `research.md` §4.
   - Parte con `split_by_host` y ajusta `fit_price_bounds` **solo** con `train`; después aplica `drop_price_outliers` y `add_target` a ambos.
   - En esta tarea no lleva registro de exclusiones (lo agrega T024).

@@ -34,7 +34,7 @@ def make_listings(n_hosts: int = 6, per_host: int = 2, seed: int = 0, **override
             "id": np.arange(1, n + 1),
             "host_id": np.repeat(np.arange(100, 100 + n_hosts), per_host),
             "city": cities,
-            "source": [np.nan] * n,
+            "source": pd.Series([np.nan] * n, dtype=object),  # texto: admite "previous scrape"
             "price": [f"${p:,.2f}" for p in prices],
             "price_quote_raw": [_quote(CITY_CURRENCY[c], p) for c, p in zip(cities, prices)],
             "price_quote_checkin_date": ["2026-10-01"] * n,
