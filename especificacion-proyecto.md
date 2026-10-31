@@ -20,8 +20,9 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 - **Pregunta de negocio** (una frase, que alguien sin formación técnica entienda): ¿Cuánto debería cobrar
   por noche un inmueble de Airbnb en América Latina, según sus características, su barrio y su ciudad?
 - **¿Quién usará el resultado y qué decisión tomará con él?** El anfitrión, para fijar su tarifa por noche
-  (él conserva la decisión final). El inversionista, para estimar si un inmueble que piensa comprar para
-  alquilar se pagaría.
+  (él conserva la decisión final). El inversionista recibe ese precio por noche como un insumo más de sus
+  cuentas: el modelo no dice si un inmueble se paga, porque ocupación confiable, costos y valor de compra no
+  están en los datos.
 - **¿Qué cuesta equivocarse?** (cuál error es peor y por qué): Sugerir un precio **muy bajo** hace perder
   ingreso en cada noche reservada. Sugerir uno **muy alto** deja el inmueble vacío y la plataforma lo baja en
   las búsquedas. Para el inversionista es peor **sobrestimar**: compraría un inmueble que no rinde lo esperado.
@@ -53,11 +54,16 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 - **Métrica principal:** **MAE en USD por noche**   **Por qué esa y no otra:** se lee directo en dinero
   ("el precio sugerido se equivoca en promedio X dólares"), que es como lo entiende el anfitrión. No se usa
   RMSE como principal porque los pocos precios extremos lo dominarían.
-- **Métricas secundarias:** MAPE (un error de 20 USD no pesa igual en Bogotá que en Río) y R².
+- **Métricas secundarias:** MAPE (un error de 20 USD no pesa igual en Bogotá que en Río), R², sesgo medio por
+  ciudad y **costo 2 a 1** del error por noche:
+  `promedio de [2 × máx(sugerido − real, 0) + 1 × máx(real − sugerido, 0)]`. El 2 a 1 es un supuesto del grupo,
+  no una medición: se repite con 1,5 a 1 y 3 a 1 para ver si el ganador por MAE depende de él.
 - **Línea base** (qué resultado obtiene una regla simple o un modelo trivial): la mediana del precio por
   ciudad y tipo de habitación (`room_type`). **MAE = 55,96 ± 1,94 USD por noche** (validación por anfitrión, solo
   entrenamiento, sin Buenos Aires; `notebooks/03_preprocesamiento.ipynb`, 2026-10-31). Con las siete ciudades era
   53,80 ± 2,74.
+- **Meta:** MAE al menos **20 % menor** que el de la línea base, con un intervalo del 95 % de la mejora que no
+  incluya el cero, y ninguna ciudad peor que con la línea base.
 
 ## 5. Riesgos
 
@@ -104,3 +110,6 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 | 2026-10-31 | Enmienda de la constitución (0.2.0 → 0.3.0): la restricción "Datos" pasa de siete a seis ciudades | Consecuencia de la fila anterior; ningún principio cambia |
 | 2026-10-31 | **Se aprueban las 11 decisiones del EDA** (tabla en `reports/01_eda.md` y sección 4 de `especificaciones/02-eda.md`), incluido el umbral de 20 × la mediana para precios extremos | Revisadas por el grupo; las decisiones 1 a 10 ya están implementadas con pruebas y la 11 va en la etapa 4 |
 | 2026-10-31 | **Se elimina la columna `license`** | Solo existe en Bogotá (84,9 % llena; vacía en las otras ciudades), así que delata la ciudad en vez de describir el inmueble; además es un número de registro que identifica la propiedad |
+| 2026-10-31 | MAE sigue como métrica principal; se agregan como control el sesgo por ciudad y el costo 2 a 1, con 1,5 a 1 y 3 a 1 como sensibilidad | Sobrestimar parece más caro, pero Inside Airbnb no permite medir cuánto: la decisión no se apoya en un número sin medir, y el control muestra si el supuesto cambiaría el ganador. Decisión de Rafael Jaramillo |
+| 2026-10-31 | Se acota lo que se promete al inversionista: recibe un precio por noche de referencia, no un cálculo de si el inmueble se paga | Ocupación confiable, costos y valor de compra no están en los datos, y la ocupación está bajo sospecha de fuga. Decisión de Rafael Jaramillo |
+| 2026-10-31 | Meta de éxito: MAE al menos 20 % menor que la línea base, con intervalo del 95 % de la mejora que no incluya el cero y ninguna ciudad peor | Es relativa, así que sigue valiendo si la línea base cambia; se fija antes de abrir la prueba y evita que el promedio esconda una ciudad mal servida. Decisión de Rafael Jaramillo |

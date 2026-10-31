@@ -7,8 +7,8 @@
 ## Qué es
 
 Sugiere el precio por noche, en USD, de un inmueble de Airbnb en seis ciudades de América Latina (Río de Janeiro, São Paulo, Ciudad de México, Bogotá, Santiago y Belice), según sus características,
-su barrio y su ciudad. Lo usan el anfitrión, para fijar su tarifa (él conserva la decisión), y el inversionista, para estimar si
-un inmueble se pagaría.
+su barrio y su ciudad. Lo usan el anfitrión, para fijar su tarifa (él conserva la decisión), y el inversionista, como un insumo
+más de sus cuentas: el modelo no dice si un inmueble se paga.
 
 - **Modelo:** _______________
 - **Registro:** _______________ versión _______________, alias `champion` (Databricks o local)

@@ -11,7 +11,7 @@ footer: "Casos Avanzados · Maestría en Ingeniería Analítica"
 <!-- TODO: borra las instrucciones de cada diapositiva y escribe lo tuyo. MÁXIMO 5 DIAPOSITIVAS: no agregues una sexta. -->
 
 - **¿Quién decide?** El anfitrión de Airbnb (fija su tarifa) y el inversionista (decide si compra para alquilar)
-- **¿Qué decide con el resultado?** Cuánto cobrar por noche; si un inmueble se pagaría
+- **¿Qué decide con el resultado?** Cuánto cobrar por noche; el inversionista usa ese precio como un insumo más de sus cuentas
 - **¿Cuánto cuesta equivocarse** (y si cuesta distinto en cada dirección)? Muy bajo: pierde ingreso cada noche. Muy alto: inmueble vacío y peor posición en las búsquedas. Para el inversionista, sobrestimar es lo más caro
 
 > TODO: un titular que entienda alguien sin formación técnica. **No abras con el nombre del algoritmo.**
