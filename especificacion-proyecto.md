@@ -53,7 +53,8 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
   RMSE como principal porque los pocos precios extremos lo dominarían.
 - **Métricas secundarias:** MAPE (un error de 20 USD no pesa igual en Bogotá que en Río) y R².
 - **Línea base** (qué resultado obtiene una regla simple o un modelo trivial): la mediana del precio por
-  ciudad y tipo de habitación (`room_type`). El valor se calcula en el EDA con el conjunto de entrenamiento.
+  ciudad y tipo de habitación (`room_type`). **MAE = 53,80 ± 2,74 USD por noche** (validación por anfitrión, solo
+  entrenamiento; `notebooks/03_preprocesamiento.ipynb`, 2026-10-30).
 
 ## 5. Riesgos
 
@@ -93,3 +94,5 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 | 2026-10-30 | Quedan pendientes de decidir en grupo: incluir o no Buenos Aires y Belice | Buenos Aires por la inflación; Belice por su tamaño pequeño y ser el único país angloparlante |
 | 2026-10-30 | Se incluyen las siete ciudades (también Buenos Aires y Belice); se excluyen los anuncios `source = "previous scrape"`; las tasas a USD son las oficiales del banco central de cada país en la fecha del corte | El error se reporta por ciudad para vigilar Buenos Aires y Belice; los anuncios del corte anterior pueden tener precios desactualizados; la tasa oficial es verificable. Ver `specs/001-eda-limpieza-particion/spec.md` |
 | 2026-10-30 | Corrección tras el EDA: Belice publica en USD (no en BZD); las columnas vacías están en las siete ciudades (no solo en Bogotá); sin reseñas hay 15,5 % (no 21 %) | Medido en los archivos de `data/raw/` (`price_quote_raw` trae la moneda); ver `reports/01_eda.md` |
+| 2026-10-30 | Tasas a USD (unidades por 1 USD): BRL 5,1161 (22-09) y 5,1696 (14-09) PTAX; MXN 17,3015 FIX en el DOF; ARS 1.516,2964 Com. A 3500; COP 3.072,27 TRM; CLP 945,87 dólar observado. **Pendiente de confirmar por el grupo** | Consultadas por Claude en las fuentes oficiales (enlaces en `src/tarifalatam/config.py`). Quien confirme, anotar nombre y fecha aquí |
+| 2026-10-30 | Riesgo abierto: en Buenos Aires el 38,6 % de los precios son múltiplos de 764,41 ARS, la mitad de la tasa oficial | Con la tasa oficial la mediana es 70 USD; con 764,41 sería 140 USD. El grupo decide cómo tratarlo; ver `reports/01_eda.md` |

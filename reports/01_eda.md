@@ -33,8 +33,10 @@
 
   El 80,6 % de los anuncios es vivienda completa y el 18,4 % habitación privada; "habitación de hotel" (492) y
   "habitación compartida" (1.484) son raras.
-- **Línea base** (resultado de una regla trivial): mediana de `price_usd` por `city` × `room_type`. **Su MAE está
-  pendiente**: se calcula sobre el entrenamiento en el notebook 03, después de partir y de convertir a USD.
+- **Línea base** (resultado de una regla trivial): mediana de `price_usd` por `city` × `room_type`. **MAE = 53,80 ± 2,74
+  USD por noche** (5 pliegues por anfitrión, solo con el entrenamiento; pliegues: 51,76 · 53,33 · 59,16 · 52,66 · 52,08).
+  Calculado en `notebooks/03_preprocesamiento.ipynb` el 2026-10-30 con las tasas de `config.py` (pendientes de
+  confirmar por el grupo). El modelo de la etapa 4 tiene que bajar este número.
 
 ## Calidad de los datos
 
@@ -44,9 +46,10 @@
   calendario cerrado, frente al 0,2 % de los que sí tienen precio. Son anuncios inactivos.
 - **Precios imposibles:** 692 anuncios cobran más de 20 veces la mediana de su ciudad y 61 menos de una décima parte.
   Máximos: 258.514.678 COP por noche en Bogotá, 160.563.760 ARS en Buenos Aires.
-- **Buenos Aires:** muchos precios repetidos son exactamente 100, 110, 120, 130 × 764,41 ARS (76.441; 84.085; 91.729;
-  99.373). Parecen precios fijados en otra moneda y convertidos por Airbnb. La tasa con la que los pasemos a USD cambia
-  mucho el resultado.
+- **Buenos Aires:** el **38,6 %** de los precios con precio son múltiplos exactos de 764,41 ARS (76.441; 84.085; 91.729;
+  99.373 = 100, 110, 120, 130 unidades); con la tasa oficial del BCRA (1.516,30) solo el 0,2 %. Parecen precios fijados en
+  otra moneda y convertidos a 764,41, casi la mitad de la tasa oficial. Con la tasa oficial la mediana de Buenos Aires es
+  70 USD; con 764,41 sería 140 USD. **Es el mayor riesgo de la conversión a USD** (ver "Qué queda abierto").
 - **Columnas vacías:** 12 columnas están 100 % vacías en **las siete ciudades** (no solo en Bogotá): `bathrooms`,
   `host_since`, `host_response_time`, `host_response_rate`, `host_acceptance_rate`, `host_neighbourhood`,
   `host_total_listings_count`, `host_verifications`, `instant_bookable`, `neighbourhood`, `neighborhood_overview` y
@@ -107,8 +110,10 @@
 
 ## Qué queda abierto
 
-- **Tasas de cambio:** decidido: tasa oficial del banco central en la fecha del corte. **Falta que el grupo anote los
-  valores** (tarea T014). En Buenos Aires la tasa implícita de Airbnb (764,41 ARS) puede diferir mucho de la oficial.
+- **Tasas de cambio:** tasa oficial del banco central para la fecha del corte. Claude consultó los valores en las fuentes
+  oficiales el 2026-10-30 y los anotó en `config.py` con su fuente; **falta que el grupo los confirme** (tarea T014).
+- **Buenos Aires, 764,41 frente a 1.516,30:** decidir si se usa la tasa oficial (decisión actual), la implícita de Airbnb,
+  o si se reporta Buenos Aires aparte. Mientras tanto, revisar su error por separado en las etapas siguientes.
 - **Decidido el 2026-10-30:** se incluyen las siete ciudades y se excluyen los 11.701 anuncios `previous scrape`.
 - **Correcciones hechas al reproducir con el notebook (2026-10-30):**
   - Filas idénticas salvo el `id`: **159**, no 26. El script exploratorio comparaba también `name` y `description`; el

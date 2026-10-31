@@ -38,16 +38,50 @@ CITY_CURRENCY = {
     "belize": "USD",
 }
 
-# Tasas de cambio: unidades de moneda local por 1 USD, en la fecha del corte de cada ciudad.
-# Las anota el grupo desde el banco central de cada país, con el enlace en "source" (tarea T014).
+# Tasas de cambio: unidades de moneda local por 1 USD, en la fecha del corte de cada ciudad (tarea T014).
+# Criterio: la tasa oficial publicada por el banco central PARA esa fecha. Las consultó Claude el 2026-10-30 en
+# las fuentes oficiales del campo "source". ESTADO: PENDIENTE DE CONFIRMAR POR EL GRUPO (anotar en la sección 7
+# de especificacion-proyecto.md quién las verificó y cuándo).
 # None = pendiente: to_usd() se detiene con un mensaje en vez de usar un valor supuesto.
 FX_RATES = {
-    "rio-de-janeiro": {"currency": "BRL", "local_per_usd": None, "date": "2026-09-22", "source": None},
-    "sao-paulo": {"currency": "BRL", "local_per_usd": None, "date": "2026-09-14", "source": None},
-    "mexico-city": {"currency": "MXN", "local_per_usd": None, "date": "2026-09-23", "source": None},
-    "buenos-aires": {"currency": "ARS", "local_per_usd": None, "date": "2026-09-23", "source": None},
-    "bogota": {"currency": "COP", "local_per_usd": None, "date": "2026-09-14", "source": None},
-    "santiago": {"currency": "CLP", "local_per_usd": None, "date": "2026-09-23", "source": None},
+    "rio-de-janeiro": {
+        "currency": "BRL",
+        "local_per_usd": 5.1161,
+        "date": "2026-09-22",
+        "source": "Banco Central do Brasil, PTAX venta del 2026-09-22 (API olinda.bcb.gov.br, CotacaoDolarDia)",
+    },
+    "sao-paulo": {
+        "currency": "BRL",
+        "local_per_usd": 5.1696,
+        "date": "2026-09-14",
+        "source": "Banco Central do Brasil, PTAX venta del 2026-09-14 (API olinda.bcb.gov.br, CotacaoDolarDia)",
+    },
+    "mexico-city": {
+        "currency": "MXN",
+        "local_per_usd": 17.3015,
+        "date": "2026-09-23",
+        # El FIX determinado el mismo 23-09 se publicó en el DOF del 24-09: 17,5030 (1,2 % más)
+        "source": "Banxico, tipo de cambio FIX publicado en el DOF el 2026-09-23 (sidof.segob.gob.mx, indicador 158)",
+    },
+    "buenos-aires": {
+        "currency": "ARS",
+        "local_per_usd": 1516.2964,
+        "date": "2026-09-23",
+        # Ojo: el 38,6 % de los precios de Buenos Aires son múltiplos exactos de 764,41 ARS (ver reports/01_eda.md)
+        "source": "BCRA, tipo de cambio de referencia Com. A 3500 del 2026-09-23 (api.bcra.gob.ar, variable 5)",
+    },
+    "bogota": {
+        "currency": "COP",
+        "local_per_usd": 3072.27,
+        "date": "2026-09-14",
+        "source": "Superfinanciera, TRM vigente del 2026-09-12 al 2026-09-14 (datos.gov.co, conjunto 32sa-8pi3)",
+    },
+    "santiago": {
+        "currency": "CLP",
+        "local_per_usd": 945.87,
+        "date": "2026-09-23",
+        "source": "Banco Central de Chile, dólar observado al 2026-09-23 (Diario Oficial Núm. 44.556, CVE 2876853)",
+    },
     "belize": {
         "currency": "USD",
         "local_per_usd": 1.0,
