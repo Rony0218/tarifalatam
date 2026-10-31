@@ -9,8 +9,9 @@
   alquiler de corta estancia en América Latina. Para cada inmueble queremos responder **¿cuánto debería
   cobrar por noche, según sus características, su barrio y su ciudad?** Hoy el anfitrión fija la tarifa a
   ojo o copiando a los vecinos. El modelo le sugiere un **precio de referencia en dólares** y el anfitrión
-  conserva la decisión final. Al inversionista le sirve para estimar si un inmueble que piensa comprar para
-  alquilar se pagaría.
+  conserva la decisión final. El inversionista recibe ese mismo precio por noche como **un insumo más** de
+  sus cuentas: el modelo no dice si un inmueble se paga, porque ocupación confiable, costos y valor de compra
+  no están en los datos.
 
 - **dataset_source:** *Inside Airbnb* (<https://insideairbnb.com/get-the-data/>), archivos
   `listings.csv.gz` de septiembre de 2026 de las siete ciudades de América Latina que publica: Río de
@@ -47,13 +48,17 @@
 
 - **primary_metric:** **MAE en USD por noche** (menor es mejor), porque el anfitrión la entiende
   directamente: "el precio sugerido se equivoca en promedio X dólares". Como controles se reportan **MAPE**
-  (un error de 20 USD no pesa igual en Bogotá que en Río) y **R²**. Línea base: la **mediana del precio por
-  ciudad y tipo de habitación**; si el modelo no la mejora, no aporta.
+  (un error de 20 USD no pesa igual en Bogotá que en Río), **R²**, **sesgo medio por ciudad** y **costo 2 a 1**
+  (`promedio de [2 × máx(sugerido − real, 0) + 1 × máx(real − sugerido, 0)]`), repetido con 1,5 a 1 y 3 a 1
+  para ver si el ganador por MAE depende del supuesto. Línea base: la **mediana del precio por ciudad y tipo
+  de habitación**. **Meta:** MAE al menos **20 % menor** que el de la línea base, con un intervalo del 95 % de
+  la mejora que no incluya el cero, y ninguna ciudad peor que con la línea base.
 
 - **business_cost_note:** Equivocarse cuesta en las dos direcciones. Un precio sugerido **muy bajo** llena
   el calendario pero deja de ganar dinero en cada noche reservada. Uno **muy alto** deja el inmueble vacío
   y la plataforma lo baja en las búsquedas. Para el inversionista es peor sobrestimar: compraría un inmueble
-  que no rinde lo esperado.
+  que no rinde lo esperado. **La proporción 2 a 1 es un supuesto del grupo, no una medición:** Inside Airbnb no
+  muestra cuánto cae la ocupación al subir el precio. Por eso orienta un control y no la métrica principal.
 
 - **status:** borrador
 
