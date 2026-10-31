@@ -162,7 +162,7 @@ mismos pliegues, y decidir cada idea con la regla escrita.
   7. Guardar `reports/04_features_tabla.csv` (esquema de `contracts/output-files.md`).
 
   Sin ninguna referencia que lea `test.csv.gz` · P5 · Responsable:
-- [ ] T033 [US1] Ejecutar `jupyter nbconvert --to notebook --execute --inplace notebooks/04_features.ipynb`. Comprobar que `data/processed/folds.csv` tiene 118.513 filas, que `reports/04_features_tabla.csv` tiene 40 filas y que no hay errores. Anotar el tiempo de ejecución · P5 · Responsable:
+- [ ] T033 [US1] Ejecutar `python -m nbconvert --to notebook --execute --inplace notebooks/04_features.ipynb`. Comprobar que `data/processed/folds.csv` tiene 118.513 filas, que `reports/04_features_tabla.csv` tiene 40 filas y que no hay errores. Anotar el tiempo de ejecución · P5 · Responsable:
 - [ ] T034 [US1] Completar `reports/04_features.md` (la plantilla actual) **solo con cifras del notebook 04**: cómo se midió, la tabla de ideas, una línea por decisión con su cifra (también las descartadas), cuánto pesan las sospechosas, supuestos y riesgos, y la lista final de variables. Anotar en `config.py` `FINAL_IDEAS = (…)`, con un comentario que cite el informe · P5 · Responsable:
 - [ ] T035 [US1] (GRUPO) Revisar las decisiones de la etapa 4. Si alguna idea se conserva o descarta como **excepción** a la regla, escribir el motivo en `reports/04_features.md` antes del torneo · Responsable:
 
@@ -250,7 +250,7 @@ la regla.
   7. `save_decision` en `reports/06_best_params.json`.
 
   La mejor puntuación de la búsqueda se rotula como optimista y no se reporta como resultado. Sin ninguna referencia que lea `test.csv.gz` · P5 · Responsable:
-- [ ] T045 [US3] Ejecutar el notebook 06 en segundo plano, con `jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/06_optimizacion.ipynb`. Comprobar con `mlflow ui --backend-store-uri sqlite:///mlflow_local.db` (o `mlflow.search_runs`) que hay una ejecución por ensayo, que existen los dos archivos de salida y que `git status` no muestra `mlflow_local.db`. Anotar el tiempo · P5 · Responsable:
+- [ ] T045 [US3] Ejecutar el notebook 06 en segundo plano, con `python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/06_optimizacion.ipynb`. Comprobar con `mlflow ui --backend-store-uri sqlite:///mlflow_local.db` (o `mlflow.search_runs`) que hay una ejecución por ensayo, que existen los dos archivos de salida y que `git status` no muestra `mlflow_local.db`. Anotar el tiempo · P5 · Responsable:
 - [ ] T046 [US3] Completar `reports/06_optimizacion.md` **solo con cifras del notebook 06**: espacio de búsqueda, presupuesto, resultados, comprobación con su intervalo, decisión según la regla y la nota sobre el doble uso de los anfitriones reservados · P5 · Responsable:
 - [ ] T047 [US3] (GRUPO) Aceptar la decisión de parámetros y el modelo que pasa a la etapa 7 · Responsable:
 

@@ -6,6 +6,8 @@
 - `data/processed/train.csv.gz`, generado por `notebooks/03_preprocesamiento.ipynb`. **En un worktree**, se copian (no se
   mueven) `data/raw/*` y `data/processed/*` desde el checkout principal a la misma ruta.
 - No hace falta `.env` ni Databricks: el seguimiento de esta clase es local.
+- Los notebooks se ejecutan con `python -m nbconvert`, usando el Python del entorno. Con `jupyter nbconvert`, si hay otra
+  instalación de Jupyter en el PATH, el kernel puede arrancar con otro Python sin `lightgbm` (pasó el 2026-10-31).
 
 ## 1. Pruebas (no necesitan los datos reales)
 
@@ -22,7 +24,7 @@ ejecuta `pytest tests/test_columns.py` y verifica que **falla**. Después deja l
 ## 2. Etapa 4 · Variables
 
 ```bash
-jupyter nbconvert --to notebook --execute --inplace notebooks/04_features.ipynb
+python -m nbconvert --to notebook --execute --inplace notebooks/04_features.ipynb
 ```
 
 Esperado:
@@ -35,7 +37,7 @@ Esperado:
 ## 3. Etapa 5 · Torneo
 
 ```bash
-jupyter nbconvert --to notebook --execute --inplace notebooks/05_torneo.ipynb
+python -m nbconvert --to notebook --execute --inplace notebooks/05_torneo.ipynb
 ```
 
 Esperado: `reports/05_torneo_tabla.csv` (20 filas) y `reports/05_torneo_por_ciudad.csv` (120 filas). El notebook muestra la
@@ -45,7 +47,7 @@ noches. Lee `folds.csv` y no recalcula pliegues.
 ## 4. Etapa 6 · Optimización
 
 ```bash
-jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/06_optimizacion.ipynb
+python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/06_optimizacion.ipynb
 ```
 
 Esperado: el notebook muestra `MLflow: local | experimento: tarifalatam-optimizacion`, el número de anfitriones de búsqueda y
