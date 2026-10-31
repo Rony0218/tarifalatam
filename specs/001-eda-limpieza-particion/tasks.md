@@ -146,14 +146,14 @@ US3 = registro de exclusiones y rastro escrito).
   - Parte con `split_by_host` y ajusta `fit_price_bounds` **solo** con `train`; después aplica `drop_price_outliers` y `add_target` a ambos.
   - En esta tarea no lleva registro de exclusiones (lo agrega T024).
   - Verificar con `pytest tests/test_pipeline.py`.
-- [ ] T014 [US1] **(GRUPO)** Anotar en `src/tarifalatam/config.py` (`FX_RATES`) las cinco tasas oficiales del banco central (BRL, MXN, ARS, COP, CLP), en unidades de moneda local por 1 USD, para la fecha del corte de cada ciudad, con el enlace en `source`. Registrar la decisión en la sección 7 de `especificacion-proyecto.md`. **Bloquea T015.**
-- [ ] T015 [US1] Reescribir `notebooks/03_preprocesamiento.ipynb` para que **solo orqueste**: *(Estado 2026-10-30: notebook escrito y probado en seco con tasa ficticia fuera del repo; falta ejecutarlo con las tasas de T014.)*
+- [ ] T014 [US1] **(GRUPO)** Anotar en `src/tarifalatam/config.py` (`FX_RATES`) las cinco tasas oficiales del banco central (BRL, MXN, ARS, COP, CLP), en unidades de moneda local por 1 USD, para la fecha del corte de cada ciudad, con el enlace en `source`. Registrar la decisión en la sección 7 de `especificacion-proyecto.md`. **Bloquea T015.** *(Estado 2026-10-30: Claude consultó y anotó las seis tasas oficiales con su fuente; falta que el grupo las confirme.)*
+- [X] T015 [US1] Reescribir `notebooks/03_preprocesamiento.ipynb` para que **solo orqueste**: *(Hecho 2026-10-30: ejecutado desde cero con las tasas oficiales en 24 s; 174.731 filas, 0 anfitriones en común.)*
   - Celdas en orden: importar de `tarifalatam`; `train, test, bounds = build_datasets()`; guardar `data/processed/train.csv.gz` y `test.csv.gz` (con `index=False`).
   - Imprimir los controles: anfitriones en común = 0, filas y anfitriones por conjunto y por ciudad, límites de precio por ciudad.
   - Calcular y mostrar `baseline_cv_mae(train)`.
   - **No** mostrar estadísticas de `test` más allá de contar filas y anfitriones.
   - Ejecutar desde cero (quickstart §3) y anotar el tiempo.
-- [ ] T016 [US1] Copiar a `reports/01_eda.md`, sección "Qué son los datos" → "Línea base", el MAE de la línea base en USD (promedio ± desviación de 5 pliegues por anfitrión, solo con el entrenamiento), tal como lo imprimió T015. Si T014 no está hecho, dejarlo como pendiente: no se inventa.
+- [X] T016 [US1] Copiar a `reports/01_eda.md`, sección "Qué son los datos" → "Línea base", el MAE de la línea base en USD (promedio ± desviación de 5 pliegues por anfitrión, solo con el entrenamiento), tal como lo imprimió T015. Si T014 no está hecho, dejarlo como pendiente: no se inventa.
 
 **Checkpoint**: US1 funciona sola; `pytest` en verde y los dos conjuntos generados desde cero
 
@@ -207,7 +207,7 @@ US3 = registro de exclusiones y rastro escrito).
   - Agregue las filas `price_bounds` con `low_usd` y `high_usd`.
   - Devuelva `(train, test, exclusions, bounds)`.
   - Actualizar `tests/test_pipeline.py` (T009) al nuevo retorno y verificar con `pytest tests/test_pipeline.py`.
-- [ ] T025 [US3] En `notebooks/03_preprocesamiento.ipynb`, guardar `exclusions` en `reports/03_exclusiones.csv` (`index=False`) y mostrar una tabla resumen: filas de partida, quitadas por regla y finales, por ciudad. Volver a ejecutar desde cero. *(Estado: escrito en el notebook 03; se ejecuta junto con T015.)*
+- [X] T025 [US3] En `notebooks/03_preprocesamiento.ipynb`, guardar `exclusions` en `reports/03_exclusiones.csv` (`index=False`) y mostrar una tabla resumen: filas de partida, quitadas por regla y finales, por ciudad. Volver a ejecutar desde cero. *(Hecho 2026-10-30: reports/03_exclusiones.csv generado.)*
 - [X] T026 [US3] Llenar las secciones 3 y 4 de `especificaciones/03-preprocesamiento.md` con las reglas implementadas (columna, regla exacta con su umbral, función, prueba) y las cifras de `reports/03_exclusiones.csv`. Marcar ☒ en su sección 6 lo que ya se verificó.
 
 **Checkpoint**: las tres historias funcionan por separado
@@ -220,7 +220,7 @@ US3 = registro de exclusiones y rastro escrito).
 - [X] T028 Verificación manual de FR-021 (quickstart §1): cambiar temporalmente `split_by_host` para que parta por fila, ejecutar `pytest tests/test_split.py`, confirmar que falla, **revertir** y confirmar que vuelve a pasar
 - [X] T029 [P] Ejecutar el subagente `auditor-de-fuga` sobre `src/tarifalatam/data/`, `src/tarifalatam/models/baseline.py` y los notebooks 02 y 03. Anotar sus hallazgos y lo que se hizo con cada uno en `reports/01_eda.md` → "Qué queda abierto". En especial: la regla de extremos aplicada a la prueba
 - [X] T030 [P] Ejecutar el subagente `revisor-de-codigo-ia` sobre los archivos nuevos de `src/` y aplicar `material-del-curso/kit/checklist-revision-ia.md`
-- [ ] T031 Recorrer `specs/001-eda-limpieza-particion/quickstart.md` de principio a fin (§1 a §4) y confirmar `git status --short data/` sin líneas
+- [X] T031 Recorrer `specs/001-eda-limpieza-particion/quickstart.md` de principio a fin (§1 a §4) y confirmar `git status --short data/` sin líneas
 - [ ] T032 **(GRUPO)** Repartir las funciones de `cleaning.py` entre los cinco integrantes. Cada uno debe poder explicar la suya, con su cifra y su motivo (SC-007)
 
 ---

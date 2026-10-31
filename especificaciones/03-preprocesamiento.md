@@ -7,9 +7,8 @@
 
 **Grupo:** TarifaLatam   **Fecha:** 2026-10-30   **Estado:** ☒ borrador  ☐ cerrada
 
-> Llenado el 2026-10-30 con las reglas **implementadas** (`specs/001-eda-limpieza-particion/`). Las filas quitadas salen
-> de una prueba en seco del notebook 03 con tasa ficticia: **los conteos no dependen de la tasa** (el umbral de precios es
-> relativo a la mediana de cada ciudad), pero se confirman al ejecutar el notebook con las tasas oficiales (tarea T014).
+> Llenado el 2026-10-30 con las reglas **implementadas** (`specs/001-eda-limpieza-particion/`). Las filas quitadas se
+> confirmaron al ejecutar el notebook 03 con las tasas oficiales (detalle en `reports/03_exclusiones.csv`).
 
 ## 1. Unidad de análisis y partición
 
@@ -88,11 +87,11 @@ va en la etapa 4, dentro del `Pipeline`.
 
 ## 7. Criterios de cierre (H1)
 
-- ☐ La limpieza corre **de principio a fin desde cero** (`data/processed/` borrada y regenerada con el notebook 03), sin pasos manuales.
-- ☐ Unidad de análisis y forma de partir **escritas** (sección 1) y documentadas en `reports/01_eda.md`.
-- ☐ `pytest` en verde.
-- ☐ Conjunto de prueba guardado y sin mirar.
-- ☐ `data/raw/` intacta y `.env` fuera de Git (`git status`).
+- ☒ La limpieza corre **de principio a fin desde cero** (`data/processed/` borrada y regenerada con el notebook 03), sin pasos manuales.
+- ☒ Unidad de análisis y forma de partir **escritas** (sección 1) y documentadas en `reports/01_eda.md`.
+- ☒ `pytest` en verde (66 pruebas; `test_tracking.py` necesita `mlflow` en el `.venv`).
+- ☒ Conjunto de prueba guardado y sin mirar (solo se contaron filas y anfitriones).
+- ☒ `data/raw/` intacta y `.env` fuera de Git (`git status`).
 - ☐ Todo subido a GitHub.
 - ☐ Revisaron el código de Claude con `checklist-revision-ia.md` y cada integrante puede explicar una función.
-- ☐ **Hallazgo que no esperaban** (para la puesta en común): _______________
+- ☐ **Hallazgo que no esperaban** (para la puesta en común): _______________ *(candidato: el 38,6 % de los precios de Buenos Aires son múltiplos de 764,41 ARS, la mitad de la tasa oficial)*
