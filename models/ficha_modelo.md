@@ -6,7 +6,7 @@
 
 ## Qué es
 
-Sugiere el precio por noche, en USD, de un inmueble de Airbnb en siete ciudades de América Latina, según sus características,
+Sugiere el precio por noche, en USD, de un inmueble de Airbnb en seis ciudades de América Latina (Río de Janeiro, São Paulo, Ciudad de México, Bogotá, Santiago y Belice), según sus características,
 su barrio y su ciudad. Lo usan el anfitrión, para fijar su tarifa (él conserva la decisión), y el inversionista, para estimar si
 un inmueble se pagaría.
 
@@ -36,7 +36,7 @@ _______________
 
 ## Límites y usos no recomendados
 
-- Datos con los que se entrenó (¿sintéticos, de una época, de una región?): una sola foto (septiembre de 2026) de siete ciudades grandes; sin efecto de temporada ni ciudades intermedias
+- Datos con los que se entrenó (¿sintéticos, de una época, de una región?): una sola foto (septiembre de 2026) de seis ciudades (Buenos Aires se excluyó por el riesgo de la conversión a USD); sin efecto de temporada ni ciudades intermedias
 - Supuestos de negocio de los que depende (p. ej. una variable que debe conocerse al decidir): predice el precio **publicado**, no el cobrado; depende de la tasa de cambio usada para cada ciudad; _______________
 - Atributos sensibles o de uso regulado: _______________
 - Qué **no** debe hacerse con este modelo: _______________

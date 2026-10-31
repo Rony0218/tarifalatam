@@ -37,26 +37,29 @@ pendiente es un **dato** que trae el grupo (las tasas), no una decisión.
   | Paso | Regla | Requisito |
   |---|---|---|
   | 1 | Cargar y quitar datos personales y texto libre | FR-001, FR-002 |
-  | 2 | Comprobar monedas | FR-003 |
-  | 3 | Excluir "previous scrape" | FR-011 |
-  | 4 | Precio a número | FR-003 |
-  | 5 | Excluir sin precio | FR-004 |
-  | 6 | Pasar a USD | FR-003 |
-  | 7 | Quitar columnas de fuga | FR-005 |
-  | 8 | Quitar columnas vacías | FR-006 |
-  | 9 | Baños | FR-007 |
-  | 10 | Excluir arriendos mensuales | FR-008 |
-  | 11 | Centinelas a vacío | FR-009 |
-  | 12 | `has_reviews` | FR-010 |
-  | 13 | **Partir por `host_id`** | FR-013 |
-  | 14 | Límites de precio aprendidos en entrenamiento y aplicados a ambos | FR-014 |
-  | 15 | Objetivo `log_price_usd` | FR-015 |
+  | 2 | Excluir Buenos Aires (desde el 2026-10-31) | FR-012 |
+  | 3 | Comprobar monedas | FR-003 |
+  | 4 | Excluir "previous scrape" | FR-011 |
+  | 5 | Precio a número | FR-003 |
+  | 6 | Excluir sin precio | FR-004 |
+  | 7 | Pasar a USD | FR-003 |
+  | 8 | Quitar columnas de fuga | FR-005 |
+  | 9 | Quitar columnas vacías | FR-006 |
+  | 10 | Quitar `license` (desde el 2026-10-31) | FR-006 |
+  | 11 | Baños | FR-007 |
+  | 12 | Excluir arriendos mensuales | FR-008 |
+  | 13 | Centinelas a vacío | FR-009 |
+  | 14 | `has_reviews` | FR-010 |
+  | 15 | **Partir por `host_id`** | FR-013 |
+  | 16 | Límites de precio aprendidos en entrenamiento y aplicados a ambos | FR-014 |
+  | 17 | Objetivo `log_price_usd` | FR-015 |
 
 - **Motivo:**
   - Primero lo que no aprende de los datos; después la partición; al final lo único que aprende (la mediana por ciudad).
   - "Previous scrape" va antes de "sin precio" para que el registro muestre cuántos anuncios del corte anterior se fueron por
     esa razón (11.701) y no se mezclen con los inactivos.
-  - La ciudad (FR-012) no filtra nada: se incluyen las siete.
+  - Buenos Aires (FR-012) sale primero, antes de cualquier otra regla, para que el registro muestre cuántos anuncios se fueron
+    por esa decisión y no se mezclen con los de las demás reglas. *(Hasta el 2026-10-30 se incluían las siete ciudades.)*
 - **Alternativa:** filtrar los precios extremos antes de partir, con la mediana de todos los datos. Se descarta porque la prueba
   influiría en el umbral (principio III).
 

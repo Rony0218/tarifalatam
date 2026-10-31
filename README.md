@@ -35,7 +35,7 @@ al repo** (traen datos personales de los anfitriones): cada integrante los desca
 | `listings_rio-de-janeiro_2026-09-22.csv.gz` | Río de Janeiro | [listings.csv.gz](https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2026-09-22/data/listings.csv.gz) |
 | `listings_sao-paulo_2026-09-14.csv.gz` | São Paulo | [listings.csv.gz](https://data.insideairbnb.com/brazil/sp/s%C3%A3o-paulo/2026-09-14/data/listings.csv.gz) |
 | `listings_mexico-city_2026-09-23.csv.gz` | Ciudad de México | [listings.csv.gz](https://data.insideairbnb.com/mexico/df/mexico-city/2026-09-23/data/listings.csv.gz) |
-| `listings_buenos-aires_2026-09-23.csv.gz` | Buenos Aires | [listings.csv.gz](https://data.insideairbnb.com/argentina/ciudad-aut%C3%B3noma-de-buenos-aires/buenos-aires/2026-09-23/data/listings.csv.gz) |
+| `listings_buenos-aires_2026-09-23.csv.gz` | Buenos Aires (se descarga, pero se excluye del modelo desde el 2026-10-31) | [listings.csv.gz](https://data.insideairbnb.com/argentina/ciudad-aut%C3%B3noma-de-buenos-aires/buenos-aires/2026-09-23/data/listings.csv.gz) |
 | `listings_bogota_2026-09-14.csv.gz` | Bogotá | [listings.csv.gz](https://data.insideairbnb.com/colombia/dc/bogot%C3%A1/2026-09-14/data/listings.csv.gz) |
 | `listings_santiago_2026-09-23.csv.gz` | Santiago | [listings.csv.gz](https://data.insideairbnb.com/chile/rm/santiago/2026-09-23/data/listings.csv.gz) |
 | `listings_belize_2026-09-25.csv.gz` | Belice | [listings.csv.gz](https://data.insideairbnb.com/belize/bz/belize/2026-09-25/data/listings.csv.gz) |

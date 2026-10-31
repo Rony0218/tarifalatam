@@ -51,7 +51,7 @@ Marquen lo que aplica a su dataset. Lo que no aplique se tacha **con una razón*
 - **Unidad de análisis (una frase):** una fila es **un anuncio** de Airbnb en la fecha de corte de su ciudad (14–25 de septiembre de 2026).
 - **Columna que identifica a la entidad (`ID_COL`):** `host_id`   **¿Se repite?** ☐ no ☒ sí, 2,2 anuncios por anfitrión en promedio (mediana 1, percentil 99 = 19, máximo 699). El 73 % de los anfitriones tiene un solo anuncio, pero el **31 % de los anuncios** (60.320) es de anfitriones con 10 o más. 258 anfitriones tienen anuncios en más de una ciudad.
 - **Objetivo (`TARGET`):** `price` (precio por noche publicado). **Distribución:** muy asimétrica a la derecha en todas las ciudades (asimetría entre 23 y 160 en escala original; entre 0,5 y 2,1 en logaritmo). Medianas en moneda local para "vivienda completa": Río 491 BRL, São Paulo 353 BRL, Ciudad de México 1.828 MXN, Buenos Aires 110.075 ARS, Bogotá 181.250 COP, Santiago 60.000 CLP, Belice 403 USD.
-- **Línea base** (regla trivial) y su resultado: mediana del precio por `city` × `room_type`. **MAE = 53,80 ± 2,74 USD por noche** (notebook 03, 5 pliegues por anfitrión, solo entrenamiento; tasas pendientes de confirmar).
+- **Línea base** (regla trivial) y su resultado: mediana del precio por `city` × `room_type`. **MAE = 55,96 ± 1,94 USD por noche** sin Buenos Aires (notebook 03, 5 pliegues por anfitrión, solo entrenamiento, 2026-10-31; con las siete ciudades era 53,80 ± 2,74).
 - **Vacíos en el objetivo:** 11.642 anuncios (6,0 %; entre 3,5 % en São Paulo y 8,5 % en Río). El 64 % de ellos tiene `availability_365 = 0` (calendario cerrado), frente al 0,2 % de los que tienen precio.   **Qué haremos con esas filas:** excluirlas (no se imputa el objetivo).
 - **Datos personales encontrados:** `host_name`, `host_about`, `host_location`, `host_url`, `host_profile_url`, `host_profile_id`, `host_picture_url`, `host_thumbnail_url`, `listing_url`, `picture_url`. Además, el texto libre trae datos de contacto: 91 descripciones con números de teléfono, 9 con correos y 7 nombres de anuncio con teléfonos.
 - **Columnas sospechosas de fuga:** `price_quote_price_per_night` (idéntica a `price` en los 182.983 anuncios que tienen ambas), `price_quote_total_price`, `price_quote_raw`, `price_quote_checkin_date`, `price_quote_checkout_date`, `estimated_revenue_l365d` (= `price` × `estimated_occupancy_l365d`). Sospechosas a medir en la etapa 4: `estimated_occupancy_l365d`, `availability_30/60/90/365`, `availability_eoy`, `has_availability`.
@@ -78,7 +78,8 @@ Marquen lo que aplica a su dataset. Lo que no aplique se tacha **con una razón*
 
 **Decidido el 2026-10-30** (ver `specs/001-eda-limpieza-particion/spec.md`):
 
-- Se incluyen las **siete ciudades**, también Buenos Aires y Belice; su error se reporta por separado.
+- Se incluyen las **siete ciudades**, también Buenos Aires y Belice; su error se reporta por separado. *(Cambiado el
+  2026-10-31: Buenos Aires se excluye del modelo; ver la sección 7 de `especificacion-proyecto.md`.)*
 - Se **excluyen** los 11.701 anuncios `source = "previous scrape"` (3.293 tenían precio).
 - Las tasas a USD son las **oficiales del banco central** de cada país en la fecha del corte. **Falta que el grupo traiga los
   cinco valores** (BRL, MXN, ARS, COP, CLP) con su enlace.

@@ -5,17 +5,27 @@ import pandas as pd
 import pytest
 from fixtures import make_listings
 
-from tarifalatam.config import CITY_FILES, EMPTY_COLUMNS, FREE_TEXT_COLUMNS, LEAKAGE_COLUMNS, PII_COLUMNS
+from tarifalatam.config import (
+    CITY_FILES,
+    EMPTY_COLUMNS,
+    EXCLUDED_CITIES,
+    FREE_TEXT_COLUMNS,
+    LEAKAGE_COLUMNS,
+    PII_COLUMNS,
+    UNUSED_COLUMNS,
+)
 from tarifalatam.data.cleaning import (
     add_review_flags,
     add_target,
     check_currencies,
     drop_empty_columns,
+    drop_excluded_cities,
     drop_leakage_columns,
     drop_missing_price,
     drop_monthly_rentals,
     drop_previous_scrape,
     drop_price_outliers,
+    drop_unused_columns,
     fit_price_bounds,
     load_raw,
     mark_impossible_values,
@@ -102,6 +112,23 @@ def test_check_currencies_ignores_empty_or_broken_quotes():
     check_currencies(df)
 
 
+# --- Ciudades excluidas (FR-012) ---
+
+
+def test_drop_excluded_cities_removes_only_listed_cities():
+    out = drop_excluded_cities(make_listings(), cities=("belize",))
+    assert set(out["city"]) == {"rio-de-janeiro"}
+
+
+def test_drop_excluded_cities_with_empty_list_keeps_all_rows():
+    df = make_listings()
+    assert len(drop_excluded_cities(df, cities=())) == len(df)
+
+
+def test_buenos_aires_is_the_only_excluded_city():
+    assert tuple(EXCLUDED_CITIES) == ("buenos-aires",)
+
+
 # --- Corte anterior (FR-011) ---
 
 
@@ -182,6 +209,16 @@ def test_drop_empty_columns_removes_all_twelve():
     out = drop_empty_columns(make_listings())
     assert not set(EMPTY_COLUMNS) & set(out.columns)
     assert "bathrooms_text" in out.columns
+
+
+def test_drop_unused_columns_removes_license():
+    out = drop_unused_columns(make_listings(license=["registro inventado"] * 12))
+    assert not set(UNUSED_COLUMNS) & set(out.columns)
+    assert "bathrooms_text" in out.columns
+
+
+def test_drop_unused_columns_ignores_columns_already_gone():
+    drop_unused_columns(make_listings())
 
 
 # --- Baños (FR-007) ---
@@ -307,11 +344,13 @@ def test_functions_do_not_modify_input():
     df["price_usd"] = 20.0
     snapshot = df.copy()
     for func in (
+        drop_excluded_cities,
         check_currencies,
         drop_previous_scrape,
         drop_missing_price,
         drop_leakage_columns,
         drop_empty_columns,
+        drop_unused_columns,
         parse_bathrooms_text,
         drop_monthly_rentals,
         mark_impossible_values,

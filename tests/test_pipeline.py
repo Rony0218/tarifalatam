@@ -2,7 +2,16 @@ import numpy as np
 import pandas as pd
 from fixtures import make_listings
 
-from tarifalatam.config import CITY_CURRENCY, CITY_FILES, EMPTY_COLUMNS, FREE_TEXT_COLUMNS, LEAKAGE_COLUMNS, PII_COLUMNS
+from tarifalatam.config import (
+    CITY_CURRENCY,
+    CITY_FILES,
+    EMPTY_COLUMNS,
+    EXCLUDED_CITIES,
+    FREE_TEXT_COLUMNS,
+    LEAKAGE_COLUMNS,
+    PII_COLUMNS,
+    UNUSED_COLUMNS,
+)
 from tarifalatam.data.pipeline import build_datasets
 
 # Tasas INVENTADAS para las pruebas: no son tasas reales y nunca van a config.py
@@ -10,6 +19,9 @@ FAKE_RATES = {
     city: {"currency": CITY_CURRENCY[city], "local_per_usd": 2.0, "date": "2026-09-01", "source": "inventada"}
     for city in CITY_FILES
 }
+
+# Ciudades que llegan al final: las de CITY_FILES menos las excluidas (Buenos Aires)
+KEPT_CITIES = set(CITY_FILES) - set(EXCLUDED_CITIES)
 
 ALWAYS = ["id", "host_id", "city", "room_type", "price_local", "price_usd", "log_price_usd",
           "bathrooms_count", "bathroom_shared", "has_reviews"]
@@ -26,6 +38,7 @@ def _write_raw_files(folder):
         df.loc[2, "minimum_nights"] = 30
         df.loc[3, "price"] = "$999,999.00"  # extremo: más de 20 x la mediana
         df = df.drop(columns=["city"])
+        df["license"] = "registro inventado"
         for col in PII_COLUMNS + FREE_TEXT_COLUMNS:
             df[col] = "dato inventado"
         df.to_csv(folder / filename, index=False, compression="gzip")
@@ -36,7 +49,7 @@ def test_build_datasets_output_contract(tmp_path):
     train, test, _, bounds = build_datasets(tmp_path, rates=FAKE_RATES)
     for df in (train, test):
         assert set(ALWAYS) <= set(df.columns)
-        forbidden = set(PII_COLUMNS + FREE_TEXT_COLUMNS + LEAKAGE_COLUMNS + EMPTY_COLUMNS + ["price"])
+        forbidden = set(PII_COLUMNS + FREE_TEXT_COLUMNS + LEAKAGE_COLUMNS + EMPTY_COLUMNS + UNUSED_COLUMNS + ["price"])
         assert not forbidden & set(df.columns)
         assert (df["price_usd"] > 0).all()
         assert np.isfinite(df["log_price_usd"]).all()
@@ -45,7 +58,15 @@ def test_build_datasets_output_contract(tmp_path):
         assert df["price_usd"].max() < 999_999.0 / 2  # el extremo salió
     assert set(train["host_id"]).isdisjoint(test["host_id"])
     assert list(train.columns) == list(test.columns)
-    assert set(bounds) == set(CITY_FILES)
+    assert set(bounds) == KEPT_CITIES
+
+
+def test_build_datasets_excludes_buenos_aires(tmp_path):
+    _write_raw_files(tmp_path)
+    train, test, _, _ = build_datasets(tmp_path, rates=FAKE_RATES)
+    for df in (train, test):
+        assert not df["city"].isin(EXCLUDED_CITIES).any()
+        assert set(df["city"]) == KEPT_CITIES
 
 
 # --- Registro de exclusiones (FR-017) ---
@@ -69,8 +90,12 @@ def test_exclusion_log_balances(tmp_path):
 def test_exclusion_log_has_expected_steps(tmp_path):
     log = _exclusions(tmp_path)
     steps = set(zip(log["step"], log["split"]))
-    for step in ("previous_scrape", "missing_price", "monthly_rental"):
+    for step in ("excluded_city", "previous_scrape", "missing_price", "monthly_rental"):
         assert (step, "all") in steps
+    # la ciudad excluida sale entera (40 anuncios de juguete) y las demás no pierden nada en ese paso
+    excluded = log[log["step"] == "excluded_city"].set_index("city")["removed"]
+    assert excluded["buenos-aires"] == 40
+    assert (excluded.drop("buenos-aires") == 0).all()
     assert ("price_outlier", "train") in steps
     assert ("price_outlier", "test") in steps
     # cada fila sucia de juguete sale por su regla: 1 por ciudad en cada paso previo a partir
@@ -81,7 +106,7 @@ def test_exclusion_log_has_expected_steps(tmp_path):
 def test_exclusion_log_includes_price_bounds(tmp_path):
     log = _exclusions(tmp_path)
     bounds = log[log["step"] == "price_bounds"]
-    assert set(bounds["city"]) == set(CITY_FILES)
+    assert set(bounds["city"]) == KEPT_CITIES
     assert (bounds["split"] == "train").all()  # los límites se aprenden solo en entrenamiento
     assert (bounds["low_usd"] < bounds["high_usd"]).all()
 

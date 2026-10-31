@@ -146,7 +146,7 @@ US3 = registro de exclusiones y rastro escrito).
   - Parte con `split_by_host` y ajusta `fit_price_bounds` **solo** con `train`; después aplica `drop_price_outliers` y `add_target` a ambos.
   - En esta tarea no lleva registro de exclusiones (lo agrega T024).
   - Verificar con `pytest tests/test_pipeline.py`.
-- [ ] T014 [US1] **(GRUPO)** Anotar en `src/tarifalatam/config.py` (`FX_RATES`) las cinco tasas oficiales del banco central (BRL, MXN, ARS, COP, CLP), en unidades de moneda local por 1 USD, para la fecha del corte de cada ciudad, con el enlace en `source`. Registrar la decisión en la sección 7 de `especificacion-proyecto.md`. **Bloquea T015.** *(Estado 2026-10-30: Claude consultó y anotó las seis tasas oficiales con su fuente; falta que el grupo las confirme.)*
+- [X] T014 [US1] **(GRUPO)** Anotar en `src/tarifalatam/config.py` (`FX_RATES`) las cinco tasas oficiales del banco central (BRL, MXN, ARS, COP, CLP), en unidades de moneda local por 1 USD, para la fecha del corte de cada ciudad, con el enlace en `source`. Registrar la decisión en la sección 7 de `especificacion-proyecto.md`. **Bloquea T015.** *(Hecho: tasas anotadas con su fuente el 2026-10-30 y aprobadas por el grupo el 2026-10-31.)*
 - [X] T015 [US1] Reescribir `notebooks/03_preprocesamiento.ipynb` para que **solo orqueste**: *(Hecho 2026-10-30: ejecutado desde cero con las tasas oficiales en 24 s; 174.731 filas, 0 anfitriones en común.)*
   - Celdas en orden: importar de `tarifalatam`; `train, test, bounds = build_datasets()`; guardar `data/processed/train.csv.gz` y `test.csv.gz` (con `index=False`).
   - Imprimir los controles: anfitriones en común = 0, filas y anfitriones por conjunto y por ciudad, límites de precio por ciudad.
@@ -222,6 +222,57 @@ US3 = registro de exclusiones y rastro escrito).
 - [X] T030 [P] Ejecutar el subagente `revisor-de-codigo-ia` sobre los archivos nuevos de `src/` y aplicar `material-del-curso/kit/checklist-revision-ia.md`
 - [X] T031 Recorrer `specs/001-eda-limpieza-particion/quickstart.md` de principio a fin (§1 a §4) y confirmar `git status --short data/` sin líneas
 - [ ] T032 **(GRUPO)** Repartir las funciones de `cleaning.py` entre los cinco integrantes. Cada uno debe poder explicar la suya, con su cifra y su motivo (SC-007)
+
+---
+
+## Phase 7: Cambio del 2026-10-31 — se excluye Buenos Aires (FR-012)
+
+**Purpose**: aplicar la decisión del grupo (sección 7 de `especificacion-proyecto.md`) sin borrar el archivo crudo ni rehacer
+el EDA. La exclusión es una regla más del preprocesamiento, con su prueba y su fila en el registro de exclusiones.
+
+**Estado**: aprobado por el grupo el 2026-10-31 y hecho (T033 a T046).
+
+**Efectos que hay que aceptar**: la partición se vuelve a sortear (cambian los anfitriones de cada conjunto; la prueba no se ha
+usado para nada, así que no hay fuga) y cambian todas las cifras de filas, extremos y línea base.
+
+- [X] T033 Enmendar la constitución con `/speckit-constitution`: en "Restricciones del proyecto", cambiar "siete ciudades" por
+  "seis ciudades (Buenos Aires se excluye desde el 2026-10-31)". Subir la versión a 0.3.0 y anotar la enmienda en la sección 7
+  de `especificacion-proyecto.md`
+- [X] T034 [P] Escribir primero, en `tests/test_cleaning.py`, la prueba `test_drop_excluded_cities` (debe fallar antes de T036):
+  - con `make_listings` y `cities=("belize",)`, solo quedan las filas de `rio-de-janeiro`;
+  - con `cities=()` no se quita ninguna fila;
+  - la tabla de entrada no cambia.
+- [X] T035 En `src/tarifalatam/config.py`, agregar `EXCLUDED_CITIES = ("buenos-aires",)` con un comentario que dé el motivo y la
+  cifra (29.753 anuncios; 38,6 % de precios múltiplos de 764,41 ARS). Buenos Aires **se queda** en `CITY_FILES`,
+  `CITY_CURRENCY` y `FX_RATES` (el EDA sigue leyendo su archivo); en su tasa, anotar "no se usa: se excluye antes de convertir"
+- [X] T036 En `src/tarifalatam/data/cleaning.py`, implementar `drop_excluded_cities(df, cities=EXCLUDED_CITIES)` sobre
+  `df.copy()`, con docstring en español que cite la decisión. Verificar con `pytest tests/test_cleaning.py`
+- [X] T037 En `src/tarifalatam/data/pipeline.py`, aplicarla como **primer paso después de `load_raw`** y antes de
+  `check_currencies`, registrada como `excluded_city` con `split = all`. Actualizar el orden de pasos en `research.md` §4
+- [X] T038 Actualizar `tests/test_pipeline.py`:
+  - `test_exclusion_log_has_expected_steps` también exige `("excluded_city", "all")`;
+  - los límites de precio (`bounds`) cubren las ciudades de `CITY_FILES` **menos** `EXCLUDED_CITIES`;
+  - prueba nueva `test_build_datasets_excludes_buenos_aires`: ninguna fila de `buenos-aires` en entrenamiento ni en prueba.
+- [X] T039 Ejecutar `pytest tests` (con `PYTHONUTF8=1`) y confirmar todo en verde
+- [X] T040 Borrar `data/processed/` (salvo `.gitkeep`) y volver a ejecutar `notebooks/03_preprocesamiento.ipynb` desde cero:
+  regenera `train.csv.gz`, `test.csv.gz`, `reports/03_exclusiones.csv` y la línea base. Controles: 0 anfitriones en común y
+  ninguna fila de Buenos Aires. De la prueba solo se cuentan filas y anfitriones
+- [X] T041 Reemplazar las cifras viejas por las que imprimió T040 (sin inventar ninguna) en:
+  - `especificaciones/03-preprocesamiento.md` (fila nueva en la tabla de reglas y el resultado final);
+  - `especificacion-proyecto.md` (secciones 3 y 4);
+  - `reports/01_eda.md` (línea base y "Qué queda abierto": Buenos Aires decidido) y `especificaciones/02-eda.md`.
+- [X] T042 Cambiar "siete ciudades" por "seis ciudades" donde se habla **del modelo**: `reports/00_caso.md`,
+  `models/ficha_modelo.md`, `notebooks/01_caso_negocio.ipynb` y la fila de Buenos Aires en `reports/07_validacion.md`. En el
+  `README.md`, el archivo de Buenos Aires se queda en la tabla con la nota "se descarga, pero se excluye del modelo"
+- [X] T043 [P] Escribir primero, en `tests/test_cleaning.py`, `test_drop_unused_columns_removes_license` y
+  `test_drop_unused_columns_ignores_columns_already_gone` (decisión del grupo del 2026-10-31: se elimina `license`)
+- [X] T044 Agregar `UNUSED_COLUMNS = ["license"]` en `config.py` y `drop_unused_columns` en `cleaning.py`; aplicarla en
+  `pipeline.py` después de `drop_empty_columns`. En `tests/test_pipeline.py`, los archivos de juguete traen `license` y
+  el contrato exige que no llegue a los conjuntos
+- [X] T045 Agregar `pytest.ini` con `testpaths = tests`: `pytest` desde la raíz ya no recoge las pruebas del ejemplo
+  CreditSight (`material-del-curso/`), que tienen los mismos nombres de archivo y chocaban con las nuestras
+- [X] T046 Crear un entorno con las versiones de `requirements.txt` y correr `pytest` desde la raíz: 76 pruebas en verde,
+  incluida `tests/test_tracking.py` (necesita `mlflow`)
 
 ---
 

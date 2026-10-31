@@ -26,6 +26,11 @@ CITY_FILES = {
     "belize": "listings_belize_2026-09-25.csv.gz",
 }
 
+# Ciudades que se cargan (el EDA las describe) pero se excluyen del modelo. Decisión del grupo del 2026-10-31:
+# en Buenos Aires (29.753 anuncios) el 38,6 % de los precios son múltiplos de 764,41 ARS, una tasa sin explicación
+# verificable, y la inflación de Argentina hace dudosa la conversión a USD.
+EXCLUDED_CITIES = ("buenos-aires",)
+
 # Moneda en que Inside Airbnb publica cada ciudad (confirmada con price_quote_raw en el EDA).
 # Belice publica en USD, no en BZD.
 CITY_CURRENCY = {
@@ -40,8 +45,8 @@ CITY_CURRENCY = {
 
 # Tasas de cambio: unidades de moneda local por 1 USD, en la fecha del corte de cada ciudad (tarea T014).
 # Criterio: la tasa oficial publicada por el banco central PARA esa fecha. Consultadas el 2026-10-30 en las
-# fuentes oficiales del campo "source". ESTADO: PENDIENTE DE CONFIRMAR POR EL GRUPO (anotar en la sección 7
-# de especificacion-proyecto.md quién las verificó y cuándo).
+# fuentes oficiales del campo "source". ESTADO: APROBADAS POR EL GRUPO el 2026-10-31 (registro en la
+# sección 7 de especificacion-proyecto.md).
 # None = pendiente: to_usd() se detiene con un mensaje en vez de usar un valor supuesto.
 FX_RATES = {
     "rio-de-janeiro": {
@@ -67,7 +72,7 @@ FX_RATES = {
         "currency": "ARS",
         "local_per_usd": 1516.2964,
         "date": "2026-09-23",
-        # Ojo: el 38,6 % de los precios de Buenos Aires son múltiplos exactos de 764,41 ARS (ver reports/01_eda.md)
+        # No se usa: Buenos Aires se excluye antes de convertir (EXCLUDED_CITIES). Se conserva como registro.
         "source": "BCRA, tipo de cambio de referencia Com. A 3500 del 2026-09-23 (api.bcra.gob.ar, variable 5)",
     },
     "bogota": {
@@ -133,6 +138,10 @@ EMPTY_COLUMNS = [
     "neighborhood_overview",
     "calendar_updated",
 ]
+
+# Columnas con datos que no se usan. license solo existe en Bogotá (84,9 % llena, vacía en las demás ciudades):
+# delata la ciudad en vez de describir el inmueble y es un número de registro (decisión del grupo, 2026-10-31)
+UNUSED_COLUMNS = ["license"]
 
 # 6.103 anuncios (3,1 %; 16,9 % en Bogotá) piden 30 noches o más: son arriendos mensuales
 MONTHLY_MIN_NIGHTS = 30
