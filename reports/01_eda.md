@@ -33,10 +33,11 @@
 
   El 80,6 % de los anuncios es vivienda completa y el 18,4 % habitación privada; "habitación de hotel" (492) y
   "habitación compartida" (1.484) son raras.
-- **Línea base** (resultado de una regla trivial): mediana de `price_usd` por `city` × `room_type`. **MAE = 53,80 ± 2,74
-  USD por noche** (5 pliegues por anfitrión, solo con el entrenamiento; pliegues: 51,76 · 53,33 · 59,16 · 52,66 · 52,08).
-  Calculado en `notebooks/03_preprocesamiento.ipynb` el 2026-10-30 con las tasas de `config.py` (pendientes de
-  confirmar por el grupo). El modelo de la etapa 4 tiene que bajar este número.
+- **Línea base** (resultado de una regla trivial): mediana de `price_usd` por `city` × `room_type`. **MAE = 55,96 ± 1,94
+  USD por noche** sin Buenos Aires (5 pliegues por anfitrión, solo con el entrenamiento; pliegues: 57,95 · 54,45 · 54,77 ·
+  58,64 · 53,99). Calculado en `notebooks/03_preprocesamiento.ipynb` el 2026-10-31 con las tasas de `config.py`
+  (aprobadas por el grupo el 2026-10-31). Con las siete ciudades era 53,80 ± 2,74; no son comparables directamente,
+  porque cambian las ciudades y el sorteo de la partición. El modelo de la etapa 4 tiene que bajar este número.
 
 ## Calidad de los datos
 
@@ -110,11 +111,16 @@
 
 ## Qué queda abierto
 
-- **Tasas de cambio:** tasa oficial del banco central para la fecha del corte. Los valores se consultaron en las fuentes
-  oficiales el 2026-10-30 y están en `config.py` con su fuente; **falta que el grupo los confirme** (tarea T014).
-- **Buenos Aires, 764,41 frente a 1.516,30:** decidir si se usa la tasa oficial (decisión actual), la implícita de Airbnb,
-  o si se reporta Buenos Aires aparte. Mientras tanto, revisar su error por separado en las etapas siguientes.
+- **Tasas de cambio (cerrado el 2026-10-31):** tasa oficial del banco central para la fecha del corte. Los valores se
+  consultaron en las fuentes oficiales el 2026-10-30, están en `config.py` con su fuente y el grupo los aprobó el
+  2026-10-31 (tarea T014).
+- **Buenos Aires, 764,41 frente a 1.516,30 (decidido el 2026-10-31):** el grupo decidió **excluir Buenos Aires** del
+  modelo por el riesgo de la conversión a USD. Se consideró mantener la tasa oficial: en entrenamiento, los anuncios
+  múltiplos de 764,41 cuestan en pesos lo mismo que los demás (mediana de vivienda completa 111.604 frente a 111.298
+  ARS). El archivo crudo se conserva y este EDA lo sigue describiendo; la exclusión es una regla del preprocesamiento
+  (29.753 anuncios, en `reports/03_exclusiones.csv`).
 - **Decidido el 2026-10-30:** se incluyen las siete ciudades y se excluyen los 11.701 anuncios `previous scrape`.
+  *(El 2026-10-31 se excluyó Buenos Aires: ver el punto anterior.)*
 - **Correcciones hechas al reproducir con el notebook (2026-10-30):**
   - Filas idénticas salvo el `id`: **159**, no 26. El script exploratorio comparaba también `name` y `description`; el
     notebook ya no los tiene porque se eliminan al cargar. No hay decisión sobre ellas: al partir por anfitrión quedan del
@@ -147,6 +153,6 @@ confirmada ni un error que invalide el resultado. Lo que encontraron y lo que se
 | Docstring de `mark_impossible_values` citaba mal el EDA ("habitaciones de hotel") | Baja | Corregido: de los 220 con más de 10 habitaciones, 129 son "habitación privada" |
 | "12 columnas vacías" frente a 11 en los datos | Baja | Aclarado: son 12 en los crudos; `neighborhood_overview` ya sale como texto libre |
 | El registro de exclusiones guardaba `11701.0` | Baja | Ahora guarda enteros |
-| `license` solo existe en Bogotá y es un número de registro | Baja | **Pendiente de decisión del grupo:** eliminarla al cargar o dejar solo `has_license` |
-| Las pruebas corrieron con pandas 3.0.3 y scikit-learn 1.9.0; `requirements.txt` fija 3.0.6 y 1.9.1 | Baja | Correr `pytest` en el `.venv` con las versiones fijadas antes de cerrar H1 |
+| `license` solo existe en Bogotá y es un número de registro | Baja | **Decidido el 2026-10-31:** se elimina (`drop_unused_columns`) |
+| Las pruebas corrieron con pandas 3.0.3 y scikit-learn 1.9.0; `requirements.txt` fija 3.0.6 y 1.9.1 | Baja | Hecho el 2026-10-31: 76 pruebas en verde con las versiones de `requirements.txt` |
 | La línea base usa límites de precio aprendidos con todo el entrenamiento | Baja | Efecto mínimo (la mediana es robusta); en la etapa 4 todo lo que aprende va dentro del `Pipeline` |

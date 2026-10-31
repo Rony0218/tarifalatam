@@ -12,11 +12,13 @@ from tarifalatam.data.cleaning import (
     add_target,
     check_currencies,
     drop_empty_columns,
+    drop_excluded_cities,
     drop_leakage_columns,
     drop_missing_price,
     drop_monthly_rentals,
     drop_previous_scrape,
     drop_price_outliers,
+    drop_unused_columns,
     fit_price_bounds,
     load_raw,
     mark_impossible_values,
@@ -53,26 +55,28 @@ def build_datasets(raw_dir=RAW_DIR, rates: dict = FX_RATES):
     """
     log: list = []
     df = load_raw(raw_dir)  # 1: carga sin datos personales ni texto libre
-    df = check_currencies(df)  # 2
-    df = _logged(log, "previous_scrape", df, drop_previous_scrape)  # 3
-    df = parse_price(df)  # 4
-    df = _logged(log, "missing_price", df, drop_missing_price)  # 5
-    df = to_usd(df, rates)  # 6
-    df = drop_leakage_columns(df)  # 7 (después de check_currencies, que usa price_quote_raw)
-    df = drop_empty_columns(df)  # 8
-    df = parse_bathrooms_text(df)  # 9
-    df = _logged(log, "monthly_rental", df, drop_monthly_rentals)  # 10
-    df = mark_impossible_values(df)  # 11
-    df = add_review_flags(df)  # 12
+    df = _logged(log, "excluded_city", df, drop_excluded_cities)  # 2: Buenos Aires (decisión del 2026-10-31)
+    df = check_currencies(df)  # 3
+    df = _logged(log, "previous_scrape", df, drop_previous_scrape)  # 4
+    df = parse_price(df)  # 5
+    df = _logged(log, "missing_price", df, drop_missing_price)  # 6
+    df = to_usd(df, rates)  # 7
+    df = drop_leakage_columns(df)  # 8 (después de check_currencies, que usa price_quote_raw)
+    df = drop_empty_columns(df)  # 9
+    df = drop_unused_columns(df)  # 10: license
+    df = parse_bathrooms_text(df)  # 11
+    df = _logged(log, "monthly_rental", df, drop_monthly_rentals)  # 12
+    df = mark_impossible_values(df)  # 13
+    df = add_review_flags(df)  # 14
 
-    train, test = split_by_host(df)  # 13: nada de lo anterior aprende de los datos
+    train, test = split_by_host(df)  # 15: nada de lo anterior aprende de los datos
 
-    bounds = fit_price_bounds(train)  # 14: solo con entrenamiento
+    bounds = fit_price_bounds(train)  # 16: solo con entrenamiento
     cleaned = {}
     for split, part in (("train", train), ("test", test)):
         kept = drop_price_outliers(part, bounds)
         log_step(log, "price_outlier", split, part, kept)
-        cleaned[split] = add_target(kept).reset_index(drop=True)  # 15
+        cleaned[split] = add_target(kept).reset_index(drop=True)  # 17
 
     for city, (low, high) in bounds.items():
         log.append({"step": "price_bounds", "split": "train", "city": city, "low_usd": low, "high_usd": high})

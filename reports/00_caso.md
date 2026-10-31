@@ -32,6 +32,9 @@
 
   \* La moneda oficial de Belice es el BZD, pero sus precios en Inside Airbnb vienen en USD (lo dice `price_quote_raw`).
 
+  **Desde el 2026-10-31 Buenos Aires se excluye del modelo** por el riesgo de la conversión a USD (sección 7 de
+  `especificacion-proyecto.md`). El modelo se entrena con las otras seis ciudades: 148.234 anuncios tras la limpieza.
+
 - **dataset_columns:** 90 (numéricas, categóricas, fechas y texto). Incluye datos personales del anfitrión
   (`host_name`, `host_about`, fotos y URLs de perfil) que se eliminan al inicio.
 

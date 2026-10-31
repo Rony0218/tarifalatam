@@ -12,7 +12,8 @@ Cada regla sale de una decisión del EDA (reports/01_eda.md, especificaciones/02
   9. has_reviews marca los anuncios con reseñas; las notas vacías se imputan después, en el Pipeline.
  10. Los centinelas (maximum_nights > 1.125, habitaciones imposibles) pasan a vacío.
  11. Agrupar categorías raras va en la etapa 4, dentro del Pipeline (no aquí).
-Además: los anuncios del corte anterior (source = "previous scrape") se excluyen (decisión del grupo).
+Además, por decisión del grupo: los anuncios del corte anterior (source = "previous scrape") se excluyen; desde el
+2026-10-31 también Buenos Aires (riesgo de la conversión a USD) y la columna license (solo existe en Bogotá).
 
 Ninguna función modifica la tabla que recibe: todas devuelven una tabla nueva.
 """
@@ -26,6 +27,7 @@ from tarifalatam.config import (
     CITY_CURRENCY,
     CITY_FILES,
     EMPTY_COLUMNS,
+    EXCLUDED_CITIES,
     FREE_TEXT_COLUMNS,
     FX_RATES,
     LEAKAGE_COLUMNS,
@@ -35,6 +37,7 @@ from tarifalatam.config import (
     PII_COLUMNS,
     PRICE_RATIO_BOUNDS,
     RAW_DIR,
+    UNUSED_COLUMNS,
 )
 
 
@@ -87,6 +90,12 @@ def check_currencies(df: pd.DataFrame) -> pd.DataFrame:
         cities = ", ".join(sorted(df.loc[mismatch, "city"].unique()))
         raise ValueError(f"La moneda de price_quote_raw no coincide con CITY_CURRENCY en: {cities}")
     return df
+
+
+def drop_excluded_cities(df: pd.DataFrame, cities=EXCLUDED_CITIES) -> pd.DataFrame:
+    """Excluye las ciudades que el grupo dejó fuera del modelo: Buenos Aires (29.753 anuncios; el 38,6 % de sus precios
+    son múltiplos de 764,41 ARS, una tasa sin explicación verificable). Decisión del 2026-10-31."""
+    return df[~df["city"].isin(list(cities))].copy()
 
 
 def drop_previous_scrape(df: pd.DataFrame) -> pd.DataFrame:
@@ -143,6 +152,11 @@ def drop_empty_columns(df: pd.DataFrame) -> pd.DataFrame:
     load_raw como texto libre.
     """
     return df.drop(columns=EMPTY_COLUMNS, errors="ignore")
+
+
+def drop_unused_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Elimina las columnas con datos que no se usan: license solo existe en Bogotá (84,9 % llena) y delataría la ciudad."""
+    return df.drop(columns=UNUSED_COLUMNS, errors="ignore")
 
 
 def parse_bathrooms_text(df: pd.DataFrame) -> pd.DataFrame:

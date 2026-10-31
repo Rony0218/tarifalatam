@@ -116,7 +116,8 @@ de partición falla.
   `price_quote_raw` antes de eliminarla, solo para verificar que coincide con la de la ciudad. *(Decisión 3.)*
 - **FR-006**: MUST eliminar las 12 columnas 100 % vacías en las siete ciudades (`bathrooms`, `host_since`, `host_response_time`,
   `host_response_rate`, `host_acceptance_rate`, `host_neighbourhood`, `host_total_listings_count`, `host_verifications`,
-  `instant_bookable`, `neighbourhood`, `neighborhood_overview`, `calendar_updated`). *(Decisión 6.)*
+  `instant_bookable`, `neighbourhood`, `neighborhood_overview`, `calendar_updated`). *(Decisión 6.)* También MUST eliminar
+  `license`: solo existe en Bogotá y delataría la ciudad. *(Decisión del grupo del 2026-10-31.)*
 - **FR-007**: MUST crear, a partir de `bathrooms_text`, el número de baños (con las reglas de los casos límite) y un indicador de
   baño compartido. *(Decisión 6.)*
 - **FR-008**: MUST excluir los anuncios con `minimum_nights ≥ 30` (arriendos mensuales). *(Decisión 7.)*
@@ -126,8 +127,10 @@ de partición falla.
   reseñas; no se imputa aquí. *(Decisión 9.)*
 - **FR-011**: MUST excluir los anuncios con `source = "previous scrape"` (11.701; 3.293 de ellos con precio), porque no se
   vieron en este corte y su precio puede estar desactualizado. *(Aclarado el 2026-10-30.)*
-- **FR-012**: MUST incluir las **siete ciudades**, Buenos Aires y Belice incluidas. El error se reportará por ciudad en las etapas
-  siguientes para vigilar a las dos. *(Aclarado el 2026-10-30.)*
+- **FR-012**: MUST **excluir Buenos Aires** como primera regla después de cargar, y dejar la exclusión en el registro
+  (`step = excluded_city`). Quedan seis ciudades; Belice se conserva y su error se reportará aparte en las etapas siguientes.
+  El archivo crudo de Buenos Aires no se borra y el EDA lo sigue describiendo. *(Aclarado el 2026-10-30: siete ciudades.
+  Cambiado el 2026-10-31 por decisión del grupo; motivo en la sección 7 de `especificacion-proyecto.md`.)*
 
 **Partición y reglas que aprenden de los datos**
 

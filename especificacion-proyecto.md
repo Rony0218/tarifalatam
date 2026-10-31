@@ -30,8 +30,10 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 
 - **Fuente** (enlace de Kaggle, empresa, etc.): Inside Airbnb, <https://insideairbnb.com/get-the-data/>,
   archivos `listings.csv.gz` de septiembre de 2026 de Río de Janeiro, São Paulo, Ciudad de México, Buenos
-  Aires, Bogotá, Santiago y Belice (enlaces exactos en el `README.md`).
-- **Filas / columnas:** 194.628 anuncios (182.986 con precio) / 90 columnas por ciudad.
+  Aires, Bogotá, Santiago y Belice (enlaces exactos en el `README.md`). **Buenos Aires se excluye del modelo** desde el
+  2026-10-31 (sección 7): se entrena con seis ciudades.
+- **Filas / columnas:** 194.628 anuncios (182.986 con precio) / 90 columnas por ciudad. Tras la limpieza y sin Buenos
+  Aires quedan 148.234 (118.513 de entrenamiento y 29.721 de prueba).
 - **Variable objetivo** (columna que queremos predecir o describir): `price`, precio por noche publicado,
   convertido a USD con la tasa oficial del día del corte de cada ciudad (Belice ya viene en USD, según
   `price_quote_raw`). Se modela en logaritmo.
@@ -53,8 +55,9 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
   RMSE como principal porque los pocos precios extremos lo dominarían.
 - **Métricas secundarias:** MAPE (un error de 20 USD no pesa igual en Bogotá que en Río) y R².
 - **Línea base** (qué resultado obtiene una regla simple o un modelo trivial): la mediana del precio por
-  ciudad y tipo de habitación (`room_type`). **MAE = 53,80 ± 2,74 USD por noche** (validación por anfitrión, solo
-  entrenamiento; `notebooks/03_preprocesamiento.ipynb`, 2026-10-30).
+  ciudad y tipo de habitación (`room_type`). **MAE = 55,96 ± 1,94 USD por noche** (validación por anfitrión, solo
+  entrenamiento, sin Buenos Aires; `notebooks/03_preprocesamiento.ipynb`, 2026-10-31). Con las siete ciudades era
+  53,80 ± 2,74.
 
 ## 5. Riesgos
 
@@ -64,7 +67,7 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
   de disponibilidad son consecuencia del precio: el auditor de fuga debe revisarlas antes de usarlas.
 - **Sesgos o equidad:** las ciudades tienen tamaños muy distintos (Río 48 mil, Belice 3,7 mil); el modelo
   puede ajustarse mejor a las grandes. Se reporta el error por ciudad. La tasa de cambio elegida afecta los
-  precios en dólares, sobre todo en Buenos Aires por la inflación de Argentina.
+  precios en dólares; por ese riesgo se excluyó Buenos Aires (sección 7).
 - **Datos faltantes o de mala calidad:** el precio viene como texto (`"$1,234.00"`) en seis monedas; entre
   3,5 % y 8,5 % de los anuncios no tiene precio, según la ciudad (se excluyen); en las siete ciudades hay 12
   columnas 100 % vacías (`bathrooms`, `host_since`, `host_response_rate`…; el número de baños se rescata de
@@ -72,7 +75,8 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
   tiene reseñas; hay precios extremos (692 anuncios cobran más de 20 veces la mediana de su ciudad). Detalle en
   `reports/01_eda.md`.
 - **Límites de lo que el modelo puede decir:** predice el precio **publicado**, no el que realmente se
-  cobró; solo cubre siete ciudades grandes (no ciudades intermedias como Medellín o Cartagena); es una foto
+  cobró; solo cubre seis ciudades: cinco grandes y Belice (no Buenos Aires, ni ciudades intermedias como Medellín o
+  Cartagena); es una foto
   de septiembre de 2026, sin efecto de temporada.
 
 ## 6. Entregables y fechas
@@ -94,5 +98,8 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 | 2026-10-30 | Quedan pendientes de decidir en grupo: incluir o no Buenos Aires y Belice | Buenos Aires por la inflación; Belice por su tamaño pequeño y ser el único país angloparlante |
 | 2026-10-30 | Se incluyen las siete ciudades (también Buenos Aires y Belice); se excluyen los anuncios `source = "previous scrape"`; las tasas a USD son las oficiales del banco central de cada país en la fecha del corte | El error se reporta por ciudad para vigilar Buenos Aires y Belice; los anuncios del corte anterior pueden tener precios desactualizados; la tasa oficial es verificable. Ver `specs/001-eda-limpieza-particion/spec.md` |
 | 2026-10-30 | Corrección tras el EDA: Belice publica en USD (no en BZD); las columnas vacías están en las siete ciudades (no solo en Bogotá); sin reseñas hay 15,5 % (no 21 %) | Medido en los archivos de `data/raw/` (`price_quote_raw` trae la moneda); ver `reports/01_eda.md` |
-| 2026-10-30 | Tasas a USD (unidades por 1 USD): BRL 5,1161 (22-09) y 5,1696 (14-09) PTAX; MXN 17,3015 FIX en el DOF; ARS 1.516,2964 Com. A 3500; COP 3.072,27 TRM; CLP 945,87 dólar observado. **Pendiente de confirmar por el grupo** | Consultadas en las fuentes oficiales (enlaces en `src/tarifalatam/config.py`). Quien confirme, anotar nombre y fecha aquí |
+| 2026-10-30 | Tasas a USD (unidades por 1 USD): BRL 5,1161 (22-09) y 5,1696 (14-09) PTAX; MXN 17,3015 FIX en el DOF; ARS 1.516,2964 Com. A 3500; COP 3.072,27 TRM; CLP 945,87 dólar observado. **Aprobadas por el grupo el 2026-10-31** | Consultadas en las fuentes oficiales (enlaces en `src/tarifalatam/config.py`). Verificadas y aprobadas por el grupo el 2026-10-31 (lo registró Rony Guerrero) |
 | 2026-10-30 | Riesgo abierto: en Buenos Aires el 38,6 % de los precios son múltiplos de 764,41 ARS, la mitad de la tasa oficial | Con la tasa oficial la mediana es 70 USD; con 764,41 sería 140 USD. El grupo decide cómo tratarlo; ver `reports/01_eda.md` |
+| 2026-10-31 | **Se excluye Buenos Aires del modelo** (29.753 anuncios en los crudos). El archivo crudo se conserva y el EDA lo sigue describiendo; la exclusión es una regla del preprocesamiento y queda en el registro de exclusiones. Cambia FR-012 de `specs/001-eda-limpieza-particion/spec.md` y exige enmendar la constitución, que dice "siete ciudades" | Decisión del grupo ante el riesgo de la conversión a USD: el 38,6 % de los precios son múltiplos de 764,41 ARS, una tasa sin explicación verificable, a lo que se suma la inflación de Argentina. Se consideró mantener la tasa oficial: medido en entrenamiento, en pesos los anuncios múltiplos cuestan lo mismo que los demás (mediana de vivienda completa 111.604 frente a 111.298 ARS). Cierra el riesgo abierto de la fila anterior |
+| 2026-10-31 | Enmienda de la constitución (0.2.0 → 0.3.0): la restricción "Datos" pasa de siete a seis ciudades | Consecuencia de la fila anterior; ningún principio cambia |
+| 2026-10-31 | **Se elimina la columna `license`** | Solo existe en Bogotá (84,9 % llena; vacía en las otras ciudades), así que delata la ciudad en vez de describir el inmueble; además es un número de registro que identifica la propiedad |

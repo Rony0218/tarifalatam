@@ -15,7 +15,7 @@
 - **Una fila es:** un anuncio de Airbnb (`id`) en la fecha de corte de su ciudad.
 - **Entidad que se repite (columna):** `host_id` (89.964 anfitriones; hasta 699 anuncios cada uno)  ☐ no se repite → partir por fila es válido porque: no aplica
 - **Se parte por:** ☒ grupo (`GroupShuffleSplit` para entrenamiento/prueba y `GroupKFold` para la validación cruzada) ☐ fila
-- **Proporción de prueba:** 20 % de los **anfitriones** (≈ 20,5 % de las filas)   **Semilla:** 42
+- **Proporción de prueba:** 20 % de los **anfitriones** (≈ 20,1 % de las filas)   **Semilla:** 42
 - **¿Hay orden temporal que respetar?** ☒ no ☐ sí → un solo corte por ciudad (septiembre de 2026)
 - **Dónde se guarda la prueba:** `data/processed/` (cerrada: **no se mira** hasta la etapa 7)
 
@@ -35,19 +35,21 @@ Una fila por decisión del EDA. **Una función, una prueba.** Se marca como vac�
 | # (de la tabla del EDA) | Columna(s) | Problema | Regla exacta (con el umbral o valor) | Función en `src/tarifalatam/data/cleaning.py` | Prueba en `tests/test_cleaning.py` |
 |---|---|---|---|---|---|
 | 1 | `price`, `price_quote_raw` | Texto `"$1,234.00"` en seis monedas | Quitar `$` y `,`; texto no numérico → vacío. Comprobar que la moneda de `price_quote_raw` coincide con la ciudad (si no, error). `price_usd = price_local / local_per_usd` de la ciudad; si falta la tasa, error | `parse_price`, `check_currencies`, `to_usd` | `test_parse_price_*`, `test_check_currencies_*`, `test_to_usd_*` |
-| 2 | `price` | Sin precio = anuncio inactivo | Excluir si `price_local` está vacío → **3.234 filas** (tras quitar el corte anterior) | `drop_missing_price` | `test_drop_missing_price` |
+| 2 | `price` | Sin precio = anuncio inactivo | Excluir si `price_local` está vacío → **2.535 filas** (tras quitar Buenos Aires y el corte anterior) | `drop_missing_price` | `test_drop_missing_price` |
 | 3 | `price_quote_*` (5), `estimated_revenue_l365d` | Contienen el precio (fuga) | Eliminar las 6 columnas, después de comprobar la moneda | `drop_leakage_columns` | `test_drop_leakage_columns_*` |
 | 4 | Datos personales y texto libre | Privacidad | Ver sección 2 | `load_raw` | `test_load_raw_*` |
 | 5 | `host_id` | El anfitrión se repite | Partir por `host_id` (ver sección 1) | `split_by_host` | `tests/test_split.py` |
 | 6 | 12 columnas vacías; `bathrooms_text` | Vacías; baños escritos como texto | Eliminar las 12. Baños: número del texto; "half-bath" sin número → 0,5; "No bathroom" → 0; `bathroom_shared` = 1 si dice "shared"; texto vacío → vacío | `drop_empty_columns`, `parse_bathrooms_text` | `test_drop_empty_columns_*`, `test_parse_bathrooms_text_*` |
-| 7 | `minimum_nights` | Arriendos mensuales | Excluir si `minimum_nights >= 30`; vacío se conserva → **4.274 filas** (2.873 en Bogotá) | `drop_monthly_rentals` | `test_drop_monthly_rentals_*` |
-| 8 | `price_usd` | Precios imposibles | Excluir fuera de [0,1 ×, 20 ×] la mediana de su ciudad, **aprendida solo con entrenamiento** → **506 filas en entrenamiento y 182 en prueba** | `fit_price_bounds`, `drop_price_outliers` | `test_fit_price_bounds_*`, `test_drop_price_outliers_*` |
+| 7 | `minimum_nights` | Arriendos mensuales | Excluir si `minimum_nights >= 30`; vacío se conserva → **3.948 filas** (2.873 en Bogotá) | `drop_monthly_rentals` | `test_drop_monthly_rentals_*` |
+| 8 | `price_usd` | Precios imposibles | Excluir fuera de [0,1 ×, 20 ×] la mediana de su ciudad, **aprendida solo con entrenamiento** → **484 filas en entrenamiento y 86 en prueba** | `fit_price_bounds`, `drop_price_outliers` | `test_fit_price_bounds_*`, `test_drop_price_outliers_*` |
 | 9 | `number_of_reviews` | Sin reseñas = anuncio nuevo | `has_reviews` = 1 si `number_of_reviews > 0`, si no 0; las notas no se imputan aquí | `add_review_flags` | `test_add_review_flags_*` |
 | 10 | `maximum_nights`, `bedrooms` | Centinelas y datos del edificio | `maximum_nights > 1.125` → vacío; `bedrooms > 10` **y** `> accommodates` → vacío. No quita filas | `mark_impossible_values` | `test_mark_impossible_values` |
-| — | `source` | Anuncios del corte anterior (decisión del grupo) | Excluir `source == "previous scrape"` → **11.701 filas** | `drop_previous_scrape` | `test_drop_previous_scrape_*` |
+| — | `source` | Anuncios del corte anterior (decisión del grupo) | Excluir `source == "previous scrape"` → **9.588 filas** (11.701 en los crudos; 2.113 eran de Buenos Aires) | `drop_previous_scrape` | `test_drop_previous_scrape_*` |
+| — | `city` | Riesgo de la conversión a USD en Buenos Aires (decisión del grupo, 2026-10-31) | Excluir `city == "buenos-aires"` como primer paso después de cargar → **29.753 filas** | `drop_excluded_cities` | `test_drop_excluded_cities_*` |
+| — | `license` | Solo existe en Bogotá: delata la ciudad (decisión del grupo, 2026-10-31) | Eliminar la columna | `drop_unused_columns` | `test_drop_unused_columns_*` |
 | — | `price_usd` | Objetivo asimétrico | `log_price_usd = ln(price_usd)` | `add_target` | `test_add_target_is_log_of_price_usd` |
 
-Resultado: de **194.628** anuncios cargados quedan **174.731** (138.891 en entrenamiento y 35.840 en prueba). El detalle por
+Resultado: de **194.628** anuncios cargados quedan **148.234** (118.513 en entrenamiento y 29.721 en prueba), ya sin Buenos Aires. El detalle por
 ciudad queda en `reports/03_exclusiones.csv` al ejecutar el notebook 03. La decisión 11 del EDA (agrupar categorías raras)
 va en la etapa 4, dentro del `Pipeline`.
 
@@ -60,7 +62,7 @@ va en la etapa 4, dentro del `Pipeline`.
 | `bedrooms` | ☒ no se anotó (122) o ☒ imposible (124 marcados) | ☒ dejar vacío | Imputar con la mediana por `room_type` o global |
 | `maximum_nights` | ☒ imposible (centinela > 1.125: 50) | ☒ dejar vacío | Imputar con la mediana; evaluar si la variable aporta |
 | `beds` | ☒ no se anotó (≈ 1,1 %) | ☒ dejar vacío | Imputar con la mediana |
-| `license` | ☒ no aplica (solo existe en Bogotá: 84,9 %) | ☒ dejar vacío | Probablemente descartar (confunde con la ciudad); decidir en la etapa 4 |
+| `license` | ☒ no aplica (solo existe en Bogotá: 84,9 %) | ☒ se elimina (`drop_unused_columns`, decisión del 2026-10-31) | No aplica: la columna ya no llega |
 
 > Imputar con medias o medianas **no se hace aquí**: depende del entrenamiento y va dentro del `Pipeline`.
 
@@ -68,7 +70,7 @@ va en la etapa 4, dentro del `Pipeline`.
 
 | | Ruta |
 |---|---|
-| Entrada | `data/raw/listings_<ciudad>_<fecha>.csv.gz` (siete archivos; nunca se modifican) |
+| Entrada | `data/raw/listings_<ciudad>_<fecha>.csv.gz` (siete archivos; nunca se modifican; Buenos Aires se excluye al limpiar) |
 | Salida: entrenamiento | `data/processed/train.csv.gz` |
 | Salida: prueba (cerrada) | `data/processed/test.csv.gz` |
 | Registro de exclusiones | `reports/03_exclusiones.csv` |
@@ -89,9 +91,9 @@ va en la etapa 4, dentro del `Pipeline`.
 
 - ☒ La limpieza corre **de principio a fin desde cero** (`data/processed/` borrada y regenerada con el notebook 03), sin pasos manuales.
 - ☒ Unidad de análisis y forma de partir **escritas** (sección 1) y documentadas en `reports/01_eda.md`.
-- ☒ `pytest` en verde (66 pruebas; `test_tracking.py` necesita `mlflow` en el `.venv`).
+- ☒ `pytest` en verde (76 pruebas con `pytest` desde la raíz, en un entorno con las versiones de `requirements.txt`, 2026-10-31).
 - ☒ Conjunto de prueba guardado y sin mirar (solo se contaron filas y anfitriones).
 - ☒ `data/raw/` intacta y `.env` fuera de Git (`git status`).
-- ☐ Todo subido a GitHub.
+- ☒ Todo subido a GitHub.
 - ☐ Revisaron el código de Claude con `checklist-revision-ia.md` y cada integrante puede explicar una función.
 - ☐ **Hallazgo que no esperaban** (para la puesta en común): _______________ *(candidato: el 38,6 % de los precios de Buenos Aires son múltiplos de 764,41 ARS, la mitad de la tasa oficial)*

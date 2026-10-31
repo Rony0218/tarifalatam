@@ -49,7 +49,6 @@
 | Río de Janeiro | | | | |
 | São Paulo | | | | |
 | Ciudad de México | | | | |
-| Buenos Aires | | | | |
 | Bogotá | | | | |
 | Santiago | | | | |
 | Belice | | | | |
