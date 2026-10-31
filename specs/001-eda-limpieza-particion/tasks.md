@@ -147,7 +147,7 @@ US3 = registro de exclusiones y rastro escrito).
   - En esta tarea no lleva registro de exclusiones (lo agrega T024).
   - Verificar con `pytest tests/test_pipeline.py`.
 - [ ] T014 [US1] **(GRUPO)** Anotar en `src/tarifalatam/config.py` (`FX_RATES`) las cinco tasas oficiales del banco central (BRL, MXN, ARS, COP, CLP), en unidades de moneda local por 1 USD, para la fecha del corte de cada ciudad, con el enlace en `source`. Registrar la decisión en la sección 7 de `especificacion-proyecto.md`. **Bloquea T015.**
-- [ ] T015 [US1] Reescribir `notebooks/03_preprocesamiento.ipynb` para que **solo orqueste**:
+- [ ] T015 [US1] Reescribir `notebooks/03_preprocesamiento.ipynb` para que **solo orqueste**: *(Estado 2026-10-30: notebook escrito y probado en seco con tasa ficticia fuera del repo; falta ejecutarlo con las tasas de T014.)*
   - Celdas en orden: importar de `tarifalatam`; `train, test, bounds = build_datasets()`; guardar `data/processed/train.csv.gz` y `test.csv.gz` (con `index=False`).
   - Imprimir los controles: anfitriones en común = 0, filas y anfitriones por conjunto y por ciudad, límites de precio por ciudad.
   - Calcular y mostrar `baseline_cv_mae(train)`.
@@ -165,22 +165,22 @@ US3 = registro de exclusiones y rastro escrito).
 
 **Independent Test**: `jupyter nbconvert --to notebook --execute --inplace notebooks/02_eda.ipynb` termina sin errores y su tabla final dice "coincide = sí" en todas las filas (quickstart §2). No necesita las tasas de cambio
 
-- [ ] T017 [US2] Reescribir la carga y las secciones 0 a 2 de `notebooks/02_eda.ipynb`:
+- [X] T017 [US2] Reescribir la carga y las secciones 0 a 2 de `notebooks/02_eda.ipynb`:
   - Celda inicial con `sys.path` a `src/`, `from tarifalatam.data.cleaning import load_raw` y `from tarifalatam.config import GROUP_COL`; `df = load_raw()`, que ya viene sin datos personales.
   - Sección 1 (unidad de análisis): filas por ciudad, anfitriones, anuncios por anfitrión, % de anuncios de anfitriones con ≥ 10 y anfitriones en más de una ciudad.
   - Sección 2 (objetivo): `price` a número **con `parse_price`** (no se repite lógica), % sin precio por ciudad, asimetría en escala original y en logaritmo, y medianas por ciudad × `room_type`.
   - Cada sección cierra con una celda markdown con la respuesta en una frase.
-- [ ] T018 [US2] Reescribir las secciones 3 a 5 de `notebooks/02_eda.ipynb`:
+- [X] T018 [US2] Reescribir las secciones 3 a 5 de `notebooks/02_eda.ipynb`:
   - Calidad: columnas 100 % vacías por ciudad, conteo de `minimum_nights >= 30` (y % en Bogotá), centinelas de `maximum_nights`, `bedrooms > 10`, precios > 20 × y < 0,1 × la mediana de su ciudad, % sin reseñas y coincidencia con notas vacías, duplicados y `source == "previous scrape"`.
   - Constancia por anfitrión.
   - Fuga: razón `price` / `price_quote_price_per_night` y `estimated_revenue_l365d` / (precio × ocupación).
   - Monedas por ciudad leídas de `price_quote_raw`.
   - Ninguna celda imprime filas completas: solo conteos y resúmenes.
-- [ ] T019 [US2] Agregar al final de `notebooks/02_eda.ipynb` una celda que arme la tabla "cifra | esperado (informe) | obtenido | coincide". Los valores esperados se copian de `reports/01_eda.md`: 194.628 filas; 89.964 anfitriones; % sin precio por ciudad; razón precio/cotización = 1; 12 columnas vacías; 6.103 con `minimum_nights >= 30`; 692 precios > 20 ×; 15,5 % sin reseñas.
-- [ ] T020 [US2] Ejecutar `jupyter nbconvert --to notebook --execute --inplace notebooks/02_eda.ipynb` (con `PYTHONUTF8=1`).
+- [X] T019 [US2] Agregar al final de `notebooks/02_eda.ipynb` una celda que arme la tabla "cifra | esperado (informe) | obtenido | coincide". Los valores esperados se copian de `reports/01_eda.md`: 194.628 filas; 89.964 anfitriones; % sin precio por ciudad; razón precio/cotización = 1; 12 columnas vacías; 6.103 con `minimum_nights >= 30`; 692 precios > 20 ×; 15,5 % sin reseñas.
+- [X] T020 [US2] Ejecutar `jupyter nbconvert --to notebook --execute --inplace notebooks/02_eda.ipynb` (con `PYTHONUTF8=1`).
   - Si alguna cifra no coincide, **corregir `reports/01_eda.md` con la cifra del notebook** y anotar el cambio en su sección "Qué queda abierto". No se ajusta el código para que "dé".
   - Revisar que la salida no muestre nombres, fotos, URLs, teléfonos ni correos.
-- [ ] T021 [US2] Quitar de `reports/01_eda.md` la nota "Estado: borrador … script exploratorio" y reemplazarla por "Cifras reproducidas por `notebooks/02_eda.ipynb` el <fecha>". En `especificaciones/02-eda.md`, marcar ☒ los criterios de cierre que ya se cumplen.
+- [X] T021 [US2] Quitar de `reports/01_eda.md` la nota "Estado: borrador … script exploratorio" y reemplazarla por "Cifras reproducidas por `notebooks/02_eda.ipynb` el <fecha>". En `especificaciones/02-eda.md`, marcar ☒ los criterios de cierre que ya se cumplen.
 
 **Checkpoint**: US2 funciona sola (no depende de US1 ni de las tasas)
 
@@ -194,21 +194,21 @@ US3 = registro de exclusiones y rastro escrito).
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T022 [P] [US3] Agregar a `tests/test_pipeline.py`:
+- [X] T022 [P] [US3] Agregar a `tests/test_pipeline.py`:
   - `test_exclusion_log_balances`: en cada fila `before - removed == after`, y el `after` de un paso es el `before` del siguiente para la misma ciudad y el mismo `split`.
   - `test_exclusion_log_has_expected_steps`: aparecen `previous_scrape`, `missing_price`, `monthly_rental` con `split = all`, y `price_outlier` con `split = train` y `split = test`.
   - `test_exclusion_log_includes_price_bounds`: filas con `step = price_bounds` y columnas `low_usd` y `high_usd`.
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Crear en `src/tarifalatam/data/pipeline.py` el ayudante `log_step(log, step, split, before_df, after_df)`. Agrega una fila por ciudad con `step`, `split`, `city`, `before`, `removed` y `after`, según `contracts/processed-files.md`.
-- [ ] T024 [US3] Cambiar `build_datasets` en `src/tarifalatam/data/pipeline.py` para que:
+- [X] T023 [US3] Crear en `src/tarifalatam/data/pipeline.py` el ayudante `log_step(log, step, split, before_df, after_df)`. Agrega una fila por ciudad con `step`, `split`, `city`, `before`, `removed` y `after`, según `contracts/processed-files.md`.
+- [X] T024 [US3] Cambiar `build_datasets` en `src/tarifalatam/data/pipeline.py` para que:
   - Registre cada paso que quita filas.
   - Agregue las filas `price_bounds` con `low_usd` y `high_usd`.
   - Devuelva `(train, test, exclusions, bounds)`.
   - Actualizar `tests/test_pipeline.py` (T009) al nuevo retorno y verificar con `pytest tests/test_pipeline.py`.
-- [ ] T025 [US3] En `notebooks/03_preprocesamiento.ipynb`, guardar `exclusions` en `reports/03_exclusiones.csv` (`index=False`) y mostrar una tabla resumen: filas de partida, quitadas por regla y finales, por ciudad. Volver a ejecutar desde cero.
-- [ ] T026 [US3] Llenar las secciones 3 y 4 de `especificaciones/03-preprocesamiento.md` con las reglas implementadas (columna, regla exacta con su umbral, función, prueba) y las cifras de `reports/03_exclusiones.csv`. Marcar ☒ en su sección 6 lo que ya se verificó.
+- [ ] T025 [US3] En `notebooks/03_preprocesamiento.ipynb`, guardar `exclusions` en `reports/03_exclusiones.csv` (`index=False`) y mostrar una tabla resumen: filas de partida, quitadas por regla y finales, por ciudad. Volver a ejecutar desde cero. *(Estado: escrito en el notebook 03; se ejecuta junto con T015.)*
+- [X] T026 [US3] Llenar las secciones 3 y 4 de `especificaciones/03-preprocesamiento.md` con las reglas implementadas (columna, regla exacta con su umbral, función, prueba) y las cifras de `reports/03_exclusiones.csv`. Marcar ☒ en su sección 6 lo que ya se verificó.
 
 **Checkpoint**: las tres historias funcionan por separado
 
@@ -216,10 +216,10 @@ US3 = registro de exclusiones y rastro escrito).
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T027 Ejecutar `pytest` sobre `tests/` desde la raíz (con `PYTHONUTF8=1`) y confirmar que todo está en verde. Pegar el resumen de la salida en la descripción del cambio
-- [ ] T028 Verificación manual de FR-021 (quickstart §1): cambiar temporalmente `split_by_host` para que parta por fila, ejecutar `pytest tests/test_split.py`, confirmar que falla, **revertir** y confirmar que vuelve a pasar
-- [ ] T029 [P] Ejecutar el subagente `auditor-de-fuga` sobre `src/tarifalatam/data/`, `src/tarifalatam/models/baseline.py` y los notebooks 02 y 03. Anotar sus hallazgos y lo que se hizo con cada uno en `reports/01_eda.md` → "Qué queda abierto". En especial: la regla de extremos aplicada a la prueba
-- [ ] T030 [P] Ejecutar el subagente `revisor-de-codigo-ia` sobre los archivos nuevos de `src/` y aplicar `material-del-curso/kit/checklist-revision-ia.md`
+- [X] T027 Ejecutar `pytest` sobre `tests/` desde la raíz (con `PYTHONUTF8=1`) y confirmar que todo está en verde. Pegar el resumen de la salida en la descripción del cambio *(Hecho 2026-10-30: 66 pruebas en verde. `tests/test_tracking.py` no corre fuera del `.venv` porque necesita `mlflow`.)*
+- [X] T028 Verificación manual de FR-021 (quickstart §1): cambiar temporalmente `split_by_host` para que parta por fila, ejecutar `pytest tests/test_split.py`, confirmar que falla, **revertir** y confirmar que vuelve a pasar
+- [X] T029 [P] Ejecutar el subagente `auditor-de-fuga` sobre `src/tarifalatam/data/`, `src/tarifalatam/models/baseline.py` y los notebooks 02 y 03. Anotar sus hallazgos y lo que se hizo con cada uno en `reports/01_eda.md` → "Qué queda abierto". En especial: la regla de extremos aplicada a la prueba
+- [X] T030 [P] Ejecutar el subagente `revisor-de-codigo-ia` sobre los archivos nuevos de `src/` y aplicar `material-del-curso/kit/checklist-revision-ia.md`
 - [ ] T031 Recorrer `specs/001-eda-limpieza-particion/quickstart.md` de principio a fin (§1 a §4) y confirmar `git status --short data/` sin líneas
 - [ ] T032 **(GRUPO)** Repartir las funciones de `cleaning.py` entre los cinco integrantes. Cada uno debe poder explicar la suya, con su cifra y su motivo (SC-007)
 

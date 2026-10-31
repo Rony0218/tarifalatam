@@ -85,11 +85,11 @@ Marquen lo que aplica a su dataset. Lo que no aplique se tacha **con una razón*
 
 ## 5. Criterios de cierre
 
-- ☐ `notebooks/02_eda.ipynb` corre de principio a fin sin errores.
+- ☒ `notebooks/02_eda.ipynb` corre de principio a fin sin errores (2026-10-30; su tabla final: 19 de 19 cifras coinciden).
 - ☒ Unidad de análisis y `ID_COL` declarados por escrito (sección 3).
 - ☐ Al menos **5 decisiones** con cifra, acción y motivo. *(Hay 11 propuestas; falta la aprobación del grupo.)*
 - ☒ Datos personales identificados y plan para eliminarlos al cargar.
 - ☒ Valores imposibles, centinelas y significado de los vacíos revisados.
 - ☒ Fuga sospechada: lista escrita, aunque sea "ninguna, porque…".
-- ☐ `reports/01_eda.md` completado. *(Borrador escrito; se cierra cuando el notebook reproduzca las cifras.)*
+- ☐ `reports/01_eda.md` completado. *(Cifras ya reproducidas por el notebook; falta el MAE de la línea base, que necesita las tasas, y la aprobación del grupo.)*
 - ☐ Quien **no** escribió una decisión sabe explicar por qué se tomó.

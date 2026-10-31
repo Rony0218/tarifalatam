@@ -62,3 +62,21 @@ def test_baseline_cv_mae_fits_only_on_train_folds(monkeypatch):
     for (_, fit_hosts), (_, valid_hosts) in zip(calls[::2], calls[1::2]):
         assert fit_hosts.isdisjoint(valid_hosts)
     assert np.isclose(result["mean"], np.mean(result["per_fold"]))
+
+
+def test_median_baseline_falls_back_to_overall_median_for_unseen_city():
+    """Si una ciudad entera cae en el pliegue de validación, se usa la mediana general (no un vacío)."""
+    model = MedianBaseline().fit(_train())
+    new = pd.DataFrame({"city": ["santiago"], "room_type": ["Entire home/apt"]})
+    assert model.predict(new).tolist() == [100.0]  # mediana de [100, 300, 50, 80, 120]
+
+
+def test_baseline_cv_mae_matches_a_hand_calculation():
+    # 4 anfitriones, uno por pliegue; todos "belize" y vivienda completa
+    train = pd.DataFrame(
+        {"host_id": [1, 2, 3, 4], "city": "belize", "room_type": "Entire home/apt", "price_usd": [10.0, 20.0, 30.0, 40.0]}
+    )
+    result = baseline_cv_mae(train, n_splits=4)
+    # cada pliegue predice la mediana de los otros tres: 30, 30, 20, 20 -> errores 20, 10, 10, 20
+    assert sorted(result["per_fold"]) == [10.0, 10.0, 20.0, 20.0]
+    assert result["mean"] == 15.0

@@ -61,3 +61,12 @@ def test_group_cv_folds_do_not_share_hosts():
         valid_hosts = set(df.iloc[valid_idx]["host_id"])
         assert train_hosts.isdisjoint(valid_hosts)
     assert np.all(df["host_id"].notna())
+
+
+def test_split_by_host_fails_if_host_id_is_missing():
+    """Un host_id vacío no se puede agrupar: dos anuncios vacíos podrían caer a ambos lados sin que se note."""
+    df = _many_hosts()
+    df["host_id"] = df["host_id"].astype(float)
+    df.loc[0, "host_id"] = np.nan
+    with pytest.raises(ValueError, match="host_id"):
+        split_by_host(df)

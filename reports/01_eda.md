@@ -4,9 +4,9 @@
 > y cada decisión está implementada con pruebas en `src/tarifalatam/data/`.
 > Guía: `material-del-curso/kit/guia-eda-y-preprocesamiento.md`.
 
-> **Estado: borrador (2026-10-30).** Las cifras salen de una exploración de los siete archivos de `data/raw/`.
-> Se cierra cuando `notebooks/02_eda.ipynb` las reproduzca y el grupo apruebe las decisiones
-> (`especificaciones/02-eda.md`, sección 4).
+> **Cifras reproducidas por `notebooks/02_eda.ipynb` el 2026-10-30** (su tabla final compara 19 cifras con este informe:
+> todas coinciden). Dos cifras que la tabla no cubría se corrigieron con el valor del notebook (ver "Qué queda abierto").
+> Falta que el grupo apruebe las decisiones (`especificaciones/02-eda.md`, sección 4).
 
 ## Qué son los datos
 
@@ -61,11 +61,13 @@
   noche de 94.102 COP frente a 170.000 COP del resto.
 - **Vacíos que significan algo:** el 15,5 % de los anuncios no tiene reseñas; en todos ellos, y solo en ellos, las notas
   (`review_scores_*`) y `reviews_per_month` están vacías. Significa "anuncio nuevo".
-- **Duplicados:** ningún `id` repetido; 26 filas idénticas salvo el `id`; 3.076 anuncios del mismo anfitrión con las
+- **Duplicados:** ningún `id` repetido; 159 filas idénticas salvo el `id` (sin contar el texto libre, que se elimina al
+  cargar); 3.076 anuncios del mismo anfitrión con las
   mismas coordenadas, tipo, capacidad y precio (unidades gemelas de un mismo edificio). Al partir por `host_id` quedan
   siempre del mismo lado.
 - **Constancia por anfitrión:** `host_is_superhost` no cambia nunca dentro de un anfitrión; `host_listings_count` cambia en
-  el 0,18 % y la antigüedad en el 0,01 %. No hay ruido que reparar.
+  el 0,18 % y la antigüedad (`hosts_time_as_host_years`) en el 0,02 % de los anfitriones con varios anuncios. No hay ruido
+  que reparar.
 - **Fechas:** un solo corte por ciudad (`last_scraped` entre el 16 y el 29 de septiembre de 2026): no hay orden temporal
   que respetar al partir. Las reseñas van de 2010 a 2026 sin incoherencias (ninguna última reseña anterior a la primera).
 - **Coordenadas:** todas dentro del área de su ciudad (Belice cubre el país entero).
@@ -105,11 +107,41 @@
 
 ## Qué queda abierto
 
-- **Tasas de cambio:** falta elegir la fuente oficial y anotar el valor usado para cada ciudad. En Buenos Aires la tasa
-  implícita de Airbnb (764,41 ARS) puede diferir mucho de la oficial.
-- **Buenos Aires y Belice:** incluirlos o no (pendiente desde la especificación del proyecto).
-- **`source = "previous scrape"`:** 3.293 anuncios con precio que vienen del corte anterior; ¿se quedan?
-- **Umbral de precios extremos** (decisión 8): 20 × es una propuesta; con 10 × se excluirían 1.898.
-- **Ocupación y disponibilidad:** medir en la etapa 4 si aportan sin hacer trampa (el auditor de fuga debe revisarlas).
+- **Tasas de cambio:** decidido: tasa oficial del banco central en la fecha del corte. **Falta que el grupo anote los
+  valores** (tarea T014). En Buenos Aires la tasa implícita de Airbnb (764,41 ARS) puede diferir mucho de la oficial.
+- **Decidido el 2026-10-30:** se incluyen las siete ciudades y se excluyen los 11.701 anuncios `previous scrape`.
+- **Correcciones hechas al reproducir con el notebook (2026-10-30):**
+  - Filas idénticas salvo el `id`: **159**, no 26. El script exploratorio comparaba también `name` y `description`; el
+    notebook ya no los tiene porque se eliminan al cargar. No hay decisión sobre ellas: al partir por anfitrión quedan del
+    mismo lado.
+  - Antigüedad del anfitrión que cambia entre sus anuncios: **0,02 %**, no 0,01 % (se mide sobre anfitriones con varios
+    anuncios).
+- **Umbrales congelados (2026-10-30):** 20 × la mediana para precios extremos (con 10 × se excluirían 1.898),
+  30 noches para arriendos mensuales, 10 habitaciones y 1.125 noches máximas. Se eligieron mirando **todos** los datos
+  en este EDA, antes de partir; desde ahora no se cambian mirando la prueba.
+- **Ocupación y disponibilidad:** medir en la etapa 4 si aportan sin hacer trampa (ver la clasificación de columnas en
+  `reports/04_features.md`).
 - **Celdas pequeñas para la línea base:** "habitación de hotel" tiene 21 anuncios en Río y 29 en Bogotá; su mediana será
   inestable.
+
+## Revisión de los subagentes (2026-10-30)
+
+Se revisó el código del hito H1 con `auditor-de-fuga` (T029) y `revisor-de-codigo-ia` (T030). Ninguno encontró una fuga
+confirmada ni un error que invalide el resultado. Lo que encontraron y lo que se hizo:
+
+| Hallazgo | Gravedad | Qué se hizo |
+|---|---|---|
+| `price_usd`, `price_local`, `id`, `host_id` y las columnas posteriores al precio siguen en los conjuntos: si entran al modelo, hay fuga | Alta (etapa 4) | Lista de columnas prohibidas y sospechosas en `reports/04_features.md`; la lista explícita de variables y su prueba van en la especificación de la etapa 4 |
+| La regla de extremos también quita filas de la prueba usando su precio real: el MAE de prueba será algo optimista | Media | Se acepta como regla de calidad; queda la instrucción de declararlo en `reports/07_validacion.md` |
+| Los umbrales se eligieron viendo todos los datos | Media | Se declaran congelados (ver "Qué queda abierto") |
+| Gemelos entre anfitriones distintos: la partición por anfitrión no los separa | Media | **Medido:** 939 anuncios (0,54 %) idénticos a menos de ≈ 11 m con otro anfitrión; 2.214 (1,26 %) a ≈ 110 m. Inside Airbnb además desplaza las coordenadas. Riesgo bajo: no se cambia la partición |
+| Ninguna prueba demostraba que los límites de precio ignoran la prueba | Media | Prueba nueva `test_price_bounds_ignore_test_prices` (pasa) |
+| `to_usd` solo detectaba tasas vacías; 0, negativas o con otra moneda pasaban | Media | Ahora se detiene en esos casos (4 pruebas nuevas) |
+| `host_id` vacío no se controlaba | Baja | `split_by_host` se detiene con un mensaje (prueba nueva) |
+| La línea base fallaba si una ciudad entera caía en un pliegue | Baja | Usa la mediana general como respaldo (prueba nueva y prueba con un MAE calculado a mano) |
+| Docstring de `mark_impossible_values` citaba mal el EDA ("habitaciones de hotel") | Baja | Corregido: de los 220 con más de 10 habitaciones, 129 son "habitación privada" |
+| "12 columnas vacías" frente a 11 en los datos | Baja | Aclarado: son 12 en los crudos; `neighborhood_overview` ya sale como texto libre |
+| El registro de exclusiones guardaba `11701.0` | Baja | Ahora guarda enteros |
+| `license` solo existe en Bogotá y es un número de registro | Baja | **Pendiente de decisión del grupo:** eliminarla al cargar o dejar solo `has_license` |
+| Las pruebas corrieron con pandas 3.0.3 y scikit-learn 1.9.0; `requirements.txt` fija 3.0.6 y 1.9.1 | Baja | Correr `pytest` en el `.venv` con las versiones fijadas antes de cerrar H1 |
+| La línea base usa límites de precio aprendidos con todo el entrenamiento | Baja | Efecto mínimo (la mediana es robusta); en la etapa 4 todo lo que aprende va dentro del `Pipeline` |

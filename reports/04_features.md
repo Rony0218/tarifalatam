@@ -41,8 +41,15 @@
 <!-- Variables que solo valen si cierto dato se conoce al momento de decidir; riesgos de fuga;
      lo que complicaría la app si se conserva. -->
 
-- Ocupación y disponibilidad (`estimated_occupancy_l365d`, `availability_*`) son sospechosas de fuga: medir con y sin ellas.
-- Reseñas y notas solo existen para anuncios con historia: el inversionista que evalúa un inmueble nuevo no las tiene.
+- **Nunca son variables** (son el objetivo o identificadores): `price_usd`, `price_local`, `log_price_usd`, `id`, `host_id`,
+  `scrape_id`, `last_scraped`, `calendar_last_scraped`, `source`. Hace falta una lista explícita de variables permitidas y
+  una prueba que falle si entra una de estas (auditoría de fuga, 2026-10-30).
+- **Medir con y sin ellas** (son consecuencia del precio o de la demanda): `estimated_occupancy_l365d`,
+  `availability_30/60/90/365`, `availability_eoy`, `has_availability`, `number_of_reviews*`, `reviews_per_month`,
+  `last_review`, `has_reviews`, `review_scores_*`, `first_review`.
+- **Recomendación:** entrenar dos versiones, una con las sospechosas (solo para medir cuánto pesan) y otra sin ellas. Solo la
+  segunda puede ir a la app: el inversionista evalúa inmuebles nuevos, sin reseñas ni ocupación.
+- `license` solo existe en Bogotá (84,9 %): funciona como un indicador de ciudad. Descartarla o dejar solo `has_license`.
 -
 
 ## Qué se lleva el pipeline final

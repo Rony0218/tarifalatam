@@ -97,6 +97,8 @@ def test_check_currencies_ignores_empty_or_broken_quotes():
     df.loc[0, "price_quote_raw"] = np.nan
     df.loc[1, "price_quote_raw"] = "{no es json"
     df.loc[2, "price_quote_raw"] = json.dumps({"quote": None})
+    df.loc[3, "price_quote_raw"] = json.dumps({"quote": "texto en vez de diccionario"})
+    df.loc[4, "price_quote_raw"] = json.dumps(["una lista"])
     check_currencies(df)
 
 
@@ -147,6 +149,21 @@ def test_to_usd_fails_when_city_is_not_in_the_table():
         to_usd(df, rates=FAKE_RATES)
 
 
+@pytest.mark.parametrize("bad_rate", [0, -5.0, np.nan, np.inf])
+def test_to_usd_fails_when_rate_is_not_a_positive_number(bad_rate):
+    rates = {**FAKE_RATES, "rio-de-janeiro": {**FAKE_RATES["rio-de-janeiro"], "local_per_usd": bad_rate}}
+    df = pd.DataFrame({"city": ["rio-de-janeiro"], "price_local": [500.0]})
+    with pytest.raises(ValueError, match="rio-de-janeiro"):
+        to_usd(df, rates=rates)
+
+
+def test_to_usd_fails_when_rate_currency_does_not_match_city():
+    rates = {**FAKE_RATES, "rio-de-janeiro": {**FAKE_RATES["rio-de-janeiro"], "currency": "MXN"}}
+    df = pd.DataFrame({"city": ["rio-de-janeiro"], "price_local": [500.0]})
+    with pytest.raises(ValueError, match="rio-de-janeiro"):
+        to_usd(df, rates=rates)
+
+
 # --- Columnas que se eliminan (FR-005, FR-006) ---
 
 
@@ -179,13 +196,22 @@ def test_parse_bathrooms_text_reads_number_and_shared_flag():
 
 def test_parse_bathrooms_text_handles_half_bath_no_bathroom_and_empty():
     df = pd.DataFrame(
-        {"bathrooms_text": ["Half-bath", "Shared half-bath", "Private half-bath", "No bathroom", np.nan]}
+        {
+            "bathrooms_text": [
+                "Half-bath",
+                "Shared half-bath",
+                "Private half-bath",
+                "Shared half bathroom",  # 1 caso real, sin guion
+                "No bathroom",
+                np.nan,
+            ]
+        }
     )
     out = parse_bathrooms_text(df)
-    assert out["bathrooms_count"].tolist()[:4] == [0.5, 0.5, 0.5, 0.0]
-    assert np.isnan(out["bathrooms_count"].iloc[4])
-    assert out["bathroom_shared"].tolist()[:4] == [0.0, 1.0, 0.0, 0.0]
-    assert np.isnan(out["bathroom_shared"].iloc[4])
+    assert out["bathrooms_count"].tolist()[:5] == [0.5, 0.5, 0.5, 0.5, 0.0]
+    assert np.isnan(out["bathrooms_count"].iloc[5])
+    assert out["bathroom_shared"].tolist()[:5] == [0.0, 1.0, 0.0, 1.0, 0.0]
+    assert np.isnan(out["bathroom_shared"].iloc[5])
 
 
 # --- Arriendos mensuales (FR-008) ---
@@ -217,6 +243,20 @@ def test_mark_impossible_values():
     assert out["maximum_nights"].isna().tolist() == [False, False, True, True]
     # 14 habitaciones para 2 personas es imposible; 12 para 16 personas se conserva
     assert out["bedrooms"].isna().tolist() == [False, True, False, False]
+
+
+def test_mark_impossible_values_edge_cases():
+    df = pd.DataFrame(
+        {
+            "maximum_nights": [365] * 4,
+            "bedrooms": [10.0, 11.0, 12.0, 15.0],
+            "accommodates": [2, 11, np.nan, 14],
+        }
+    )
+    out = mark_impossible_values(df)
+    # 10 no supera el tope; 11 = capacidad no la supera; sin capacidad no hay con qué comparar -> se conserva;
+    # 15 habitaciones para 14 personas sí se marca
+    assert out["bedrooms"].isna().tolist() == [False, False, False, True]
 
 
 # --- Reseñas (FR-010) ---

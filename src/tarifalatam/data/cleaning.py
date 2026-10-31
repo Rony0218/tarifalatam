@@ -67,10 +67,11 @@ def _quote_currency(raw) -> str | None:
     if not isinstance(raw, str):
         return None
     try:
-        quote = (json.loads(raw) or {}).get("quote") or {}
-    except (json.JSONDecodeError, AttributeError):
+        parsed = json.loads(raw)
+    except json.JSONDecodeError:
         return None
-    return quote.get("currency")
+    quote = parsed.get("quote") if isinstance(parsed, dict) else None
+    return quote.get("currency") if isinstance(quote, dict) else None
 
 
 def check_currencies(df: pd.DataFrame) -> pd.DataFrame:
@@ -109,13 +110,21 @@ def drop_missing_price(df: pd.DataFrame) -> pd.DataFrame:
 def to_usd(df: pd.DataFrame, rates: dict = FX_RATES) -> pd.DataFrame:
     """Agrega price_usd = price_local / (moneda local por 1 USD) con la tasa de la ciudad.
 
-    Si a una ciudad presente le falta la tasa, se detiene: nunca se usa un valor supuesto.
+    Si a una ciudad presente le falta la tasa, se detiene: nunca se usa un valor supuesto. También se detiene si la
+    tasa no es un número positivo (0, negativo, vacío o infinito) o si su moneda no es la de la ciudad.
     """
-    missing = sorted(c for c in df["city"].unique() if (rates.get(c) or {}).get("local_per_usd") is None)
+    cities = df["city"].unique()
+    missing = sorted(c for c in cities if (rates.get(c) or {}).get("local_per_usd") is None)
     if missing:
         raise ValueError(
             f"falta la tasa de cambio de {', '.join(missing)}: anótela en FX_RATES (config.py) con su fuente oficial"
         )
+    invalid = sorted(c for c in cities if not (np.isfinite(rates[c]["local_per_usd"]) and rates[c]["local_per_usd"] > 0))
+    if invalid:
+        raise ValueError(f"la tasa de cambio no es un número positivo en: {', '.join(invalid)}")
+    wrong_currency = sorted(c for c in cities if rates[c].get("currency") != CITY_CURRENCY.get(c))
+    if wrong_currency:
+        raise ValueError(f"la moneda de FX_RATES no coincide con CITY_CURRENCY en: {', '.join(wrong_currency)}")
     out = df.copy()
     per_usd = out["city"].map({city: rate["local_per_usd"] for city, rate in rates.items()})
     out["price_usd"] = out["price_local"] / per_usd
@@ -128,7 +137,11 @@ def drop_leakage_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def drop_empty_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Elimina las 12 columnas que vienen 100 % vacías en las siete ciudades."""
+    """Elimina las columnas que vienen 100 % vacías en las siete ciudades.
+
+    Son 12 en los archivos crudos; con datos reales aquí se quitan 11, porque neighborhood_overview ya sale en
+    load_raw como texto libre.
+    """
     return df.drop(columns=EMPTY_COLUMNS, errors="ignore")
 
 
@@ -160,8 +173,11 @@ def drop_monthly_rentals(df: pd.DataFrame) -> pd.DataFrame:
 def mark_impossible_values(df: pd.DataFrame) -> pd.DataFrame:
     """Pasa a vacío los centinelas, sin quitar filas.
 
-    maximum_nights > 1.125 (21 anuncios con 2.147.483.647, el máximo entero) y habitaciones > 10 que
-    además superan la capacidad (124 casos: habitaciones de hotel que reportan el edificio).
+    maximum_nights > 1125 (50 anuncios; 21 con 2.147.483.647, el máximo entero). El 1125 se conserva: es el
+    valor por defecto de Airbnb (60.322 anuncios) y significa "sin límite", no un error.
+    bedrooms > 10 que además supera la capacidad (124 casos de 220 con más de 10 habitaciones; de esos 220,
+    129 son "habitación privada": parecen reportar el edificio, no el anuncio). Si falta la capacidad no hay con
+    qué comparar y el valor se conserva.
     """
     out = df.copy()
     out["maximum_nights"] = out["maximum_nights"].mask(out["maximum_nights"] > MAX_NIGHTS_CAP)

@@ -33,6 +33,13 @@
 | MAPE (%) | | | |
 | R² | | | |
 
+> **Declarar siempre (auditoría de fuga, 2026-10-30):** la prueba excluye por ciudad los precios fuera de [0,1 ×, 20 ×] la
+> mediana del entrenamiento (182 filas en la prueba en seco; cifra final en `reports/03_exclusiones.csv`). El MAE de arriba es
+> sobre "anuncios con precio plausible". Reportar también, una sola vez y sin usarlo para decidir, el MAE sin ese filtro: la
+> app no filtra nada.
+
+- MAE sin el filtro de extremos (sensibilidad): _______________
+
 **¿Mejora al baseline con confianza?** (¿el intervalo de la diferencia excluye el cero?): _______________
 
 ## 4. Errores y carga de trabajo

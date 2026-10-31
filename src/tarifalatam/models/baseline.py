@@ -2,7 +2,7 @@
 
 Es la regla simple que el modelo debe superar (especificacion-proyecto.md, sección 4). Si una combinación
 ciudad × tipo no se vio al ajustar (por ejemplo, hay solo 21 habitaciones de hotel en Río), usa la mediana
-de la ciudad.
+de la ciudad; si tampoco se vio la ciudad (un pliegue sin Belice, por ejemplo), usa la mediana general.
 """
 import numpy as np
 import pandas as pd
@@ -18,13 +18,15 @@ class MedianBaseline:
     def fit(self, train: pd.DataFrame) -> "MedianBaseline":
         self.cell_medians_ = train.groupby(["city", "room_type"])["price_usd"].median()
         self.city_medians_ = train.groupby("city")["price_usd"].median()
+        self.overall_median_ = float(train["price_usd"].median())
         return self
 
     def predict(self, df: pd.DataFrame) -> np.ndarray:
         keys = pd.MultiIndex.from_frame(df[["city", "room_type"]])
         by_cell = self.cell_medians_.reindex(keys).to_numpy(dtype=float)
         by_city = df["city"].map(self.city_medians_).to_numpy(dtype=float)
-        return np.where(np.isnan(by_cell), by_city, by_cell)
+        prediction = np.where(np.isnan(by_cell), by_city, by_cell)
+        return np.where(np.isnan(prediction), self.overall_median_, prediction)
 
 
 def baseline_cv_mae(train: pd.DataFrame, n_splits: int = 5) -> dict:

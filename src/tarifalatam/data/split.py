@@ -16,7 +16,10 @@ def split_by_host(df: pd.DataFrame, test_size: float = TEST_SIZE, seed: int = RA
     """Separa entrenamiento y prueba sin repartir a ningún anfitrión entre los dos.
 
     test_size es la proporción de ANFITRIONES en prueba: la de filas queda cerca, no exacta.
+    Falla si algún host_id está vacío: un anuncio sin anfitrión no se puede agrupar con seguridad.
     """
+    if df[GROUP_COL].isna().any():
+        raise ValueError(f"{df[GROUP_COL].isna().sum()} anuncios no tienen {GROUP_COL}: no se puede partir por anfitrión")
     splitter = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=seed)
     train_idx, test_idx = next(splitter.split(df, groups=df[GROUP_COL]))
     train = df.iloc[train_idx].reset_index(drop=True)
