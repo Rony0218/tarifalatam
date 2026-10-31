@@ -110,8 +110,8 @@
 
 ## Qué queda abierto
 
-- **Tasas de cambio:** tasa oficial del banco central para la fecha del corte. Claude consultó los valores en las fuentes
-  oficiales el 2026-10-30 y los anotó en `config.py` con su fuente; **falta que el grupo los confirme** (tarea T014).
+- **Tasas de cambio:** tasa oficial del banco central para la fecha del corte. Los valores se consultaron en las fuentes
+  oficiales el 2026-10-30 y están en `config.py` con su fuente; **falta que el grupo los confirme** (tarea T014).
 - **Buenos Aires, 764,41 frente a 1.516,30:** decidir si se usa la tasa oficial (decisión actual), la implícita de Airbnb,
   o si se reporta Buenos Aires aparte. Mientras tanto, revisar su error por separado en las etapas siguientes.
 - **Decidido el 2026-10-30:** se incluyen las siete ciudades y se excluyen los 11.701 anuncios `previous scrape`.

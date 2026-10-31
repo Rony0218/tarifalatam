@@ -39,8 +39,8 @@ CITY_CURRENCY = {
 }
 
 # Tasas de cambio: unidades de moneda local por 1 USD, en la fecha del corte de cada ciudad (tarea T014).
-# Criterio: la tasa oficial publicada por el banco central PARA esa fecha. Las consultó Claude el 2026-10-30 en
-# las fuentes oficiales del campo "source". ESTADO: PENDIENTE DE CONFIRMAR POR EL GRUPO (anotar en la sección 7
+# Criterio: la tasa oficial publicada por el banco central PARA esa fecha. Consultadas el 2026-10-30 en las
+# fuentes oficiales del campo "source". ESTADO: PENDIENTE DE CONFIRMAR POR EL GRUPO (anotar en la sección 7
 # de especificacion-proyecto.md quién las verificó y cuándo).
 # None = pendiente: to_usd() se detiene con un mensaje en vez de usar un valor supuesto.
 FX_RATES = {
