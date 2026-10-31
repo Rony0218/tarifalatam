@@ -122,17 +122,17 @@ mismos pliegues, y decidir cada idea con la regla escrita.
 
 ### P3 · Pipeline, métricas y evaluación (`src/tarifalatam/models/train.py`, pruebas en `tests/test_train.py`)
 
-- [ ] T024 [P] [US1] Escribir en `tests/test_train.py` (debe fallar antes de T025):
+- [X] T024 [P] [US1] Escribir en `tests/test_train.py` (debe fallar antes de T025):
   - `test_usd_metrics_perfect_prediction` (`mae = bias = 0`, `r2_log = 1`)
   - `test_usd_metrics_hand_case`: MAE, MAPE en % y sesgo calculados a mano, con un caso que sobrestima (sesgo positivo) y otro que subestima
   - `test_improvement_over_noise_hand_case`: `noise` con `ddof=1` del MAE de la variante; `noise = 0` → `ratio = inf`; `folds_won`
   - `test_keep_idea_rule`: 1,3 y se conoce → `True`; 0,8 → `False`; 1,3 y no se conoce → `False`
 
   · P3 · Responsable:
-- [ ] T025 [US1] Implementar `usd_metrics`, `improvement_over_noise` y `keep_idea` en `src/tarifalatam/models/train.py` (`research.md`, punto 9). Verificar con `pytest tests/test_train.py -k "metrics or noise or keep"` · P3 · Responsable:
-- [ ] T026 [US1] Escribir las pruebas del adaptador y los candidatos (deben fallar antes de T027): `BaselineRegressor` da en USD la misma predicción que `MedianBaseline` (incluido el respaldo a la mediana de la ciudad y a la general); `candidates()` devuelve `linea_base`, `ridge`, `random_forest` y `lightgbm`, con las familias `baseline`, `linear`, `forest` y `boosting` y los parámetros de la sección 5.1 de la especificación de etapa · P3 · Responsable:
-- [ ] T027 [US1] Implementar `BaselineRegressor` y `candidates(random_state=42)` en `src/tarifalatam/models/train.py`, reutilizando `MedianBaseline` **sin modificar `baseline.py`**. Parámetros: `Ridge(alpha=1.0)`; `RandomForestRegressor(n_estimators=200, min_samples_leaf=3, max_features=0.5, n_jobs=-1, random_state=42)`; `LGBMRegressor(n_estimators=300, learning_rate=0.05, num_leaves=31, random_state=42, n_jobs=-1, verbose=-1)`. Verificar con `pytest tests/test_train.py -k "baseline or candidates"` · P3 · Responsable:
-- [ ] T028 [US1] Escribir las pruebas de `build_pipeline` y `feature_frame` (deben fallar antes de T029):
+- [X] T025 [US1] Implementar `usd_metrics`, `improvement_over_noise` y `keep_idea` en `src/tarifalatam/models/train.py` (`research.md`, punto 9). Verificar con `pytest tests/test_train.py -k "metrics or noise or keep"` · P3 · Responsable:
+- [X] T026 [US1] Escribir las pruebas del adaptador y los candidatos (deben fallar antes de T027): `BaselineRegressor` da en USD la misma predicción que `MedianBaseline` (incluido el respaldo a la mediana de la ciudad y a la general); `candidates()` devuelve `linea_base`, `ridge`, `random_forest` y `lightgbm`, con las familias `baseline`, `linear`, `forest` y `boosting` y los parámetros de la sección 5.1 de la especificación de etapa · P3 · Responsable:
+- [X] T027 [US1] Implementar `BaselineRegressor` y `candidates(random_state=42)` en `src/tarifalatam/models/train.py`, reutilizando `MedianBaseline` **sin modificar `baseline.py`**. Parámetros: `Ridge(alpha=1.0)`; `RandomForestRegressor(n_estimators=200, min_samples_leaf=3, max_features=0.5, n_jobs=-1, random_state=42)`; `LGBMRegressor(n_estimators=300, learning_rate=0.05, num_leaves=31, random_state=42, n_jobs=-1, verbose=-1)`. Verificar con `pytest tests/test_train.py -k "baseline or candidates"` · P3 · Responsable:
+- [X] T028 [US1] Escribir las pruebas de `build_pipeline` y `feature_frame` (deben fallar antes de T029):
   - `test_build_pipeline_rejects_a_forbidden_column` (al pedir `price_usd`, error que la nombra)
   - `test_pipeline_ignores_target_and_ids`: con datos de juguete donde `price_usd`, `id` y `host_id` predicen perfecto, los nombres de salida del `ColumnTransformer` no los contienen
   - `test_build_pipeline_fits_each_family_with_each_idea` (ajusta y predice en el juguete)
@@ -140,15 +140,15 @@ mismos pliegues, y decidir cada idea con la regla escrita.
   - `test_feature_frame_drops_target_columns`
 
   · P3 · Responsable:
-- [ ] T029 [US1] Implementar `build_pipeline(model, family, ideas=(), with_suspicious=False)` y `feature_frame(train)` en `src/tarifalatam/models/train.py`, según `data-model.md` (sección 3) y `research.md` (puntos 5 a 7):
+- [X] T029 [US1] Implementar `build_pipeline(model, family, ideas=(), with_suspicious=False)` y `feature_frame(train)` en `src/tarifalatam/models/train.py`, según `data-model.md` (sección 3) y `research.md` (puntos 5 a 7):
   - Transformadores de las ideas activas → `ColumnTransformer(remainder="drop")` → modelo.
   - Llama a `check_feature_columns`.
   - Idea 5: `TargetEncoder(target_type="continuous", cv=KFold(5, shuffle=True, random_state=42))`, **sin** los parámetros obsoletos `shuffle` y `random_state`.
   - Verificar con `pytest tests/test_train.py -k "pipeline or frame or family"`.
 
   · P3 · Responsable:
-- [ ] T030 [US1] Escribir las pruebas de `evaluate_folds` (deben fallar antes de T031): una fila por pliegue con `mae`, `mape`, `rmse`, `bias`, `r2_log` y `fit_seconds`; usa exactamente los pliegues dados (cada predicción fuera de pliegue sale de un modelo que no vio esa fila); el `Pipeline` original queda sin ajustar · P3 · Responsable:
-- [ ] T031 [US1] Implementar `evaluate_folds(pipeline, X, y_log, folds)` en `src/tarifalatam/models/train.py`, que devuelve (tabla por pliegue, predicciones fuera de pliegue en logaritmo), clonando el `Pipeline` en cada pliegue. Verificar con `pytest tests/test_train.py` (todo el archivo en verde) · P3 · Responsable:
+- [X] T030 [US1] Escribir las pruebas de `evaluate_folds` (deben fallar antes de T031): una fila por pliegue con `mae`, `mape`, `rmse`, `bias`, `r2_log` y `fit_seconds`; usa exactamente los pliegues dados (cada predicción fuera de pliegue sale de un modelo que no vio esa fila); el `Pipeline` original queda sin ajustar · P3 · Responsable:
+- [X] T031 [US1] Implementar `evaluate_folds(pipeline, X, y_log, folds)` en `src/tarifalatam/models/train.py`, que devuelve (tabla por pliegue, predicciones fuera de pliegue en logaritmo), clonando el `Pipeline` en cada pliegue. Verificar con `pytest tests/test_train.py` (todo el archivo en verde) · P3 · Responsable:
 
 ### P5 · Notebook 04 e informe
 
@@ -180,13 +180,13 @@ finalistas.
 
 ### P3 · Funciones del torneo
 
-- [ ] T036 [P] [US2] Escribir en `tests/test_train.py` (deben fallar antes de T037):
+- [X] T036 [P] [US2] Escribir en `tests/test_train.py` (deben fallar antes de T037):
   - `test_city_errors_hand_case` (MAE y sesgo por ciudad y pliegue con una tabla calculada a mano)
   - `test_compare_hand_case` (diferencia media, pliegues que gana y diferencia / ruido con `ddof=1` de las diferencias)
   - `test_value_per_nights` (diferencia × 30)
 
   · P3 · Responsable:
-- [ ] T037 [US2] Implementar `city_errors`, `compare` y `value_per_nights` en `src/tarifalatam/models/train.py`, según `contracts/model-functions.md`. Verificar con `pytest tests/test_train.py` · P3 · Responsable:
+- [X] T037 [US2] Implementar `city_errors`, `compare` y `value_per_nights` en `src/tarifalatam/models/train.py`, según `contracts/model-functions.md`. Verificar con `pytest tests/test_train.py` · P3 · Responsable:
 
 ### P5 · Notebook 05 e informe
 
