@@ -8,12 +8,13 @@ criterio y cómo sabrán que quedó bien. Claude las lee antes de generar códig
 |---|---|---|
 | [`02-eda.md`](02-eda.md) | **Clase 2 · viernes 30 de octubre**, bloque de EDA | `reports/01_eda.md` con ≥ 5 decisiones |
 | [`03-preprocesamiento.md`](03-preprocesamiento.md) | **Clase 2 · viernes 30 de octubre**, bloque de limpieza y partición | `src/tarifalatam/data/` + `pytest` en verde |
+| [`04-features-torneo-optimizacion.md`](04-features-torneo-optimizacion.md) | **Clase 3 · sábado 31 de octubre**, antes de medir variables, torneo y optimización | `reports/04_features.md`, `05_torneo.md` y `06_optimizacion.md` + `src/tarifalatam/features/` y `models/` + `pytest` en verde |
 
 **Relación con Spec Kit.** Estas guías son **la entrada**: lo que escriben aquí se pasa a `/speckit-specify`, que lo convierte
 en `specs/<nº>/spec.md`; después `/speckit-plan` y `/speckit-tasks` producen el plan y la lista de tareas (`tasks.md`).
 Ver `material-del-curso/guias/entorno-ia-specify.md`.
 
-Las especificaciones de las etapas siguientes se agregan en las clases 3 y 4.
+Las especificaciones de las etapas 7 en adelante se agregan en la clase 4.
 
 ## Cómo se usan
 
