@@ -240,7 +240,7 @@ la regla.
 
 ### P5 · Notebook 06 e informe
 
-- [ ] T044 [US3] Reescribir `notebooks/06_optimizacion.ipynb` (solo orquesta):
+- [X] T044 [US3] Reescribir `notebooks/06_optimizacion.ipynb` (solo orquesta):
   1. `configure_mlflow(force_local=True)`, mostrando los avisos; `set_experiment(EXPERIMENT_NAME)` e imprimir `MLflow: local | experimento: …`.
   2. `reserve_hosts` con `assert` de anfitriones disjuntos y `fold_indices(search, folds, exact=False)`.
   3. Presupuesto y espacio escritos antes de buscar.
@@ -250,9 +250,9 @@ la regla.
   7. `save_decision` en `reports/06_best_params.json`.
 
   La mejor puntuación de la búsqueda se rotula como optimista y no se reporta como resultado. Sin ninguna referencia que lea `test.csv.gz` · P5 · Responsable:
-- [ ] T045 [US3] Ejecutar el notebook 06 en segundo plano, con `python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/06_optimizacion.ipynb`. Comprobar con `mlflow ui --backend-store-uri sqlite:///mlflow_local.db` (o `mlflow.search_runs`) que hay una ejecución por ensayo, que existen los dos archivos de salida y que `git status` no muestra `mlflow_local.db`. Anotar el tiempo · P5 · Responsable:
-- [ ] T046 [US3] Completar `reports/06_optimizacion.md` **solo con cifras del notebook 06**: espacio de búsqueda, presupuesto, resultados, comprobación con su intervalo, decisión según la regla y la nota sobre el doble uso de los anfitriones reservados · P5 · Responsable:
-- [ ] T047 [US3] (GRUPO) Aceptar la decisión de parámetros y el modelo que pasa a la etapa 7 · Responsable:
+- [X] T045 [US3] Ejecutar el notebook 06 en segundo plano, con `python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 notebooks/06_optimizacion.ipynb`. Comprobar con `mlflow ui --backend-store-uri sqlite:///mlflow_local.db` (o `mlflow.search_runs`) que hay una ejecución por ensayo, que existen los dos archivos de salida y que `git status` no muestra `mlflow_local.db`. Anotar el tiempo · P5 · Responsable:
+- [X] T046 [US3] Completar `reports/06_optimizacion.md` **solo con cifras del notebook 06**: espacio de búsqueda, presupuesto, resultados, comprobación con su intervalo, decisión según la regla y la nota sobre el doble uso de los anfitriones reservados · P5 · Responsable:
+- [X] T047 [US3] (GRUPO) Aceptar la decisión de parámetros y el modelo que pasa a la etapa 7 · Responsable:
 
 **Checkpoint**: las tres historias funcionan; el hito H2 tiene su parte de clase 3.
 

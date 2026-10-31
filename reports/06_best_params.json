@@ -1,0 +1,42 @@
+{
+  "finalista": "lightgbm",
+  "parametros": {
+    "n_estimators": 522,
+    "learning_rate": 0.016724373591399267,
+    "num_leaves": 215,
+    "min_child_samples": 19,
+    "subsample": 0.9281081091680619,
+    "colsample_bytree": 0.542468127069249,
+    "reg_lambda": 2.8855004473017765
+  },
+  "origen_parametros": "optimizados",
+  "comprobacion": {
+    "anfitriones_reservados": 13347,
+    "anuncios_reservados": 29023,
+    "mae_partida": 38.862347213065604,
+    "mae_optimizado": 38.52331318457415,
+    "diferencia_media": -0.3390340284914485,
+    "intervalo_95": [
+      -0.6376654436260816,
+      -0.009914320219349446
+    ],
+    "remuestreos": 1000,
+    "semilla": 42
+  },
+  "regla": "Se usan los optimizados solo si todo el intervalo está por debajo de cero",
+  "comparacion_finalistas": {
+    "finalista_a": "random_forest",
+    "finalista_b": "lightgbm",
+    "mae_a": 38.69607178082489,
+    "mae_b": 38.52331318457415,
+    "diferencia_media": 0.17275859625073786,
+    "intervalo_95": [
+      -0.198535681775078,
+      0.550686956269823
+    ],
+    "motivo": "el intervalo cruza el cero: empate; pasa el más rápido de ajustar (lightgbm)"
+  },
+  "tracking": "local",
+  "experimento": "tarifalatam-optimizacion",
+  "ensayos": 60
+}
