@@ -2,7 +2,7 @@
 marp: true
 theme: default
 paginate: true
-header: "Presentación ejecutiva · TODO: nombre de tu startup"
+header: "Presentación ejecutiva · TarifaLatam"
 footer: "Casos Avanzados · Maestría en Ingeniería Analítica"
 ---
 
@@ -10,9 +10,9 @@ footer: "Casos Avanzados · Maestría en Ingeniería Analítica"
 
 <!-- TODO: borra las instrucciones de cada diapositiva y escribe lo tuyo. MÁXIMO 5 DIAPOSITIVAS: no agregues una sexta. -->
 
-- **¿Quién decide?** TODO
-- **¿Qué decide con el resultado?** TODO
-- **¿Cuánto cuesta equivocarse** (y si cuesta distinto en cada dirección)? TODO
+- **¿Quién decide?** El anfitrión de Airbnb (fija su tarifa) y el inversionista (decide si compra para alquilar)
+- **¿Qué decide con el resultado?** Cuánto cobrar por noche; si un inmueble se pagaría
+- **¿Cuánto cuesta equivocarse** (y si cuesta distinto en cada dirección)? Muy bajo: pierde ingreso cada noche. Muy alto: inmueble vacío y peor posición en las búsquedas. Para el inversionista, sobrestimar es lo más caro
 
 > TODO: un titular que entienda alguien sin formación técnica. **No abras con el nombre del algoritmo.**
 
@@ -39,7 +39,7 @@ footer: "Casos Avanzados · Maestría en Ingeniería Analítica"
 | Con TODO decisiones al mes | TODO | TODO |
 
 - **Mejora y su intervalo o límite:** TODO
-- **La métrica técnica** (F1, AUC, RMSE…) va en una nota, no en el titular: TODO
+- **La métrica técnica** (MAE en USD, MAPE, R²) va en una nota, no en el titular: TODO
 
 ---
 

@@ -1,4 +1,4 @@
-# [NOMBRE DEL PROYECTO] — Constitución
+# TarifaLatam — Constitución
 
 > **Borrador sembrado con las reglas del curso.** Su primer trabajo con Spec Kit es **ajustarla a su grupo**:
 > ejecuten `/speckit-constitution` y pídanle, por ejemplo: *«Ajusta esta constitución a mi proyecto: nombre
@@ -9,12 +9,12 @@
 ## Principios
 
 ### I. Los datos originales no se tocan
-`data/raw/` MUST NOT modificarse. Toda limpieza se hace en código (`src/<paquete>/data/`) y se guarda en
+`data/raw/` MUST NOT modificarse. Toda limpieza se hace en código (`src/tarifalatam/data/`) y se guarda en
 `data/processed/`, que se regenera desde cero con el notebook de preprocesamiento. *Razón:* sin el original no hay
 reproducibilidad.
 
 ### II. Se parte por la unidad de análisis
-La unidad de análisis de este proyecto es **[una fila es …]** y la entidad que se repite es **[columna o «ninguna»]**.
+La unidad de análisis de este proyecto es **un anuncio de Airbnb (`id`) en la fecha de corte de su ciudad** y la entidad que se repite es **el anfitrión (`host_id`)**.
 Si una entidad aparece en varias filas, la partición y la validación cruzada MUST hacerse por grupo
 (`GroupShuffleSplit`, `GroupKFold`, `StratifiedGroupKFold`), nunca por fila. Una prueba automática MUST verificar que
 ninguna entidad cae en dos particiones. *Razón:* partir por fila filtra información y infla la métrica.
@@ -46,7 +46,8 @@ inventado en el informe invalida todo lo demás.
 
 ## Restricciones del proyecto
 
-- **Caso:** [pregunta de negocio en una frase] · **Métrica principal:** [métrica y por qué] · **Tipo de problema:** [clasificación / regresión / clusterización].
+- **Caso:** ¿cuánto debería cobrar por noche un inmueble de Airbnb en América Latina, según sus características, su barrio y su ciudad? · **Métrica principal:** MAE en USD por noche, porque el anfitrión la lee directo en dinero (controles: MAPE y R²) · **Tipo de problema:** regresión (objetivo `log(price_usd)`).
+- **Datos:** Inside Airbnb, siete ciudades, septiembre de 2026 (CC BY 4.0). `host_id` se usa solo para partir, nunca como variable.
 - **Entorno:** Python 3.12; dependencias fijadas en `requirements.txt`.
 - **Seguimiento de experimentos:** MLflow en Databricks (o local si no hay conexión); la app **no** consulta Databricks.
 - **App:** Streamlit, cargando `models/model.joblib` desde el repositorio.
@@ -66,4 +67,4 @@ Esta constitución prevalece sobre otras prácticas del proyecto. Una enmienda s
 justifica y se anota en la sección 7 de `especificacion-proyecto.md`. El instructor puede pedir aclaraciones sobre
 cualquier principio en los puntos de control.
 
-**Versión**: 0.1.0 (borrador) | **Ratificada**: [fecha] | **Última enmienda**: [fecha]
+**Versión**: 0.2.0 (borrador) | **Ratificada**: pendiente (la ratifica el grupo) | **Última enmienda**: 2026-10-30

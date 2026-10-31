@@ -10,9 +10,9 @@
      (por qué entidad se parte), semilla. Los MISMOS pliegues para todas las variantes. -->
 
 - **Modelo (parámetros fijos):**
-- **Métrica principal** (y por qué):
-- **Métricas de control:**
-- **Pliegues** (cuántos y partidos por qué entidad):
+- **Métrica principal** (y por qué): MAE en USD por noche (el anfitrión la lee en dinero)
+- **Métricas de control:** MAPE (compara ciudades con precios distintos) y R²
+- **Pliegues** (cuántos y partidos por qué entidad): `GroupKFold` por `host_id`; número de pliegues:
 - **Regla de decisión escrita antes de medir:**
 
 ## Tabla de ideas medidas
@@ -41,8 +41,10 @@
 <!-- Variables que solo valen si cierto dato se conoce al momento de decidir; riesgos de fuga;
      lo que complicaría la app si se conserva. -->
 
+- Ocupación y disponibilidad (`estimated_occupancy_l365d`, `availability_*`) son sospechosas de fuga: medir con y sin ellas.
+- Reseñas y notas solo existen para anuncios con historia: el inversionista que evalúa un inmueble nuevo no las tiene.
 -
 
 ## Qué se lleva el pipeline final
 
-<!-- La lista final de variables, y dónde está el código (`src/<paquete>/features/`). -->
+<!-- La lista final de variables, y dónde está el código (`src/tarifalatam/features/`). -->

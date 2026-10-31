@@ -33,7 +33,8 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
   Aires, Bogotá, Santiago y Belice (enlaces exactos en el `README.md`).
 - **Filas / columnas:** 194.628 anuncios (182.986 con precio) / 90 columnas por ciudad.
 - **Variable objetivo** (columna que queremos predecir o describir): `price`, precio por noche publicado,
-  convertido a USD con la tasa oficial del día del corte de cada ciudad. Se modela en logaritmo.
+  convertido a USD con la tasa oficial del día del corte de cada ciudad (Belice ya viene en USD, según
+  `price_quote_raw`). Se modela en logaritmo.
 - **Tipo de problema:** ☐ clasificación  ☒ regresión  ☐ clusterización
 - **¿Una misma entidad (cliente, paciente, empresa) aparece en varias filas?** ☐ no  ☒ sí → la partición
   será por: **`host_id`** (anfitrión). Hay ≈ 89.000 anfitriones y uno puede tener muchos anuncios.
@@ -64,9 +65,11 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
   puede ajustarse mejor a las grandes. Se reporta el error por ciudad. La tasa de cambio elegida afecta los
   precios en dólares, sobre todo en Buenos Aires por la inflación de Argentina.
 - **Datos faltantes o de mala calidad:** el precio viene como texto (`"$1,234.00"`) en seis monedas; entre
-  3,5 % y 8,5 % de los anuncios no tiene precio, según la ciudad (se excluyen); en Bogotá, unas 14 columnas
-  vienen 100 % vacías (`bathrooms`, `host_since`, `host_response_rate`…; el número de baños se rescata de
-  `bathrooms_text`); el 21 % de los anuncios no tiene reseñas; hay precios extremos.
+  3,5 % y 8,5 % de los anuncios no tiene precio, según la ciudad (se excluyen); en las siete ciudades hay 12
+  columnas 100 % vacías (`bathrooms`, `host_since`, `host_response_rate`…; el número de baños se rescata de
+  `bathrooms_text` y la antigüedad del anfitrión de `hosts_time_as_host_years`); el 15,5 % de los anuncios no
+  tiene reseñas; hay precios extremos (692 anuncios cobran más de 20 veces la mediana de su ciudad). Detalle en
+  `reports/01_eda.md`.
 - **Límites de lo que el modelo puede decir:** predice el precio **publicado**, no el que realmente se
   cobró; solo cubre siete ciudades grandes (no ciudades intermedias como Medellín o Cartagena); es una foto
   de septiembre de 2026, sin efecto de temporada.
@@ -88,3 +91,5 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 | 2026-10-30 | Se usan los anuncios de Inside Airbnb de las siete ciudades de América Latina disponibles | Ninguna ciudad sola llega al mínimo de 50.000 filas; juntas suman 194.628. No hay datos abiertos de países completos |
 | 2026-10-30 | Los precios se convierten a USD con la tasa del día del corte de cada ciudad | Hay seis monedas distintas y el modelo necesita una sola escala |
 | 2026-10-30 | Quedan pendientes de decidir en grupo: incluir o no Buenos Aires y Belice | Buenos Aires por la inflación; Belice por su tamaño pequeño y ser el único país angloparlante |
+| 2026-10-30 | Se incluyen las siete ciudades (también Buenos Aires y Belice); se excluyen los anuncios `source = "previous scrape"`; las tasas a USD son las oficiales del banco central de cada país en la fecha del corte | El error se reporta por ciudad para vigilar Buenos Aires y Belice; los anuncios del corte anterior pueden tener precios desactualizados; la tasa oficial es verificable. Ver `specs/001-eda-limpieza-particion/spec.md` |
+| 2026-10-30 | Corrección tras el EDA: Belice publica en USD (no en BZD); las columnas vacías están en las siete ciudades (no solo en Bogotá); sin reseñas hay 15,5 % (no 21 %) | Medido en los archivos de `data/raw/` (`price_quote_raw` trae la moneda); ver `reports/01_eda.md` |

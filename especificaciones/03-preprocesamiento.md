@@ -5,22 +5,28 @@
 > **exactamente** esto (`material-del-curso/kit/checklist-revision-ia.md`).
 > Guía: `material-del-curso/kit/guia-eda-y-preprocesamiento.md`, sección 4 · Ejemplo: `material-del-curso/ejemplo-creditsight/src/creditsight/data/`.
 
-**Grupo:** _______________   **Fecha:** _______________   **Estado:** ☐ borrador  ☐ cerrada
+**Grupo:** TarifaLatam   **Fecha:** 2026-10-30   **Estado:** ☒ borrador  ☐ cerrada
+
+> Prellenado con lo que ya fijan `especificacion-proyecto.md` y el EDA. Las secciones 3 y 4 se llenan cuando el grupo
+> apruebe las decisiones de `especificaciones/02-eda.md` (sección 4). La proporción de prueba la decide el grupo.
 
 ## 1. Unidad de análisis y partición
 
-- **Una fila es:** _______________
-- **Entidad que se repite (columna):** _______________  ☐ no se repite → partir por fila es válido porque: _______________
-- **Se parte por:** ☐ grupo (`GroupShuffleSplit` / `StratifiedGroupKFold`) ☐ fila
+- **Una fila es:** un anuncio de Airbnb (`id`) en la fecha de corte de su ciudad.
+- **Entidad que se repite (columna):** `host_id` (89.964 anfitriones; hasta 699 anuncios cada uno)  ☐ no se repite → partir por fila es válido porque: no aplica
+- **Se parte por:** ☒ grupo (`GroupShuffleSplit` para entrenamiento/prueba y `GroupKFold` para la validación cruzada) ☐ fila
 - **Proporción de prueba:** ___ %   **Semilla:** 42
-- **¿Hay orden temporal que respetar?** ☐ no ☐ sí → _______________
+- **¿Hay orden temporal que respetar?** ☒ no ☐ sí → un solo corte por ciudad (septiembre de 2026)
 - **Dónde se guarda la prueba:** `data/processed/` (cerrada: **no se mira** hasta la etapa 7)
 
 ## 2. Datos personales
 
 | Columna | Qué es | Se elimina en | Prueba que lo verifica |
 |---|---|---|---|
-| | | `load_raw()` (primer paso al cargar) | `test_no_personal_columns` |
+| `host_name`, `host_about`, `host_location` | Nombre, presentación y ubicación del anfitrión | `load_raw()` (primer paso al cargar) | `test_no_personal_columns` |
+| `host_url`, `host_profile_url`, `host_profile_id`, `host_picture_url`, `host_thumbnail_url` | Perfil y fotos del anfitrión | `load_raw()` | `test_no_personal_columns` |
+| `listing_url`, `picture_url` | Enlaces al anuncio y su foto | `load_raw()` | `test_no_personal_columns` |
+| `name`, `description`, `neighborhood_overview` | Texto libre (91 descripciones con teléfonos, 9 con correos) | `load_raw()` | `test_no_personal_columns` |
 
 ## 3. Reglas de limpieza
 
@@ -46,7 +52,7 @@ Una fila por decisión del EDA. **Una función, una prueba.** Se marca como vac�
 
 | | Ruta |
 |---|---|
-| Entrada | `data/raw/_______________` (nunca se modifica) |
+| Entrada | `data/raw/listings_<ciudad>_<fecha>.csv.gz` (siete archivos; nunca se modifican) |
 | Salida: entrenamiento | `data/processed/train.csv` (o `.parquet`) |
 | Salida: prueba (cerrada) | `data/processed/test.csv` (o `.parquet`) |
 | Código de limpieza | `src/tarifalatam/data/cleaning.py` |
