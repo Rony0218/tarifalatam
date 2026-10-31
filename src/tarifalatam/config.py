@@ -271,3 +271,9 @@ EXPERIMENT_NAME = "tarifalatam-optimizacion"
 # cumple mejora / ruido > 1, y el grupo decidió aplicar la regla sin excepciones. El torneo y la optimización usan la
 # referencia (13 columnas). Las amenidades (idea 2) ganaron en los 5 pliegues, pero con mejora / ruido de 0,49.
 FINAL_IDEAS = ()
+
+# Resultado de la etapa 5 (notebooks/05_torneo.ipynb, 2026-10-31; detalle en reports/05_torneo.md): el bosque aleatorio
+# (MAE 39,67 ± 1,60 USD) y LightGBM (39,90 ± 1,73) pasan a la optimización, por decisión del grupo. El bosque gana en 4 de 5
+# pliegues (diferencia / ruido 1,13); ambos ganan a Ridge en los 5 pliegues. El orden importa en el notebook 06: el primero
+# es "A" en la comparación final entre finalistas.
+FINALISTS = ("random_forest", "lightgbm")

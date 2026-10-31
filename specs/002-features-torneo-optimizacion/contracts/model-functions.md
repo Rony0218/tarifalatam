@@ -17,6 +17,7 @@ tabla nueva con columnas agregadas.
 | `RARE_MIN_COUNT = 30`, `N_FOLDS = 5`, `FOLD_SEED = 42` | Decisión 11 y pliegues | FR-003, FR-007 |
 | `RESERVE_SIZE = 0.25`, `RESERVE_SEED = 7`, `N_TRIALS = 30`, `BOOTSTRAP_N = 1000`, `NIGHTS_SCALE = 30` | Etapas 5 y 6 | FR-018, FR-020, FR-021, FR-024 |
 | `EXPERIMENT_NAME = "tarifalatam-optimizacion"` | Seguimiento | FR-023 |
+| `FINAL_IDEAS`, `FINALISTS` | Ideas que conservó la etapa 4 y finalistas de la etapa 5; los anota quien cierra cada etapa, con un comentario que cita el informe | FR-012, FR-019 |
 
 ## `data/load.py`
 
@@ -76,7 +77,10 @@ Reglas de vacíos y divisiones por cero: `data-model.md`, sección 2.
 | `lgbm_space(trial)`, `rf_space(trial)`, `ridge_space(trial)` | Ensayo de Optuna | `dict` de hiperparámetros dentro de los rangos aprobados | — | FR-022 |
 | `make_model(name, params)` | Nombre del finalista y parámetros | Estimador con las semillas fijadas | Error si el nombre no existe | FR-022 |
 | `tune(name, X, y_log, folds, n_trials=N_TRIALS, seed=42, ideas=())` | Datos de búsqueda y sus pliegues | Estudio de Optuna | Exactamente `n_trials` ensayos; cada uno registrado con `log_run` (nombre, parámetros, métricas, etiquetas); un fallo se registra con `estado=fallido` y cuenta en el presupuesto | FR-020, FR-023 |
+| `trials_table(study, name)` | Estudio de Optuna y nombre del finalista | Una fila por ensayo: `model`, `trial`, `state`, hiperparámetros y métricas | Agregada en la implementación: alimenta `reports/06_optimizacion_tabla.csv` | FR-023 |
 | `host_bootstrap_ci(diff_per_row, hosts, n=BOOTSTRAP_N, seed=42)` | Diferencia por anuncio y anfitrión de cada anuncio | (media, límite inferior, límite superior) | Remuestrea anfitriones completos; con una diferencia constante, los tres valores son esa constante | FR-024 |
+| `paired_abs_error_difference(y_true_log, pred_a_log, pred_b_log)` | Objetivo y dos predicciones en logaritmo | \|error de A\| − \|error de B\| en USD por anuncio | Agregada en la implementación. Negativo: A se equivoca menos | FR-024 |
+| `compare_on_reserved(pipeline_a, pipeline_b, search, reserved, n=BOOTSTRAP_N, seed=42)` | Dos `Pipeline`, datos de búsqueda y reservados | `dict`: `hosts`, `listings`, `mae_a`, `mae_b`, `bias_a`, `bias_b`, `mean_difference`, `low`, `high` | Agregada en la implementación. Ajusta solo con los datos de búsqueda; el intervalo remuestrea anfitriones | FR-024, FR-025 |
 | `use_optimized(low, high)` | Límites del intervalo | `True` solo si `high < 0` | — | FR-024 |
 | `save_decision(path, decision)` | Ruta y `dict` | Escribe `reports/06_best_params.json` | Esquema de `output-files.md` | FR-026 |
 

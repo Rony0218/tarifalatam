@@ -190,7 +190,7 @@ finalistas.
 
 ### P5 · Notebook 05 e informe
 
-- [ ] T038 [US2] Reescribir `notebooks/05_torneo.ipynb` (solo orquesta):
+- [X] T038 [US2] Reescribir `notebooks/05_torneo.ipynb` (solo orquesta):
   1. `load_train()`, `load_folds()` y `fold_indices(train, folds, exact=True)`.
   2. Los 4 candidatos con `build_pipeline(…, ideas=FINAL_IDEAS)`.
   3. `evaluate_folds` y `city_errors`.
@@ -199,9 +199,9 @@ finalistas.
   6. Guardar `reports/05_torneo_tabla.csv` y `reports/05_torneo_por_ciudad.csv`.
 
   Sin ninguna referencia que lea `test.csv.gz` · P5 · Responsable:
-- [ ] T039 [US2] Ejecutar el notebook 05 con `nbconvert` y comprobar 20 y 120 filas, sin errores. Anotar el tiempo · P5 · Responsable:
-- [ ] T040 [US2] Completar `reports/05_torneo.md` **solo con cifras del notebook 05**: tablas, error por ciudad (con la advertencia sobre Belice), comparación pareada, diferencia en USD por cada 30 noches, finalistas según el orden de la sección 5.4 de la especificación de etapa y por qué el torneo no elige un campeón. Anotar en `config.py` `FINALISTS = (…)`, con un comentario que cite el informe · P5 · Responsable:
-- [ ] T041 [US2] (GRUPO) Confirmar los finalistas antes de optimizar · Responsable:
+- [X] T039 [US2] Ejecutar el notebook 05 con `nbconvert` y comprobar 20 y 120 filas, sin errores. Anotar el tiempo · P5 · Responsable:
+- [X] T040 [US2] Completar `reports/05_torneo.md` **solo con cifras del notebook 05**: tablas, error por ciudad (con la advertencia sobre Belice), comparación pareada, diferencia en USD por cada 30 noches, finalistas según el orden de la sección 5.4 de la especificación de etapa y por qué el torneo no elige un campeón. Anotar en `config.py` `FINALISTS = (…)`, con un comentario que cite el informe · P5 · Responsable:
+- [X] T041 [US2] (GRUPO) Confirmar los finalistas antes de optimizar · Responsable:
 
 **Checkpoint**: las US1 y US2 funcionan; hay finalistas escritos.
 
