@@ -218,7 +218,7 @@ la regla.
 
 ### P4 · Optimización (`src/tarifalatam/models/tuning.py`, pruebas en `tests/test_tuning.py`)
 
-- [ ] T042 [P] [US3] Escribir `tests/test_tuning.py` (debe fallar antes de T043):
+- [X] T042 [P] [US3] Escribir `tests/test_tuning.py` (debe fallar antes de T043):
   - `test_spaces_stay_within_approved_ranges`: muestrea 50 ensayos de cada espacio con un objetivo ficticio y comprueba los rangos de la sección 6 de la especificación de etapa.
   - `test_make_model_unknown_name_raises`
   - `test_host_bootstrap_ci_constant_difference`: con una diferencia constante, la media y los dos límites son esa constante.
@@ -229,7 +229,7 @@ la regla.
   - `test_save_decision_writes_the_contract_keys` (en `tmp_path`).
 
   · P4 · Responsable:
-- [ ] T043 [US3] Implementar `src/tarifalatam/models/tuning.py` según `contracts/model-functions.md` y `research.md` (puntos 10 y 12):
+- [X] T043 [US3] Implementar `src/tarifalatam/models/tuning.py` según `contracts/model-functions.md` y `research.md` (puntos 10 y 12):
   - `lgbm_space`, `rf_space` y `ridge_space` con los rangos aprobados; `make_model`.
   - `tune`, con `TPESampler(seed=42)` y `catch=(Exception,)`, y **una ejecución por ensayo** con `log_run` de `mlflow_utils.py`, **sin reescribir ese módulo**.
   - `host_bootstrap_ci`, con remuestreos en bloques de 100.
