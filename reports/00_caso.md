@@ -28,7 +28,9 @@
   | Buenos Aires | Argentina | ARS | 2026-09-23 | 29.753 | 14.623 |
   | Bogotá | Colombia | COP | 2026-09-14 | 19.505 | 8.497 |
   | Santiago | Chile | CLP | 2026-09-23 | 18.904 | 9.920 |
-  | Belice | Belice | BZD | 2026-09-25 | 3.671 | 1.054 |
+  | Belice | Belice | USD* | 2026-09-25 | 3.671 | 1.054 |
+
+  \* La moneda oficial de Belice es el BZD, pero sus precios en Inside Airbnb vienen en USD (lo dice `price_quote_raw`).
 
 - **dataset_columns:** 90 (numéricas, categóricas, fechas y texto). Incluye datos personales del anfitrión
   (`host_name`, `host_about`, fotos y URLs de perfil) que se eliminan al inicio.

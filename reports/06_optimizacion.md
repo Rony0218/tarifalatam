@@ -15,7 +15,7 @@
 | | | |
 
 - **Presupuesto** (ensayos por modelo, fijado antes de empezar) y **por qué ese número:**
-- **Entidades reservadas** (qué porcentaje, partidas por qué entidad, semilla):
+- **Entidades reservadas** (qué porcentaje, partidas por qué entidad, semilla): anfitriones (`host_id`) reservados; semilla 42;
 
 ## Seguimiento (tracking)
 

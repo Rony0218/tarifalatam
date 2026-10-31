@@ -1,11 +1,11 @@
-# Informe técnico — TODO: nombre de tu startup
+# Informe técnico — TarifaLatam
 
 > Esqueleto. Aquí **ensamblas** las secciones que ya escribiste en `reports/`; no las reescribas desde cero: tómalas, ordénalas
 > y cuenta una historia coherente. **Se entrega el domingo 15 de noviembre** (hito H4).
 
 > **Regla del informe:** **cada decisión va con su motivo.** Un resultado sin la razón de la decisión que lo produjo es solo un número.
 
-**Grupo:** TODO (integrantes y roles) · **Repositorio:** TODO · **App:** TODO (enlace público)
+**Grupo:** Rony Guerrero, Carolina Jiménez, Jesica Tarazona, Dulce Vargas, Rafael Jaramillo (roles: TODO) · **Repositorio:** <https://github.com/Rony0218/tarifalatam> · **App:** TODO (enlace público)
 
 ## Resumen ejecutivo
 
@@ -20,7 +20,7 @@ TODO: quién decide, qué decide, con qué información, qué cuesta equivocarse
 
 ## 2. Datos y limpieza
 
-> Fuente: `reports/01_eda.md` y `src/<paquete>/data/`.
+> Fuente: `reports/01_eda.md` y `src/tarifalatam/data/`.
 
 - **Unidad de análisis y partición** (y por qué respeta la entidad que se repite): TODO
 - **Hallazgos y decisiones** (cada una con su motivo): TODO
