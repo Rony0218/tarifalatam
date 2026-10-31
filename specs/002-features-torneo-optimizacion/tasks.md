@@ -163,8 +163,8 @@ mismos pliegues, y decidir cada idea con la regla escrita.
 
   Sin ninguna referencia que lea `test.csv.gz` · P5 · Responsable:
 - [X] T033 [US1] Ejecutar `python -m nbconvert --to notebook --execute --inplace notebooks/04_features.ipynb`. Comprobar que `data/processed/folds.csv` tiene 118.513 filas, que `reports/04_features_tabla.csv` tiene 40 filas y que no hay errores. Anotar el tiempo de ejecución · P5 · Responsable:
-- [ ] T034 [US1] Completar `reports/04_features.md` (la plantilla actual) **solo con cifras del notebook 04**: cómo se midió, la tabla de ideas, una línea por decisión con su cifra (también las descartadas), cuánto pesan las sospechosas, supuestos y riesgos, y la lista final de variables. Anotar en `config.py` `FINAL_IDEAS = (…)`, con un comentario que cite el informe · P5 · Responsable:
-- [ ] T035 [US1] (GRUPO) Revisar las decisiones de la etapa 4. Si alguna idea se conserva o descarta como **excepción** a la regla, escribir el motivo en `reports/04_features.md` antes del torneo · Responsable:
+- [X] T034 [US1] Completar `reports/04_features.md` (la plantilla actual) **solo con cifras del notebook 04**: cómo se midió, la tabla de ideas, una línea por decisión con su cifra (también las descartadas), cuánto pesan las sospechosas, supuestos y riesgos, y la lista final de variables. Anotar en `config.py` `FINAL_IDEAS = (…)`, con un comentario que cite el informe · P5 · Responsable:
+- [X] T035 [US1] (GRUPO) Revisar las decisiones de la etapa 4. Si alguna idea se conserva o descarta como **excepción** a la regla, escribir el motivo en `reports/04_features.md` antes del torneo · Responsable:
 
 **Checkpoint**: la US1 funciona sola: variables decididas y su informe.
 

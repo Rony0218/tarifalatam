@@ -266,3 +266,8 @@ N_TRIALS = 30
 BOOTSTRAP_N = 1000
 NIGHTS_SCALE = 30  # la diferencia de MAE se lee como "USD por cada 30 noches reservadas" (escala, no pronóstico)
 EXPERIMENT_NAME = "tarifalatam-optimizacion"
+
+# Resultado de la etapa 4 (notebooks/04_features.ipynb, 2026-10-31; detalle en reports/04_features.md): ninguna idea
+# cumple mejora / ruido > 1, y el grupo decidió aplicar la regla sin excepciones. El torneo y la optimización usan la
+# referencia (13 columnas). Las amenidades (idea 2) ganaron en los 5 pliegues, pero con mejora / ruido de 0,49.
+FINAL_IDEAS = ()
