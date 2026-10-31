@@ -8,8 +8,8 @@
 
 > **Cómo se llenó este borrador.** Las secciones 1 y 2 salen de `especificacion-proyecto.md` (escrita antes de
 > abrir los datos). Las cifras de las secciones 3 y 4 se midieron sobre los siete archivos de `data/raw/` con un
-> script exploratorio (sin imprimir datos personales). **Falta que `notebooks/02_eda.ipynb` las reproduzca** y que el
-> grupo revise y apruebe cada decisión: hasta entonces, la sección 4 es una **propuesta**.
+> script exploratorio (sin imprimir datos personales). `notebooks/02_eda.ipynb` las reprodujo el 2026-10-30 y el grupo
+> aprobó las 11 decisiones de la sección 4 el 2026-10-31.
 
 ## 1. Qué esperamos encontrar (se escribe ANTES de mirar los datos)
 
@@ -60,7 +60,7 @@ Marquen lo que aplica a su dataset. Lo que no aplique se tacha **con una razón*
 
 > Cada una con **cifra**, acción **concreta** y **motivo**. Se copian tal cual a `reports/01_eda.md`.
 > Cada decisión se convierte en una función de `src/tarifalatam/data/` y en una prueba (ver `03-preprocesamiento.md`).
-> **Propuesta pendiente de aprobación del grupo.** Los nombres de función son sugerencias.
+> **Aprobadas por el grupo el 2026-10-31.** Las decisiones 1 a 10 están implementadas con sus pruebas; la 11 va en la etapa 4.
 
 | # | Hallazgo (con cifra) | Decisión | Motivo | Función que la implementa |
 |---|---|---|---|---|
@@ -71,7 +71,7 @@ Marquen lo que aplica a su dataset. Lo que no aplique se tacha **con una razón*
 | 5 | 194.628 anuncios de 89.964 anfitriones; el 31 % de los anuncios es de anfitriones con ≥ 10 anuncios (máximo 699) | Partir entrenamiento/prueba y la validación cruzada **por `host_id`** (`GroupShuffleSplit`, `GroupKFold`) | Los anuncios de un mismo anfitrión se parecen (mismo estilo de precio); partir por fila inflaría la métrica | `split_by_host` |
 | 6 | 12 columnas están 100 % vacías en las siete ciudades (`bathrooms`, `host_since`, `host_response_time`, `host_response_rate`, `host_acceptance_rate`, `instant_bookable`, `neighbourhood`, …); `bathrooms_text` solo tiene 0,1 % de vacíos | Eliminar las columnas vacías. Sacar de `bathrooms_text` el número de baños (con "half-bath" = 0,5; 1.010 casos) y un indicador de baño compartido (8,0 %). Usar `hosts_time_as_host_years` como antigüedad del anfitrión | Una columna vacía no aporta; el número de baños sí existe, pero escrito como texto | `drop_empty_columns`, `parse_bathrooms_text` |
 | 7 | 6.103 anuncios (3,1 %) piden `minimum_nights ≥ 30`; en Bogotá son el 16,9 % y su precio mediano por noche es 94.102 COP frente a 170.000 COP del resto | Excluir los anuncios con `minimum_nights ≥ 30` | Son arriendos mensuales con otra lógica de precio; el caso es la corta estancia | `drop_monthly_rentals` |
-| 8 | 692 anuncios cobran más de 20 veces la mediana de su ciudad (355 en Río) y 61 menos de una décima parte; hay máximos como 258.514.678 COP por noche en Bogotá | Excluir como error de captura los precios fuera de [0,1 ×, 20 ×] la mediana de su ciudad, **calculada con el entrenamiento** (umbral a confirmar por el grupo) | Precios imposibles dominarían el error; el umbral relativo funciona igual en todas las monedas | `drop_price_outliers` |
+| 8 | 692 anuncios cobran más de 20 veces la mediana de su ciudad (355 en Río) y 61 menos de una décima parte; hay máximos como 258.514.678 COP por noche en Bogotá | Excluir como error de captura los precios fuera de [0,1 ×, 20 ×] la mediana de su ciudad, **calculada con el entrenamiento** (umbral aprobado por el grupo el 2026-10-31) | Precios imposibles dominarían el error; el umbral relativo funciona igual en todas las monedas | `drop_price_outliers` |
 | 9 | `review_scores_*` está vacío en el 100 % de los 15,5 % de anuncios sin reseñas, y en ninguno con reseñas | Crear `has_reviews` (0/1) y dejar las notas vacías para imputarlas **dentro del `Pipeline`** | El vacío significa "anuncio nuevo", no un dato perdido | `add_review_flags` |
 | 10 | `maximum_nights` tiene 21 anuncios con 2.147.483.647 (máximo entero) y 50 por encima de 1.125; `bedrooms` > 10 en 220 anuncios (129 son habitaciones privadas) | Marcar como vacío `maximum_nights > 1.125` y `bedrooms > 10` cuando supere a `accommodates` (124 casos) | Son centinelas o datos del edificio, no del anuncio | `mark_impossible_values` |
 | 11 | `property_type` tiene 123 categorías (73 con < 30 anuncios) y `neighbourhood_cleansed` 371 barrios (146 con < 30) | Agrupar las categorías raras en "Other" **dentro del `Pipeline`**, con el umbral aprendido del entrenamiento | Categorías con pocos casos generan ruido y fallan con anuncios nuevos | (etapa 4, `features/`) |
@@ -81,16 +81,19 @@ Marquen lo que aplica a su dataset. Lo que no aplique se tacha **con una razón*
 - Se incluyen las **siete ciudades**, también Buenos Aires y Belice; su error se reporta por separado. *(Cambiado el
   2026-10-31: Buenos Aires se excluye del modelo; ver la sección 7 de `especificacion-proyecto.md`.)*
 - Se **excluyen** los 11.701 anuncios `source = "previous scrape"` (3.293 tenían precio).
-- Las tasas a USD son las **oficiales del banco central** de cada país en la fecha del corte. **Falta que el grupo traiga los
-  cinco valores** (BRL, MXN, ARS, COP, CLP) con su enlace.
+- Las tasas a USD son las **oficiales del banco central** de cada país en la fecha del corte. *(Valores en `config.py`,
+  aprobados por el grupo el 2026-10-31.)*
+
+**Decidido el 2026-10-31:** se aprueban las 11 decisiones de esta sección y se elimina la columna `license` (solo existe en
+Bogotá). Detalle en la sección 7 de `especificacion-proyecto.md`.
 
 ## 5. Criterios de cierre
 
 - ☒ `notebooks/02_eda.ipynb` corre de principio a fin sin errores (2026-10-30; su tabla final: 19 de 19 cifras coinciden).
 - ☒ Unidad de análisis y `ID_COL` declarados por escrito (sección 3).
-- ☐ Al menos **5 decisiones** con cifra, acción y motivo. *(Hay 11 propuestas; falta la aprobación del grupo.)*
+- ☒ Al menos **5 decisiones** con cifra, acción y motivo. *(11, aprobadas por el grupo el 2026-10-31.)*
 - ☒ Datos personales identificados y plan para eliminarlos al cargar.
 - ☒ Valores imposibles, centinelas y significado de los vacíos revisados.
 - ☒ Fuga sospechada: lista escrita, aunque sea "ninguna, porque…".
-- ☐ `reports/01_eda.md` completado. *(Cifras reproducidas y MAE de la línea base calculado; falta la aprobación del grupo y confirmar las tasas.)*
+- ☒ `reports/01_eda.md` completado. *(Cifras reproducidas, línea base calculada, y decisiones y tasas aprobadas por el grupo el 2026-10-31.)*
 - ☐ Quien **no** escribió una decisión sabe explicar por qué se tomó.

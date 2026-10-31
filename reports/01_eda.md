@@ -6,7 +6,7 @@
 
 > **Cifras reproducidas por `notebooks/02_eda.ipynb` el 2026-10-30** (su tabla final compara 19 cifras con este informe:
 > todas coinciden). Dos cifras que la tabla no cubría se corrigieron con el valor del notebook (ver "Qué queda abierto").
-> Falta que el grupo apruebe las decisiones (`especificaciones/02-eda.md`, sección 4).
+> El grupo aprobó las 11 decisiones el 2026-10-31 (`especificaciones/02-eda.md`, sección 4).
 
 ## Qué son los datos
 
@@ -93,7 +93,7 @@
 ## Decisiones
 
 > Mínimo **5**. Cada una con una cifra que la respalda, una acción concreta y un motivo.
-> **Propuesta pendiente de aprobación del grupo.**
+> **Aprobadas por el grupo el 2026-10-31.**
 
 | # | Hallazgo (con cifra) | Decisión | Motivo |
 |---|---|---|---|
