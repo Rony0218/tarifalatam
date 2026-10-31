@@ -125,7 +125,10 @@ def build_pipeline(model, family: str, ideas=(), with_suspicious: bool = False) 
     """
     if family not in FAMILIES:
         raise ValueError(f"No existe la familia de modelo {family!r}. Opciones: {FAMILIES}")
+    ideas = tuple(sorted(set(ideas)))  # una idea repetida cuenta una sola vez
     if family == "baseline":
+        if ideas or with_suspicious:
+            raise ValueError("La línea base solo usa city y room_type: no admite ideas ni columnas sospechosas")
         return Pipeline([("model", clone(model))])
     columns = feature_columns(ideas, with_suspicious)
     check_feature_columns([col for group in columns.values() for col in group], allow_suspicious=with_suspicious)
@@ -204,9 +207,16 @@ def improvement_over_noise(reference_mae, variant_mae) -> dict:
     return {
         "improvement": float(improvement),
         "noise": float(noise),
-        "ratio": float(improvement / noise) if noise > 0 else np.inf,
+        "ratio": _over_noise(improvement, noise),
         "folds_won": int((variant < reference).sum()),
     }
+
+
+def _over_noise(difference: float, noise: float) -> float:
+    """Diferencia dividida por el ruido. Sin ruido conserva el signo: +inf si mejora, -inf si empeora, 0 si empata."""
+    if noise > 0:
+        return float(difference / noise)
+    return float(np.sign(difference) * np.inf) if difference != 0 else 0.0
 
 
 def keep_idea(ratio: float, known_at_prediction: bool) -> bool:
@@ -224,7 +234,7 @@ def compare(best, other) -> dict:
     return {
         "mean_difference": float(difference.mean()),
         "folds_won": int((difference > 0).sum()),
-        "difference_over_noise": float(difference.mean() / noise) if noise > 0 else np.inf,
+        "difference_over_noise": _over_noise(difference.mean(), noise),
     }
 
 

@@ -6,8 +6,11 @@ Reglas aprobadas antes de buscar (especificaciones/04-features-torneo-optimizaci
   - UN ENSAYO = UNA EJECUCIÓN en MLflow, registrada con log_run de tracking/mlflow_utils.py (no se reescribe);
   - la mejor puntuación de la búsqueda es optimista: la decisión se toma en el 25 % de anfitriones reservados, con un
     intervalo del 95 % que remuestrea anfitriones completos. Se usan los parámetros optimizados solo si TODO el
-    intervalo está por debajo de cero.
+    intervalo está por debajo de cero;
+  - entre dos finalistas, pasa el que se equivoca menos en todo el intervalo; si cruza el cero, el más rápido de ajustar
+    con su configuración elegida (choose_finalist).
 """
+import contextlib
 import json
 from pathlib import Path
 
@@ -20,7 +23,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge
 
 from tarifalatam.config import BOOTSTRAP_N, GROUP_COL, N_TRIALS, RANDOM_STATE, TARGET
-from tarifalatam.models.train import build_pipeline, evaluate_folds, feature_frame, usd_metrics
+from tarifalatam.data.split import assert_disjoint_hosts
+from tarifalatam.models.train import build_pipeline, candidates, evaluate_folds, feature_frame, usd_metrics
 from tarifalatam.tracking.mlflow_utils import log_run
 
 
@@ -52,26 +56,55 @@ def ridge_space(trial: optuna.Trial) -> dict:
 
 
 SPACES = {"lightgbm": lgbm_space, "random_forest": rf_space, "ridge": ridge_space}
-FAMILIES = {"lightgbm": "boosting", "random_forest": "forest", "ridge": "linear"}
+FINALIST_FAMILIES = {"lightgbm": "boosting", "random_forest": "forest", "ridge": "linear"}
+
+# Parámetros que make_model fija siempre y que NO están en los parámetros de un ensayo. La etapa 7 debe armar el modelo
+# con make_model para que sean los mismos: sin subsample_freq=1, LightGBM ignora subsample (auditoría del 2026-10-31).
+FIXED_PARAMS = {
+    "lightgbm": {"subsample_freq": 1, "random_state": RANDOM_STATE, "n_jobs": -1, "verbose": -1},
+    "random_forest": {"n_estimators": 200, "random_state": RANDOM_STATE, "n_jobs": -1},
+    "ridge": {},
+}
+MODEL_CLASSES = {"lightgbm": LGBMRegressor, "random_forest": RandomForestRegressor, "ridge": Ridge}
 
 
-def make_model(name: str, params: dict, random_state: int = RANDOM_STATE):
-    """Arma el modelo de un finalista con los parámetros de un ensayo, con las semillas fijadas."""
-    if name == "lightgbm":
-        return LGBMRegressor(subsample_freq=1, random_state=random_state, n_jobs=-1, verbose=-1, **params)
-    if name == "random_forest":
-        return RandomForestRegressor(n_estimators=200, n_jobs=-1, random_state=random_state, **params)
-    if name == "ridge":
-        return Ridge(**params)
-    raise ValueError(f"No hay espacio de búsqueda para {name!r}. Opciones: {sorted(SPACES)}")
+def make_model(name: str, params: dict):
+    """Arma el modelo de un finalista con los parámetros de un ensayo y los parámetros fijos (FIXED_PARAMS)."""
+    if name not in MODEL_CLASSES:
+        raise ValueError(f"No hay espacio de búsqueda para {name!r}. Opciones: {sorted(SPACES)}")
+    return MODEL_CLASSES[name](**FIXED_PARAMS[name], **params)
+
+
+# Parámetros de partida de cada finalista que se informan en la decisión (los que cambió el torneo respecto del valor
+# por defecto de la librería)
+STARTING_KEYS = {
+    "lightgbm": ["n_estimators", "learning_rate", "num_leaves"],
+    "random_forest": ["n_estimators", "min_samples_leaf", "max_features"],
+    "ridge": ["alpha"],
+}
+
+
+def starting_params(name: str) -> dict:
+    """Parámetros de partida (los del torneo, models/train.py:candidates) de un finalista."""
+    model = candidates()[name][0]
+    return {key: model.get_params()[key] for key in STARTING_KEYS[name]}
+
+
+def construction_info(name: str) -> dict:
+    """Cómo se vuelve a armar el modelo de un finalista (va en reports/06_best_params.json para la etapa 7)."""
+    return {
+        "como_se_arma": f"make_model('{name}', parametros) de src/tarifalatam/models/tuning.py, dentro de build_pipeline",
+        "parametros_fijos": dict(FIXED_PARAMS[name]),
+    }
 
 
 def tune(name: str, X: pd.DataFrame, y_log, folds, n_trials: int = N_TRIALS, seed: int = RANDOM_STATE, ideas=(),
          log: bool = True) -> optuna.Study:
     """Busca hiperparámetros minimizando el MAE medio en USD; cada ensayo queda como una ejecución en MLflow.
 
-    MLflow debe estar configurado antes (configure_mlflow y set_experiment). Un ensayo que falla queda registrado con
-    estado=fallido y cuenta en el presupuesto: nunca se hacen más de n_trials.
+    MLflow debe estar configurado antes (configure_mlflow y set_experiment); con log=False no se registra nada. Un
+    ensayo que falla queda registrado con estado=fallido y cuenta en el presupuesto: nunca se hacen más de n_trials.
+    Si fallan TODOS, se detiene con el error del primero (suele ser un error de programación, no de un ensayo).
     """
     if name not in SPACES:
         raise ValueError(f"No hay espacio de búsqueda para {name!r}. Opciones: {sorted(SPACES)}")
@@ -81,26 +114,29 @@ def tune(name: str, X: pd.DataFrame, y_log, folds, n_trials: int = N_TRIALS, see
         params = SPACES[name](trial)
         run_name = f"{name}-ensayo-{trial.number + 1:02d}"
         try:
-            pipeline = build_pipeline(make_model(name, params), FAMILIES[name], ideas=ideas)
+            pipeline = build_pipeline(make_model(name, params), FINALIST_FAMILIES[name], ideas=ideas)
             table, _ = evaluate_folds(pipeline, X, y_log, folds)
-        except Exception as error:
+            metrics = {
+                "mae": table["mae"].mean(),
+                "mae_std": table["mae"].std(),
+                "mape": table["mape"].mean(),
+                "rmse": table["rmse"].mean(),
+                "bias": table["bias"].mean(),
+                "r2_log": table["r2_log"].mean(),
+                "fit_seconds": table["fit_seconds"].mean(),
+            }
             if log:
-                reason = f"{type(error).__name__}: {error}"[:250]
-                log_run(run_name, params, {}, tags={**tags, "estado": "fallido", "error": reason})
+                log_run(run_name, params, metrics, tags={**tags, "estado": "completo"})
+        except Exception as error:
+            reason = f"{type(error).__name__}: {error}"[:250]
+            trial.set_user_attr("error", reason)
+            if log:
+                # Registro del fallo "si se puede": si MLflow también falla, igual se propaga el error original
+                with contextlib.suppress(Exception):
+                    log_run(run_name, params, {}, tags={**tags, "estado": "fallido", "error": reason})
             raise
-        metrics = {
-            "mae": table["mae"].mean(),
-            "mae_std": table["mae"].std(),
-            "mape": table["mape"].mean(),
-            "rmse": table["rmse"].mean(),
-            "bias": table["bias"].mean(),
-            "r2_log": table["r2_log"].mean(),
-            "fit_seconds": table["fit_seconds"].mean(),
-        }
         for key, value in metrics.items():
             trial.set_user_attr(key, float(value))
-        if log:
-            log_run(run_name, params, metrics, tags={**tags, "estado": "completo"})
         return float(metrics["mae"])
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
@@ -108,14 +144,18 @@ def tune(name: str, X: pd.DataFrame, y_log, folds, n_trials: int = N_TRIALS, see
         direction="minimize", sampler=optuna.samplers.TPESampler(seed=seed), study_name=f"tarifalatam-{name}"
     )
     study.optimize(objective, n_trials=n_trials, catch=(Exception,))
+    if not any(t.state == optuna.trial.TrialState.COMPLETE for t in study.trials):
+        first_error = study.trials[0].user_attrs.get("error", "sin detalle") if study.trials else "ningún ensayo"
+        raise RuntimeError(f"Fallaron los {len(study.trials)} ensayos de {name}. Primer error: {first_error}")
     return study
 
 
 def trials_table(study: optuna.Study, name: str) -> pd.DataFrame:
     """Una fila por ensayo: número, estado, hiperparámetros y métricas (lo mismo que quedó en MLflow)."""
+    names = {optuna.trial.TrialState.COMPLETE: "completo", optuna.trial.TrialState.FAIL: "fallido"}
     rows = []
     for trial in study.trials:
-        state = "completo" if trial.state == optuna.trial.TrialState.COMPLETE else "fallido"
+        state = names.get(trial.state, trial.state.name.lower())
         rows.append({"model": name, "trial": trial.number + 1, "state": state, **trial.params, **trial.user_attrs})
     return pd.DataFrame(rows)
 
@@ -128,6 +168,8 @@ def host_bootstrap_ci(diff_per_row, hosts, n: int = BOOTSTRAP_N, seed: int = RAN
     Devuelve (media, límite inferior, límite superior).
     """
     per_host = pd.DataFrame({"host": np.asarray(hosts), "diff": np.asarray(diff_per_row, dtype=float)})
+    if per_host["host"].isna().any():
+        raise ValueError(f"{per_host['host'].isna().sum()} anuncios sin anfitrión: se perderían al agrupar")
     per_host = per_host.groupby("host")["diff"].agg(["sum", "count"])
     sums, counts = per_host["sum"].to_numpy(), per_host["count"].to_numpy()
     rng = np.random.default_rng(seed)
@@ -140,8 +182,29 @@ def host_bootstrap_ci(diff_per_row, hosts, n: int = BOOTSTRAP_N, seed: int = RAN
 
 
 def use_optimized(low: float, high: float) -> bool:
-    """Regla escrita antes de mirar: los optimizados se usan solo si todo el intervalo está por debajo de cero."""
+    """Regla escrita antes de mirar: los optimizados se usan solo si todo el intervalo está por debajo de cero.
+
+    Basta mirar el límite superior: si está por debajo de cero, todo el intervalo lo está.
+    """
     return bool(high < 0)
+
+
+def choose_finalist(a: str, b: str, low: float, high: float, seconds: dict) -> tuple:
+    """Regla entre dos finalistas, con el intervalo de la diferencia de error (A − B) en los anfitriones reservados.
+
+    Pasa A si todo el intervalo está por debajo de cero, B si todo está por encima. Si cruza (o toca) el cero es un
+    empate y pasa el más rápido de ajustar con SU configuración elegida (seconds: segundos por pliegue de cada uno).
+    Devuelve (ganador, motivo).
+    """
+    if high < 0:
+        return a, f"{a} se equivoca menos en todo el intervalo"
+    if low > 0:
+        return b, f"{b} se equivoca menos en todo el intervalo"
+    winner = min((a, b), key=lambda name: seconds[name])
+    return winner, (
+        f"el intervalo cruza el cero: empate; pasa el más rápido de ajustar con su configuración elegida ({winner}: "
+        f"{seconds[winner]:.2f} s por pliegue frente a {seconds[b if winner == a else a]:.2f} s)"
+    )
 
 
 def paired_abs_error_difference(y_true_log, pred_a_log, pred_b_log) -> np.ndarray:
@@ -156,8 +219,10 @@ def compare_on_reserved(pipeline_a, pipeline_b, search: pd.DataFrame, reserved: 
                         seed: int = RANDOM_STATE) -> dict:
     """Comprobación honesta: ajusta A y B con los datos de búsqueda y los compara en los anfitriones reservados.
 
-    Devuelve el MAE y el sesgo de cada uno y la diferencia de MAE (A − B) con su intervalo del 95 % por anfitrión.
+    Se detiene si búsqueda y reservados comparten algún anfitrión. Devuelve el MAE y el sesgo de cada uno y la
+    diferencia de MAE (A − B) con su intervalo del 95 % por anfitrión.
     """
+    assert_disjoint_hosts(search, reserved)
     X_search, y_search = feature_frame(search), search[TARGET].to_numpy()
     X_reserved, y_reserved = feature_frame(reserved), reserved[TARGET].to_numpy()
     pred_a = clone(pipeline_a).fit(X_search, y_search).predict(X_reserved)
@@ -186,15 +251,33 @@ DECISION_KEYS = [
     "comprobacion",
     "regla",
     "comparacion_finalistas",
+    "regla_elegiria",
+    "decision_del_grupo",
+    "como_se_arma",
+    "parametros_fijos",
     "tracking",
     "experimento",
     "ensayos",
 ]
 
 
+def _to_native(value):
+    """Convierte números de numpy a tipos de Python, para que el JSON guarde 60 y no 60.0."""
+    if isinstance(value, np.bool_):
+        return bool(value)
+    if isinstance(value, np.integer):
+        return int(value)
+    if isinstance(value, np.floating):
+        return float(value)
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    raise TypeError(f"No se puede guardar en JSON un valor de tipo {type(value).__name__}")
+
+
 def save_decision(path, decision: dict) -> None:
-    """Guarda la decisión de la etapa 6 en JSON; falla si falta alguna clave del contrato."""
+    """Guarda la decisión de la etapa 6 en JSON; falla si falta una clave del contrato o hay un valor infinito."""
     missing = [key for key in DECISION_KEYS if key not in decision]
     if missing:
         raise ValueError(f"A la decisión le faltan claves: {missing}")
-    Path(path).write_text(json.dumps(decision, indent=2, ensure_ascii=False, default=float), encoding="utf-8")
+    text = json.dumps(decision, indent=2, ensure_ascii=False, default=_to_native, allow_nan=False)
+    Path(path).write_text(text, encoding="utf-8")

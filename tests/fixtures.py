@@ -66,7 +66,10 @@ TRAIN_CITIES = {
     "bogota": (4.65, -74.06),
     "belize": (17.25, -88.77),
 }
-TOY_NEIGHBOURHOODS = ["Centro", "Norte", "Sur", "Barrio Raro"]  # "Barrio Raro" aparece poco: sirve para probar "Other"
+# "Barrio Raro" aparece en el 3 % de los anuncios. Ojo con el umbral de 30 (RARE_MIN_COUNT): con los 60 anuncios por
+# defecto TODOS los barrios quedan por debajo y pasan a "Other"; para probar el agrupador hacen falta unos 400
+# (make_train_rows(n_hosts=200)), donde solo "Barrio Raro" queda por debajo
+TOY_NEIGHBOURHOODS = ["Centro", "Norte", "Sur", "Barrio Raro"]
 TOY_AMENITIES = [
     ["Wifi", "Kitchen", "Pool", "Air conditioning"],
     ["Wifi", "Pool table", "Elevator"],  # "Pool table" no es una piscina

@@ -54,12 +54,13 @@ def feature_columns(ideas=(), with_suspicious: bool = False) -> dict:
     Devuelve {"categorical", "numeric", "binary", "target_encoded"}. Sin ideas es la referencia (13 columnas). La
     idea 5 no agrega una columna cruda: codifica neighbourhood_cleansed con el promedio del objetivo.
     """
+    ideas = sorted(set(ideas))  # una idea repetida cuenta una sola vez
     unknown = set(ideas) - set(IDEA_NAMES)
     if unknown:
         raise ValueError(f"Ideas desconocidas: {sorted(unknown)}. Las ideas van de 1 a 5")
     numeric = list(REFERENCE_NUMERIC)
     binary = list(REFERENCE_BINARY)
-    for idea in sorted(ideas):
+    for idea in ideas:
         numeric += IDEA_NUMERIC.get(idea, [])
         binary += IDEA_BINARY.get(idea, [])
     if with_suspicious:

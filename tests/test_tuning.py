@@ -5,6 +5,7 @@ import numpy as np
 import optuna
 import pytest
 from lightgbm import LGBMRegressor
+from sklearn.base import clone
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge
 
@@ -12,10 +13,13 @@ from fixtures import make_train_rows
 from tarifalatam.config import TARGET
 from tarifalatam.data.folds import fold_indices, make_folds, reserve_hosts
 from tarifalatam.models import tuning
-from tarifalatam.models.train import build_pipeline, feature_frame, usd_metrics
+from tarifalatam.models.train import BaselineRegressor, build_pipeline, feature_frame, usd_metrics
 from tarifalatam.models.tuning import (
     SPACES,
+    choose_finalist,
+    starting_params,
     compare_on_reserved,
+    construction_info,
     host_bootstrap_ci,
     make_model,
     paired_abs_error_difference,
@@ -158,6 +162,7 @@ def test_tune_records_failed_trials(tmp_path, monkeypatch):
     assert [t.state for t in study.trials] == [optuna.trial.TrialState.FAIL, optuna.trial.TrialState.COMPLETE]
     runs = mlflow.search_runs(experiment_names=["prueba-fallo"])
     assert sorted(runs["tags.estado"]) == ["completo", "fallido"]
+    assert list(trials_table(study, "ridge")["state"]) == ["fallido", "completo"]
 
 
 def test_trials_table_has_one_row_per_trial(tmp_path):
@@ -168,20 +173,123 @@ def test_trials_table_has_one_row_per_trial(tmp_path):
     assert {"model", "state", "alpha", "mae", "mae_std", "fit_seconds"} <= set(table.columns)
 
 
-def test_save_decision_writes_the_contract_keys(tmp_path):
-    decision = {
+def _decision() -> dict:
+    return {
         "finalista": "lightgbm",
         "parametros": {"learning_rate": 0.05},
         "origen_parametros": "partida",
         "comprobacion": {"intervalo_95": [-0.5, 0.3]},
         "regla": "Se usan los optimizados solo si todo el intervalo está por debajo de cero",
         "comparacion_finalistas": None,
+        "regla_elegiria": "lightgbm",
+        "decision_del_grupo": None,
+        "como_se_arma": "make_model('lightgbm', parametros)",
+        "parametros_fijos": {"subsample_freq": 1},
         "tracking": "local",
         "experimento": "tarifalatam-optimizacion",
         "ensayos": 30,
     }
+
+
+def test_save_decision_writes_the_contract_keys(tmp_path):
+    decision = _decision()
     path = tmp_path / "06_best_params.json"
     save_decision(path, decision)
     assert json.loads(path.read_text(encoding="utf-8")) == decision
-    with pytest.raises(ValueError, match="regla"):
-        save_decision(path, {k: v for k, v in decision.items() if k != "regla"})
+    for key in ("regla", "como_se_arma", "decision_del_grupo"):
+        with pytest.raises(ValueError, match=key):
+            save_decision(path, {k: v for k, v in decision.items() if k != key})
+
+
+# --- Revisión del 2026-10-31 (revisor-de-codigo-ia y auditor-de-fuga) -------------------------------------------
+
+
+def test_save_decision_keeps_native_types_and_rejects_infinity(tmp_path):
+    path = tmp_path / "06_best_params.json"
+    decision = _decision() | {"ensayos": np.int64(60), "comprobacion": {"mae": np.float64(38.5), "ok": np.bool_(True)}}
+    save_decision(path, decision)
+    loaded = json.loads(path.read_text(encoding="utf-8"))
+    assert loaded["ensayos"] == 60 and isinstance(loaded["ensayos"], int)  # no 60.0
+    assert loaded["comprobacion"]["ok"] is True
+    with pytest.raises(ValueError):
+        save_decision(path, _decision() | {"ensayos": float("inf")})  # "Infinity" no es JSON válido
+
+
+def test_construction_info_matches_make_model():
+    """La etapa 7 debe armar el modelo igual que la optimización: con subsample_freq=1, o LightGBM ignora subsample."""
+    info = construction_info("lightgbm")
+    assert "make_model" in info["como_se_arma"]
+    assert info["parametros_fijos"]["subsample_freq"] == 1
+    model = make_model("lightgbm", {"subsample": 0.9})
+    for key, value in info["parametros_fijos"].items():
+        assert model.get_params()[key] == value
+
+
+def test_choose_finalist_rule():
+    seconds = {"a": 5.0, "b": 2.0}
+    assert choose_finalist("a", "b", -0.5, -0.1, seconds)[0] == "a"  # A se equivoca menos en todo el intervalo
+    assert choose_finalist("a", "b", 0.1, 0.5, seconds)[0] == "b"  # B se equivoca menos en todo el intervalo
+    winner, reason = choose_finalist("a", "b", -0.2, 0.5, seconds)
+    assert winner == "b" and "empate" in reason  # cruza el cero: el más rápido de ajustar
+    assert choose_finalist("a", "b", -0.2, 0.0, seconds)[0] == "b"  # tocar el cero también es empate
+
+
+def test_compare_on_reserved_fails_if_hosts_are_shared():
+    data = make_train_rows(n_hosts=40)
+    pipeline = build_pipeline(Ridge(), "linear")
+    with pytest.raises(AssertionError, match="anfitriones"):
+        compare_on_reserved(pipeline, pipeline, data.iloc[:50], data.iloc[30:], n=50)
+
+
+def test_compare_on_reserved_with_two_different_models():
+    data = make_train_rows(n_hosts=60)
+    search, reserved = reserve_hosts(data)
+    ridge, base = build_pipeline(Ridge(), "linear"), build_pipeline(BaselineRegressor(), "baseline")
+    result = compare_on_reserved(ridge, base, search, reserved, n=200)
+    X_search, y_search = feature_frame(search), search[TARGET]
+    X_reserved, y_reserved = feature_frame(reserved), reserved[TARGET]
+    mae_ridge = usd_metrics(y_reserved, clone(ridge).fit(X_search, y_search).predict(X_reserved))["mae"]
+    mae_base = usd_metrics(y_reserved, clone(base).fit(X_search, y_search).predict(X_reserved))["mae"]
+    assert (result["mae_a"], result["mae_b"]) == pytest.approx((mae_ridge, mae_base))
+    assert result["mean_difference"] == pytest.approx(mae_ridge - mae_base)  # A − B
+    assert result["low"] <= result["mean_difference"] <= result["high"]
+    assert result["listings"] == len(reserved)
+
+
+def test_host_bootstrap_ci_is_reproducible_with_the_same_seed():
+    rng = np.random.default_rng(1)
+    hosts, diff = np.repeat(np.arange(20), 2), rng.normal(size=40)
+    assert host_bootstrap_ci(diff, hosts, n=200, seed=3) == host_bootstrap_ci(diff, hosts, n=200, seed=3)
+
+
+def test_host_bootstrap_ci_fails_with_missing_hosts():
+    with pytest.raises(ValueError, match="anfitrión"):
+        host_bootstrap_ci([1.0, 1.0, 100.0], [1, 2, np.nan])  # sin el error, la fila de 100 desaparecería callada
+
+
+def test_tune_raises_if_every_trial_fails(tmp_path):
+    _local_mlflow(tmp_path, "prueba-todo-falla")
+    X, y, folds = _search_data()
+    with pytest.raises(RuntimeError, match="amenities"):
+        tune("ridge", X.drop(columns=["amenities"]), y, folds, n_trials=2, ideas=(2,))
+
+
+@pytest.mark.parametrize("name", ["lightgbm", "random_forest"])
+def test_tune_runs_each_finalist(tmp_path, name):
+    _local_mlflow(tmp_path, f"prueba-{name}")
+    X, y, folds = _search_data()
+    study = tune(name, X, y, folds, n_trials=1)
+    assert study.trials[0].state == optuna.trial.TrialState.COMPLETE
+
+
+def test_tune_without_logging_registers_nothing(tmp_path):
+    _local_mlflow(tmp_path, "prueba-sin-registro")
+    X, y, folds = _search_data()
+    tune("ridge", X, y, folds, n_trials=1, log=False)
+    assert len(mlflow.search_runs(experiment_names=["prueba-sin-registro"])) == 0
+
+
+def test_starting_params_are_the_tournament_configuration():
+    assert starting_params("lightgbm") == {"n_estimators": 300, "learning_rate": 0.05, "num_leaves": 31}
+    assert starting_params("random_forest") == {"n_estimators": 200, "min_samples_leaf": 3, "max_features": 0.5}
+    assert starting_params("ridge") == {"alpha": 1.0}

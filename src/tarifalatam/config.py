@@ -277,3 +277,15 @@ FINAL_IDEAS = ()
 # pliegues (diferencia / ruido 1,13); ambos ganan a Ridge en los 5 pliegues. El orden importa en el notebook 06: el primero
 # es "A" en la comparación final entre finalistas.
 FINALISTS = ("random_forest", "lightgbm")
+
+# Resultado de la etapa 6 (notebooks/06_optimizacion.ipynb, 2026-10-31; detalle en reports/06_optimizacion.md): los dos
+# finalistas optimizados empatan en los anfitriones reservados, y la regla (el más rápido de ajustar con su configuración
+# elegida) elige el bosque. El grupo eligió LightGBM como EXCEPCIÓN a la regla, decidida después de ver el resultado
+# (tarea T047). None = aplicar la regla sin excepción.
+STAGE7_MODEL = "lightgbm"
+STAGE7_GROUP_NOTE = (
+    "Excepción a la regla escrita, decidida por el grupo el 2026-10-31 después de ver el resultado (T047): los dos "
+    "finalistas optimizados empatan en los anfitriones reservados y la regla elegiría al más rápido de ajustar; el grupo "
+    "eligió LightGBM porque tiene el MAE más bajo en los reservados (dentro del ruido) y lo considera más simple de "
+    "operar en la app, que carga models/model.joblib desde el repositorio."
+)

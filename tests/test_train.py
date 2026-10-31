@@ -234,3 +234,50 @@ def test_compare_hand_case():
 def test_value_per_nights():
     assert value_per_nights(2.5) == pytest.approx(75.0)
     assert value_per_nights(2.5, nights=10) == pytest.approx(25.0)
+
+
+# --- Revisión del 2026-10-31 (revisor-de-codigo-ia y auditor-de-fuga) ------------------------------------------
+
+
+def test_improvement_over_noise_without_noise_keeps_the_sign():
+    worse = improvement_over_noise([10, 10, 10], [11, 11, 11])
+    assert worse["ratio"] == -np.inf  # peor y sin ruido: nunca se conserva
+    assert not keep_idea(worse["ratio"], known_at_prediction=True)
+    assert improvement_over_noise([10, 10, 10], [10, 10, 10])["ratio"] == 0.0  # empate
+
+
+def test_compare_without_noise_keeps_the_sign():
+    assert compare(best=[11, 11, 11], other=[10, 10, 10])["difference_over_noise"] == -np.inf
+    assert compare(best=[10, 10, 10], other=[11, 11, 11])["difference_over_noise"] == np.inf
+    assert compare(best=[10, 10, 10], other=[10, 10, 10])["difference_over_noise"] == 0.0
+
+
+def test_rare_categories_are_learned_inside_the_pipeline():
+    data = make_train_rows(n_hosts=200)  # 399 anuncios: "Barrio Raro" tiene menos de 30
+    pipeline = build_pipeline(Ridge(), "linear").fit(feature_frame(data), data[TARGET])
+    rare = pipeline.named_steps["prep"].named_transformers_["categorical"].named_steps["rare"]
+    assert rare.frequent_["city"] == {"rio-de-janeiro", "bogota", "belize"}
+    assert {"Centro", "Norte", "Sur"} <= rare.frequent_["neighbourhood_cleansed"]
+    assert "Barrio Raro" not in rare.frequent_["neighbourhood_cleansed"]
+
+
+@pytest.mark.parametrize("family", ["linear", "forest", "boosting"])
+def test_build_pipeline_handles_missing_values_in_the_reference(family):
+    data = make_train_rows()
+    for column in ("bedrooms", "beds", "bathrooms_count", "bathroom_shared"):
+        data.loc[data.index[::7], column] = np.nan  # en los datos reales hay entre 0,1 % y 0,9 % de vacíos
+    pipeline = build_pipeline(SMALL_MODELS[family], family, ideas=(3,)).fit(feature_frame(data), data[TARGET])
+    assert np.isfinite(pipeline.predict(feature_frame(data))).all()
+
+
+def test_build_pipeline_ignores_repeated_ideas():
+    data = make_train_rows()
+    pipeline = build_pipeline(Ridge(), "linear", ideas=(1, 1)).fit(feature_frame(data), data[TARGET])
+    assert np.isfinite(pipeline.predict(feature_frame(data))).all()
+
+
+def test_baseline_family_rejects_ideas_and_suspicious_columns():
+    with pytest.raises(ValueError, match="línea base"):
+        build_pipeline(BaselineRegressor(), "baseline", ideas=(1,))
+    with pytest.raises(ValueError, match="línea base"):
+        build_pipeline(BaselineRegressor(), "baseline", with_suspicious=True)

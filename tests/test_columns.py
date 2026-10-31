@@ -101,3 +101,7 @@ def test_with_suspicious_adds_them_and_their_derived_columns():
     added = set(_all(feature_columns(with_suspicious=True))) - set(_all(feature_columns()))
     expected = (set(SUSPICIOUS_FEATURES) - {"first_review", "last_review"}) | set(SUSPICIOUS_DERIVED)
     assert added == expected  # las dos fechas entran convertidas en días
+
+
+def test_feature_columns_ignores_repeated_ideas():
+    assert feature_columns(ideas=(1, 1)) == feature_columns(ideas=(1,))

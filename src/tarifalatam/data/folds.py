@@ -62,6 +62,9 @@ def fold_indices(frame: pd.DataFrame, folds: pd.DataFrame, exact: bool = True) -
     if not exact and not ids <= known:
         raise ValueError(f"{len(ids - known)} anuncios no están en la asignación de pliegues")
     fold = frame[["id"]].merge(folds, on="id", how="left")["fold"].to_numpy()
+    missing = sorted(set(range(int(folds["fold"].max()) + 1)) - set(fold))
+    if missing:
+        raise ValueError(f"No hay anuncios del pliegue {missing} en esta tabla: no se pueden usar los 5 pliegues")
     positions = np.arange(len(frame))
     return [(positions[fold != k], positions[fold == k]) for k in sorted(set(fold))]
 
@@ -71,6 +74,8 @@ def reserve_hosts(train: pd.DataFrame, size: float = RESERVE_SIZE, seed: int = R
 
     Devuelve (búsqueda, reservados). Sirven para la comprobación honesta de la etapa 6 (guía, sección 3.4).
     """
+    if train[GROUP_COL].isna().any():
+        raise ValueError(f"{train[GROUP_COL].isna().sum()} anuncios no tienen {GROUP_COL}: no se puede reservar por anfitrión")
     splitter = GroupShuffleSplit(n_splits=1, test_size=size, random_state=seed)
     search_idx, reserved_idx = next(splitter.split(train, groups=train[GROUP_COL]))
     search = train.iloc[search_idx].reset_index(drop=True)

@@ -87,3 +87,18 @@ def test_reserve_hosts_has_no_shared_hosts_and_loses_no_rows():
     assert set(search["host_id"]).isdisjoint(set(reserved["host_id"]))
     assert len(search) + len(reserved) == len(train)
     assert reserved["host_id"].nunique() == 10  # 25 % de 40 anfitriones
+
+
+def test_fold_indices_fails_if_a_fold_is_missing():
+    train = make_train_rows()
+    folds = make_folds(train)
+    two_folds = train[train["id"].isin(folds.loc[folds["fold"] < 2, "id"])]
+    with pytest.raises(ValueError, match="pliegue"):
+        fold_indices(two_folds, folds, exact=False)
+
+
+def test_reserve_hosts_fails_with_missing_host_id():
+    train = make_train_rows()
+    train.loc[0, "host_id"] = np.nan
+    with pytest.raises(ValueError, match="host_id"):
+        reserve_hosts(train)

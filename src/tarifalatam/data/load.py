@@ -35,6 +35,8 @@ def load_train(path=TRAIN_PATH) -> pd.DataFrame:
     modelar en silencio con otra tabla.
     """
     path = Path(path)
+    if path.name.startswith("test"):
+        raise ValueError(f"{path.name} es la prueba: se abre una sola vez, en la etapa 7, y no con esta función")
     if not path.exists():
         raise FileNotFoundError(f"No existe {path}: ejecuta antes notebooks/03_preprocesamiento.ipynb")
     train = pd.read_csv(path, low_memory=False)
@@ -42,4 +44,9 @@ def load_train(path=TRAIN_PATH) -> pd.DataFrame:
     extra = [col for col in train.columns if col not in EXPECTED_COLUMNS]
     if missing or extra:
         raise ValueError(f"Las columnas del entrenamiento no son las esperadas. Faltan: {missing}. Sobran: {extra}")
+    # Los pliegues se guardan por id y se parte por anfitrión: los dos deben estar completos y el id ser único
+    if train["id"].duplicated().any():
+        raise ValueError(f"Hay {train['id'].duplicated().sum()} id repetidos: los pliegues se asignan por id")
+    if train["host_id"].isna().any():
+        raise ValueError(f"{train['host_id'].isna().sum()} anuncios no tienen host_id: no se puede partir por anfitrión")
     return train
