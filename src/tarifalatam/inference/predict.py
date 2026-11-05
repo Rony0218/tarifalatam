@@ -1,24 +1,26 @@
-"""Inferencia: validar entradas y predecir clase y probabilidades.
+"""Inferencia: validar las entradas y sugerir el precio por noche en USD, con su rango típico.
 
-Contrato (el mismo que el del ejemplo del curso):
-  - Entrada: una tabla con las columnas CRUDAS que una persona conoce al decidir (las del esquema).
-  - Salida: la clase decidida, la probabilidad de cada clase y una señal de "revisar" cuando el modelo duda.
-  - Nunca devuelve una predicción silenciosa con datos imposibles: lanza `InputValidationError`.
+Contrato (specs/003-validacion-registro-app/data-model.md, secciones 4 y 5):
+  - Entrada: una tabla con las 13 columnas CRUDAS que una persona conoce (las del esquema). La ciudad es obligatoria; lo
+    demás puede venir vacío («No sé»): el Pipeline del modelo trata los vacíos y las categorías desconocidas.
+  - Salida: `price_usd` (redondeado al dólar), `low_usd` y `high_usd` (el rango típico de su ciudad) y `city`.
+    Las advertencias quedan en `resultado.attrs["warnings"]`.
+  - Nunca devuelve un precio con datos imposibles: lanza `InputValidationError` con un mensaje que dice qué corregir.
 
 Uso:
 
-    from tarifalatam.inference.predict import load_model, predict_with_scores
+    from tarifalatam.inference.predict import load_model, predict_price
     from tarifalatam.inference.schema import load_schema
     model, schema = load_model("models/model.joblib"), load_schema("models/input_schema.json")
-    resultado = predict_with_scores(filas_nuevas, model, schema)
-
-Funciona con cualquier clasificador de scikit-learn (o un Pipeline) que tenga `predict_proba`.
+    resultado = predict_price(filas_nuevas, model, schema)
 """
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
+
+from tarifalatam.models.price import to_usd_price
 
 
 class InputValidationError(ValueError):
@@ -33,73 +35,93 @@ def load_model(path: str | Path):
     return joblib.load(path)
 
 
+def _label(schema: dict, column: str) -> str:
+    return f"{schema.get('labels', {}).get(column, column)} ({column})"
+
+
+def _unique(messages: list[str]) -> list[str]:
+    return list(dict.fromkeys(messages))
+
+
 def validate_inputs(df: pd.DataFrame, schema: dict) -> list[str]:
-    """Valida columnas, tipos y rangos. Lanza InputValidationError si hay errores; devuelve advertencias."""
-    numeric, categorical = schema["numeric"], schema["categorical"]
-    missing = [c for c in numeric + categorical if c not in df.columns]
+    """Valida columnas, ciudad, números, rangos posibles y barrio. Lanza InputValidationError si hay errores; devuelve
+    advertencias (categoría no vista, fuera de lo observado, coordenadas lejos de la ciudad)."""
+    numbers = schema["numeric"] + schema["binary"]
+    missing = [c for c in schema["categorical"] + numbers if c not in df.columns]
     if missing:
         raise InputValidationError(f"Faltan columnas: {', '.join(missing)}")
 
     errors, warnings = [], []
-    for col in numeric:
-        values = pd.to_numeric(df[col], errors="coerce")
-        if (values.isna() & df[col].notna()).any():
-            errors.append(f"{col}: hay valores que no son números")
+    known_cities = set(schema["categories"]["city"])
+    if df["city"].isna().any():
+        errors.append("Falta la ciudad (city): es obligatoria")
+    unknown_cities = sorted(set(df["city"].dropna().astype(str)) - known_cities)
+    if unknown_cities:
+        errors.append(f"Ciudad desconocida (city): {', '.join(unknown_cities)}. El modelo solo conoce: {', '.join(sorted(known_cities))}")
+
+    values = {}
+    for col in numbers:
+        values[col] = pd.to_numeric(df[col], errors="coerce")
+        if (values[col].isna() & df[col].notna()).any():
+            errors.append(f"{_label(schema, col)}: hay valores que no son números")
         if col in schema.get("valid_range", {}):
             low, high = schema["valid_range"][col]
-            if (values.notna() & ~values.between(low, high)).any():
-                errors.append(f"{col}: debe estar entre {low:g} y {high:g}")
+            if (values[col].notna() & ~values[col].between(low, high)).any():
+                errors.append(f"{_label(schema, col)}: debe estar entre {low:g} y {high:g}")
+
+    by_city = schema["neighbourhoods_by_city"]
+    all_barrios = {b for barrios in by_city.values() for b in barrios}
+    for city, barrio in zip(df["city"], df["neighbourhood_cleansed"]):
+        if pd.isna(city) or pd.isna(barrio) or str(city) not in by_city:
+            continue
+        if str(barrio) not in by_city[str(city)] and str(barrio) in all_barrios:
+            city_name = schema.get("city_labels", {}).get(str(city), str(city))
+            errors.append(f"El barrio '{barrio}' no pertenece a {city_name} (neighbourhood_cleansed)")
     if errors:
-        raise InputValidationError("; ".join(errors))
+        raise InputValidationError("; ".join(_unique(errors)))
 
     for col, known in schema.get("categories", {}).items():
-        unseen = set(df[col].dropna().astype(str)) - set(known)
+        if col == "city":
+            continue
+        unseen = sorted(set(df[col].dropna().astype(str)) - set(known))
         if unseen:
-            warnings.append(f"{col}: categoría no vista en el entrenamiento ({', '.join(sorted(unseen))})")
+            warnings.append(f"{_label(schema, col)}: categoría no vista en el entrenamiento ({', '.join(unseen)})")
     for col, (low, high) in schema.get("observed_range", {}).items():
-        values = pd.to_numeric(df[col], errors="coerce")
-        if ((values < low) | (values > high)).any():
-            warnings.append(f"{col}: fuera del rango visto en el entrenamiento ({low:g} a {high:g})")
-    return warnings
+        if ((values[col] < low) | (values[col] > high)).any():
+            warnings.append(f"{_label(schema, col)}: fuera de lo visto en el entrenamiento ({low:g} a {high:g})")
+    for city, lat, lon in zip(df["city"], values["latitude"], values["longitude"]):
+        box = schema.get("city_box", {}).get(str(city))
+        if box is None or pd.isna(lat) or pd.isna(lon):
+            continue
+        if not (box[0] <= lat <= box[1] and box[2] <= lon <= box[3]):
+            city_name = schema.get("city_labels", {}).get(str(city), str(city))
+            warnings.append(f"Las coordenadas quedan fuera de la zona de {city_name} vista en los datos")
+    return _unique(warnings)
 
 
-def decide_min_cost(proba: np.ndarray, cost_matrix) -> np.ndarray:
-    """Elige la clase de menor costo esperado: argmin_j sum_i p_i * costo(i, j)."""
-    return np.argmin(proba @ np.asarray(cost_matrix, dtype=float), axis=1)
-
-
-def _ordered_proba(model, X: pd.DataFrame, class_names: list[str]) -> np.ndarray:
-    """Probabilidades en el orden de class_names (reordena si el modelo guarda sus clases con otro orden)."""
-    proba = model.predict_proba(X)
-    classes = getattr(model, "classes_", None)
-    if classes is None and hasattr(model, "steps"):  # Pipeline
-        classes = getattr(model.steps[-1][1], "classes_", None)
-    if classes is not None:
-        as_text = [str(c) for c in classes]
-        if set(as_text) == set(class_names) and as_text != class_names:
-            proba = proba[:, [as_text.index(name) for name in class_names]]
-    return proba
-
-
-def predict_with_scores(df: pd.DataFrame, model, schema: dict) -> pd.DataFrame:
-    """Predice. Una fila de salida por fila de entrada.
-
-    Columnas: decision, most_likely, proba_<clase>, needs_review y (si el esquema trae matriz de costos)
-    expected_cost. Las advertencias de validación quedan en `resultado.attrs["warnings"]`.
-    """
+def predict_price(df: pd.DataFrame, model, schema: dict) -> pd.DataFrame:
+    """Sugiere el precio por noche. Una fila de salida por fila de entrada: price_usd, low_usd, high_usd y city."""
     warnings = validate_inputs(df, schema)
-    class_names = schema["class_names"]
-    proba = _ordered_proba(model, df, class_names)
-    most_likely = proba.argmax(axis=1)
+    numbers = schema["numeric"] + schema["binary"]
+    X = df[schema["categorical"] + numbers].copy()
+    for col in numbers:
+        X[col] = pd.to_numeric(X[col], errors="coerce")
+    for col in schema["categorical"]:
+        X[col] = X[col].astype(object).where(X[col].notna(), np.nan)
 
-    cost = schema.get("cost_matrix")
-    decision = decide_min_cost(proba, cost) if cost is not None else most_likely
-
-    out = pd.DataFrame(proba, columns=[f"proba_{c}" for c in class_names], index=df.index)
-    out.insert(0, "decision", [class_names[i] for i in decision])
-    out["most_likely"] = [class_names[i] for i in most_likely]
-    if cost is not None:
-        out["expected_cost"] = (proba @ np.asarray(cost, dtype=float))[np.arange(len(df)), decision]
-    out["needs_review"] = (proba.max(axis=1) < schema.get("review_threshold", 0.55)) | (decision != most_likely)
-    out.attrs["warnings"] = warnings
+    exact = to_usd_price(model.predict(X), schema.get("correction_factor", 1.0))
+    ratios = np.array([schema["price_range_ratios"][str(city)] for city in df["city"]], dtype=float)
+    out = pd.DataFrame(
+        {
+            "city": df["city"].astype(str).to_numpy(),
+            "price_usd": np.round(exact).astype(int),
+            "low_usd": np.round(exact * ratios[:, 0]).astype(int),
+            "high_usd": np.round(exact * ratios[:, 1]).astype(int),
+        },
+        index=df.index,
+    )
+    for city in out["city"].unique():
+        if city in schema.get("city_warnings", {}):
+            warnings.append(schema["city_warnings"][city])
+    out.attrs["warnings"] = _unique(warnings)
     return out

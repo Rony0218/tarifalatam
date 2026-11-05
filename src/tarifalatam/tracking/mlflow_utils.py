@@ -76,17 +76,22 @@ def _databricks_user() -> str:
     return WorkspaceClient().current_user.me().user_name
 
 
-def set_experiment(name: str) -> str:
+def set_experiment(name: str, artifact_root: Path | None = None) -> str:
     """Crea o activa el experimento. En Databricks el nombre debe ser una ruta.
 
     Si `.env` define EXPERIMENT_DIR (una carpeta del workspace que ya existe), el experimento va ahí;
     si no, en /Users/<usuario>/.
+    En local, un experimento NUEVO guarda sus artefactos (p. ej. el modelo registrado) en `<raíz>/mlruns/<nombre>`
+    (o en `artifact_root/<nombre>`), no en la carpeta desde la que se ejecuta el notebook. Uno que ya existe no cambia.
     """
     if uses_databricks():
         folder = os.environ.get("EXPERIMENT_DIR", "").rstrip("/") or f"/Users/{_databricks_user()}"
         full_name = f"{folder}/{name}"
     else:
         full_name = name
+        if mlflow.get_experiment_by_name(name) is None:
+            root = Path(artifact_root) if artifact_root is not None else ROOT / "mlruns"
+            mlflow.create_experiment(name, artifact_location=(root / name).as_uri())
     mlflow.set_experiment(full_name)
     return full_name
 

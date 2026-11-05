@@ -33,3 +33,23 @@ def test_experiment_dir_is_ignored_in_local_mode(tmp_path, monkeypatch):
     monkeypatch.setenv("EXPERIMENT_DIR", "/Users/alguien/carpeta")
     mu.configure_mlflow(force_local=True, local_db=tmp_path / "mlflow.db", env_file=tmp_path / "no_existe.env")
     assert mu.set_experiment("prueba") == "prueba"
+
+
+def test_local_experiment_keeps_its_artifacts_in_the_root_mlruns(tmp_path):
+    """En local, los artefactos (el modelo registrado) van a <raíz>/mlruns/<experimento>, no a la carpeta desde la que
+    se ejecuta el notebook."""
+    mu.configure_mlflow(force_local=True, local_db=tmp_path / "mlflow.db", env_file=tmp_path / "no_existe.env")
+    mu.set_experiment("con-artefactos", artifact_root=tmp_path / "mlruns")
+    location = mlflow.get_experiment_by_name("con-artefactos").artifact_location
+    assert location == (tmp_path / "mlruns" / "con-artefactos").as_uri()
+
+    mu.set_experiment("por-defecto")
+    default = mlflow.get_experiment_by_name("por-defecto").artifact_location
+    assert default == (mu.ROOT / "mlruns" / "por-defecto").as_uri()
+
+
+def test_existing_local_experiment_is_not_changed(tmp_path):
+    mu.configure_mlflow(force_local=True, local_db=tmp_path / "mlflow.db", env_file=tmp_path / "no_existe.env")
+    mlflow.create_experiment("viejo", artifact_location=(tmp_path / "otra").as_uri())
+    mu.set_experiment("viejo", artifact_root=tmp_path / "mlruns")
+    assert mlflow.get_experiment_by_name("viejo").artifact_location == (tmp_path / "otra").as_uri()
