@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from tarifalatam.config import TARGET
+from tarifalatam.config import RARE_MIN_COUNT, TARGET
 
 DEFAULT_LABELS = {
     "city": "Ciudad",
@@ -63,6 +63,8 @@ def build_schema(
     price_range_ratios: dict,
     correction_factor: float = 1.0,
     city_warnings: dict | None = None,
+    city_mae: dict | None = None,
+    min_neighbourhood_count: int = RARE_MIN_COUNT,
     labels: dict | None = None,
     city_labels: dict | None = None,
     app_title: str = DEFAULT_TITLE,
@@ -76,6 +78,9 @@ def build_schema(
     - `price_range_ratios`: {ciudad: [p25, p75]} de precio real / sugerido en los anfitriones reservados (etapa 7).
     - `correction_factor`: el factor al volver del logaritmo (1 = sin corrección, lo decidido en la etapa 7).
     - `city_warnings`: {ciudad: texto} que la app muestra junto al precio (p. ej. Belice).
+    - `city_mae`: {ciudad: MAE en USD} medido en la prueba (etapa 7). Solo se INFORMA en la app; no cambia ninguna predicción.
+    - `min_neighbourhood_count`: el mapa muestra la mediana del precio de un barrio solo si tiene al menos estos anuncios
+      (30, el mismo umbral de barrios raros del modelo): con menos, la mediana no es confiable.
     """
     numbers = list(numeric) + list(binary)
     missing = [c for c in list(categorical) + numbers if c not in df.columns]
@@ -120,6 +125,9 @@ def build_schema(
         "correction_factor": float(correction_factor),
         "price_range_ratios": {str(c): [float(v[0]), float(v[1])] for c, v in price_range_ratios.items()},
         "city_warnings": dict(city_warnings or {}),
+        "city_mae": {str(c): float(v) for c, v in (city_mae or {}).items()},
+        "neighbourhood_price": {},
+        "city_price": {},
         "labels": {**DEFAULT_LABELS, **(labels or {})},
         "city_labels": {**DEFAULT_CITY_LABELS, **(city_labels or {})},
         "app_title": app_title,
@@ -127,6 +135,15 @@ def build_schema(
     }
     for (city, barrio), row in coords.iterrows():
         schema["neighbourhood_coords"].setdefault(str(city), {})[str(barrio)] = [float(row["latitude"]), float(row["longitude"])]
+    if "price_usd" in df.columns:  # datos del mapa: medianas del ENTRENAMIENTO, nunca de la prueba
+        for city, group in by_city:
+            schema["city_price"][str(city)] = [float(group["price_usd"].median()), int(len(group))]
+            barrios = group.dropna(subset=["neighbourhood_cleansed"]).groupby("neighbourhood_cleansed")["price_usd"]
+            schema["neighbourhood_price"][str(city)] = {
+                str(barrio): [float(prices.median()), int(len(prices))]
+                for barrio, prices in barrios
+                if len(prices) >= min_neighbourhood_count
+            }
     for col in numbers:
         values = pd.to_numeric(df[col], errors="coerce").dropna()
         if values.empty:
