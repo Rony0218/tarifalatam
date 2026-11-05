@@ -1,0 +1,15 @@
+{
+  "tracking": "local",
+  "experimento": "tarifalatam-modelo-final",
+  "modelo_registrado": "tarifalatam_precio_noche",
+  "version": 1,
+  "alias": "champion",
+  "run_id": "7b3281b37c0b4feabc985324d0797082",
+  "registrado_el": "2026-11-05 18:12:34",
+  "artefactos": "mlruns/tarifalatam-modelo-final (en .gitignore; la ruta absoluta queda en mlflow_local.db)",
+  "ida_y_vuelta": {
+    "filas": 200,
+    "iguales": 200
+  },
+  "como_recuperarlo": "configure_mlflow(force_local=True); mlflow.sklearn.load_model('models:/tarifalatam_precio_noche@champion')"
+}
