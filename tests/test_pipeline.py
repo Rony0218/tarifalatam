@@ -12,7 +12,8 @@ from tarifalatam.config import (
     PII_COLUMNS,
     UNUSED_COLUMNS,
 )
-from tarifalatam.data.pipeline import build_datasets
+from tarifalatam.data.cleaning import drop_price_outliers
+from tarifalatam.data.pipeline import build_datasets, build_unfiltered_test
 
 # Tasas INVENTADAS para las pruebas: no son tasas reales y nunca van a config.py
 FAKE_RATES = {
@@ -132,3 +133,26 @@ def test_exclusion_counts_are_integers(tmp_path):
     counts = log[log["step"] != "price_bounds"]
     for col in ("before", "removed", "after"):
         assert str(counts[col].dtype) == "Int64"
+
+
+def test_unfiltered_test_keeps_the_price_outliers(tmp_path):
+    """La prueba sin el filtro de extremos (sensibilidad de la etapa 7) = la prueba filtrada + los anuncios que quitó el filtro."""
+    _write_raw_files(tmp_path)
+    _, test, exclusions, _ = build_datasets(tmp_path, rates=FAKE_RATES)
+    unfiltered = build_unfiltered_test(tmp_path, rates=FAKE_RATES)
+    removed = exclusions.query("step == 'price_outlier' and split == 'test'")["removed"].sum()
+    assert len(unfiltered) == len(test) + removed
+    assert set(test["id"]) <= set(unfiltered["id"])
+    assert unfiltered["price_usd"].max() > test["price_usd"].max()  # los extremos siguen ahí
+    assert list(unfiltered.columns) == list(test.columns)
+    # misma partición: todos los anfitriones de la prueba están (y alguno más, si todos sus anuncios eran extremos)
+    assert set(test["host_id"]) <= set(unfiltered["host_id"])
+
+
+def test_filtering_the_unfiltered_test_gives_the_test(tmp_path):
+    """Aplicar el filtro de extremos a la prueba sin filtrar da exactamente la prueba de build_datasets."""
+    _write_raw_files(tmp_path)
+    _, test, _, bounds = build_datasets(tmp_path, rates=FAKE_RATES)
+    unfiltered = build_unfiltered_test(tmp_path, rates=FAKE_RATES)
+    kept = drop_price_outliers(unfiltered, bounds).reset_index(drop=True)
+    pd.testing.assert_frame_equal(kept, test)

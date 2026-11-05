@@ -289,3 +289,38 @@ STAGE7_GROUP_NOTE = (
     "eligió LightGBM porque tiene el MAE más bajo en los reservados (dentro del ruido) y lo considera más simple de "
     "operar en la app, que carga models/model.joblib desde el repositorio."
 )
+
+# ---------------------------------------------------------------------------------------------------------------
+# Etapas 7 a 9: validación, registro y app (especificaciones/07-validacion-registro-app.md, aprobada por el grupo el
+# 2026-11-05; decisiones congeladas a las 17:42, antes de abrir la prueba).
+# ---------------------------------------------------------------------------------------------------------------
+# La ruta de la prueba NO va aquí: la pasan los notebooks 07 y 09 a validation.open_test (tests/test_no_test_set.py)
+TEST_MARK_PATH = REPORTS_DIR / "prueba_abierta.txt"  # una línea por cada lectura de la prueba, con su propósito
+FROZEN_AT = "2026-11-05 17:42 (UTC−5)"  # hora en que el grupo congeló las decisiones (sección 1 de la especificación)
+
+FINAL_EXPERIMENT = "tarifalatam-modelo-final"
+REGISTERED_MODEL = "tarifalatam_precio_noche"
+MODEL_ALIAS = "champion"
+
+# Meta de éxito (PR #5 de Rafael Jaramillo, respuesta 1 del grupo): (a) MAE al menos 20 % menor que la línea base,
+# (b) intervalo del 95 % de la diferencia entero bajo cero y (c) ninguna ciudad con MAE mayor que el de la línea base
+GOAL_IMPROVEMENT = 0.20
+# Costo asimétrico (sobrestimar, subestimar): 2 a 1 es un supuesto del grupo, no una medición; 1,5 y 3 son sensibilidad
+COST_RATIOS = ((2.0, 1.0), (1.5, 1.0), (3.0, 1.0))
+# Rango típico del precio (respuesta 2 del grupo): percentiles 25 y 75 de real / sugerido en los anfitriones reservados
+RANGE_QUANTILES = (0.25, 0.75)
+SHAP_SAMPLE = 2000  # anuncios del ENTRENAMIENTO para la importancia global
+
+# Rango POSIBLE de cada entrada (sección 7 de la especificación): fuera de él, predict_price se niega a responder.
+# Es conocimiento del grupo, no lo observado en los datos (fuera de lo observado solo hay advertencia).
+VALID_RANGE = {
+    "accommodates": (1, 16),  # Airbnb no permite anunciar más de 16 huéspedes
+    "bedrooms": (0, 10),  # 0 = estudio; más de 10 se marcó como imposible en la limpieza (MAX_BEDROOMS)
+    "beds": (0, 50),  # un inmueble para 16 huéspedes no necesita más; un valor mayor es un error de digitación
+    "bathrooms_count": (0, 20),  # ídem
+    "minimum_nights": (1, 29),  # 30 o más es arriendo mensual y se excluyó del modelo (MONTHLY_MIN_NIGHTS)
+    "maximum_nights": (1, MAX_NIGHTS_CAP),  # 1.125 es el máximo de Airbnb
+    "latitude": (-90, 90),  # lo imposible en el planeta; fuera de la ciudad es solo advertencia
+    "longitude": (-180, 180),
+    "bathroom_shared": (0, 1),
+}

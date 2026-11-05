@@ -1,0 +1,3 @@
+Primera apertura: 2026-11-05 18:09:33 · propósito: evaluación única de la etapa 7 (decisiones congeladas el 2026-11-05 17:42 (UTC−5))
+Nueva lectura: 2026-11-05 18:17:27 · propósito: comprobar que models/model.joblib es el modelo evaluado (no decide nada)
+Nota agregada a mano el 2026-11-05 tras la auditoría de fuga: en la misma ejecución de la primera apertura (18:09), la sección 6 del notebook 07 reconstruyó desde data/raw los anuncios de los anfitriones de prueba SIN el filtro de precios extremos (build_unfiltered_test), solo para la sensibilidad. No decidió nada.
