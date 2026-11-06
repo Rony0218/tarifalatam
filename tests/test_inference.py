@@ -193,3 +193,23 @@ def test_real_model_with_a_real_row():
     assert result["low_usd"] <= result["high_usd"]
     with pytest.raises(InputValidationError):
         predict_price(row.assign(accommodates=40), model, schema)
+
+
+# --- datos del mapa (solo entrenamiento) ---------------------------------------------------------------------------
+
+def test_schema_has_the_median_price_of_each_neighbourhood(train):
+    schema = make_schema(train, min_neighbourhood_count=5, city_mae={"bogota": 22.3})
+    for (city, barrio), group in train.groupby(["city", "neighbourhood_cleansed"]):
+        stored = schema["neighbourhood_price"].get(city, {}).get(barrio)
+        if len(group) >= 5:
+            assert stored == [pytest.approx(group["price_usd"].median()), len(group)]
+        else:
+            assert stored is None  # con pocos anuncios la mediana no es confiable: no se muestra
+    for city, group in train.groupby("city"):
+        assert schema["city_price"][city] == [pytest.approx(group["price_usd"].median()), len(group)]
+    assert schema["city_mae"] == {"bogota": 22.3}
+
+
+def test_schema_hides_neighbourhoods_with_few_listings(train):
+    schema = make_schema(train, min_neighbourhood_count=10_000)
+    assert all(barrios == {} for barrios in schema["neighbourhood_price"].values())
