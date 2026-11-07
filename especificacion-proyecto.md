@@ -7,11 +7,13 @@
 
 | Integrante | Rol (datos / modelado / app / negocio) |
 |---|---|
-| Rony Guerrero | Por definir |
-| Carolina Jiménez | Por definir |
-| Jesica Tarazona | Por definir |
-| Dulce Vargas | Por definir |
-| Rafael Jaramillo | Por definir |
+| Rony Guerrero | app |
+| Carolina Jiménez | modelado |
+| Jesica Tarazona | app |
+| Dulce Vargas | datos |
+| Rafael Jaramillo | negocio |
+
+*Roles asignados al azar el 2026-11-06 (sorteo pedido por Dulce Vargas); el grupo debe confirmarlos o cambiarlos.*
 
 Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://github.com/Rony0218/tarifalatam>
 
@@ -122,3 +124,5 @@ Nombre de la "startup": **TarifaLatam**   Repositorio (público): <https://githu
 | 2026-11-05 | **El modelo se registra en el MLflow local**, no en Databricks (excepción a la regla 7 de `CLAUDE.md`) | No hay `.env` con Databricks configurado y el seguimiento de la etapa 6 (60 ejecuciones) ya está en el local; la guía de la clase 4 acepta el local como respaldo |
 | 2026-11-05 | **Etapa 7: la prueba se abrió una vez (18:09:33) y la meta se cumple** (se leyó otra vez a las 18:17:27 solo para comprobar que `models/model.joblib` es el modelo evaluado). MAE del modelo 41,40 USD por noche [38,29; 45,01] frente a 57,44 [53,18; 62,50] de la línea base; diferencia −16,04 [−17,84; −14,36] (27,9 % menos); las seis ciudades mejoran. Sin corrección del logaritmo (el factor de Duan empeoraba el MAE en los reservados). Límites: Belice (MAE 245,96) y habitaciones compartidas (peor que la línea base) | Decisiones congeladas a las 17:42, antes de abrir la prueba; detalle en `reports/07_validacion.md` |
 | 2026-11-05 | **Etapas 8 y 9:** `tarifalatam_precio_noche` versión 1, alias `champion`, en el MLflow local; exportado a `models/model.joblib` (mismo MAE en la prueba) con su esquema `models/input_schema.json`; la app corre en local | `reports/08_registro.md`, `models/ficha_modelo.md` y `reports/09_despliegue.md`, sección 3 |
+| 2026-11-06 | **Roles asignados** : app, Rony Guerrero y Jesica Tarazona; modelado, Carolina Jiménez; datos, Dulce Vargas; negocio, Rafael Jaramillo | Antes no había roles definidos («Por definir»). Cinco personas para cuatro roles: app tiene dos. Es provisional hasta que el grupo lo confirme; lo registró Dulce Vargas |
+| 2026-11-06 | **La app aún no está desplegada** (H3 pendiente); corre solo en local | Lo confirmó Dulce Vargas el 2026-11-06 |

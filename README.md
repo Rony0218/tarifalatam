@@ -61,10 +61,10 @@ clonan **este** repositorio. Para arrancar, sigue `material-del-curso/guias/mont
 ## Equipo
 | Integrante | Rol |
 |---|---|
-| Rony Guerrero | Por definir |
-| Carolina Jiménez | Por definir |
-| Jesica Tarazona | Por definir |
-| Dulce Vargas | Por definir |
-| Rafael Jaramillo | Por definir |
+| Rony Guerrero | app |
+| Carolina Jiménez | modelado |
+| Jesica Tarazona | app |
+| Dulce Vargas | datos |
+| Rafael Jaramillo | negocio |
 
 Especificación del proyecto: [`especificacion-proyecto.md`](especificacion-proyecto.md) · Especificaciones por etapa: [`especificaciones/`](especificaciones/)
