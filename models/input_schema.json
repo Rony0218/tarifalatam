@@ -1,0 +1,3061 @@
+{
+  "target": "log_price_usd",
+  "numeric": [
+    "latitude",
+    "longitude",
+    "accommodates",
+    "bedrooms",
+    "beds",
+    "bathrooms_count",
+    "minimum_nights",
+    "maximum_nights"
+  ],
+  "categorical": [
+    "city",
+    "neighbourhood_cleansed",
+    "room_type",
+    "property_type"
+  ],
+  "binary": [
+    "bathroom_shared"
+  ],
+  "required": [
+    "city"
+  ],
+  "categories": {
+    "city": [
+      "belize",
+      "bogota",
+      "mexico-city",
+      "rio-de-janeiro",
+      "santiago",
+      "sao-paulo"
+    ],
+    "neighbourhood_cleansed": [
+      "Abolição",
+      "Acari",
+      "Agua Rasa",
+      "Alto De Pinheiros",
+      "Alto da Boa Vista",
+      "Anchieta",
+      "Andaraí",
+      "Anhanguera",
+      "Anil",
+      "Antonio Nariño",
+      "Aricanduva",
+      "Artur Alvim",
+      "Azcapotzalco",
+      "Bancários",
+      "Bangu",
+      "Barra Funda",
+      "Barra da Tijuca",
+      "Barra de Guaratiba",
+      "Barrios Unidos",
+      "Barros Filho",
+      "Bela Vista",
+      "Belem",
+      "Belize Islands",
+      "Belize Mainland",
+      "Benfica",
+      "Benito Juárez",
+      "Bento Ribeiro",
+      "Bom Retiro",
+      "Bonsucesso",
+      "Bosa",
+      "Botafogo",
+      "Bras",
+      "Brasilandia",
+      "Brás de Pina",
+      "Butanta",
+      "Cachambi",
+      "Cachoeirinha",
+      "Cacuia",
+      "Caju",
+      "Cambuci",
+      "Camorim",
+      "Campinho",
+      "Campo Belo",
+      "Campo Grande",
+      "Campo Limpo",
+      "Campo dos Afonsos",
+      "Candelaria",
+      "Cangaiba",
+      "Capao Redondo",
+      "Carrao",
+      "Casa Verde",
+      "Cascadura",
+      "Catete",
+      "Catumbi",
+      "Cavalcanti",
+      "Cayo",
+      "Centro",
+      "Cerrillos",
+      "Cerro Navia",
+      "Chapinero",
+      "Cidade Ademar",
+      "Cidade Dutra",
+      "Cidade Lider",
+      "Cidade Nova",
+      "Cidade Tiradentes",
+      "Cidade Universitária",
+      "Cidade de Deus",
+      "Ciudad Bolivar",
+      "Cocotá",
+      "Coelho Neto",
+      "Colégio",
+      "Complexo do Alemão",
+      "Conchalí",
+      "Consolacao",
+      "Copacabana",
+      "Cordovil",
+      "Corozal",
+      "Cosme Velho",
+      "Cosmos",
+      "Coyoacán",
+      "Cuajimalpa de Morelos",
+      "Cuauhtémoc",
+      "Curicica",
+      "Cursino",
+      "Del Castilho",
+      "El Bosque",
+      "Encantado",
+      "Engativa",
+      "Engenheiro Leal",
+      "Engenho Novo",
+      "Engenho da Rainha",
+      "Engenho de Dentro",
+      "Ermelino Matarazzo",
+      "Estación Central",
+      "Estácio",
+      "Flamengo",
+      "Fontibon",
+      "Freguesia (Ilha)",
+      "Freguesia (Jacarepaguá)",
+      "Freguesia Do O",
+      "Galeão",
+      "Gamboa",
+      "Gardênia Azul",
+      "Glória",
+      "Grajau",
+      "Grajaú",
+      "Grumari",
+      "Guadalupe",
+      "Guaianases",
+      "Guaratiba",
+      "Gustavo A. Madero",
+      "Gávea",
+      "Higienópolis",
+      "Honório Gurgel",
+      "Huechuraba",
+      "Humaitá",
+      "Iguatemi",
+      "Independencia",
+      "Inhaúma",
+      "Inhoaíba",
+      "Ipanema",
+      "Ipiranga",
+      "Irajá",
+      "Itaim Bibi",
+      "Itaim Paulista",
+      "Itanhangá",
+      "Itaquera",
+      "Iztacalco",
+      "Iztapalapa",
+      "Jabaquara",
+      "Jacana",
+      "Jacarepaguá",
+      "Jacaré",
+      "Jaguara",
+      "Jaguare",
+      "Jaragua",
+      "Jardim América",
+      "Jardim Angela",
+      "Jardim Botânico",
+      "Jardim Carioca",
+      "Jardim Guanabara",
+      "Jardim Helena",
+      "Jardim Paulista",
+      "Jardim Sao Luis",
+      "Jardim Sulacap",
+      "Jose Bonifacio",
+      "Joá",
+      "Kennedy",
+      "La Cisterna",
+      "La Florida",
+      "La Granja",
+      "La Magdalena Contreras",
+      "La Reina",
+      "Lagoa",
+      "Lajeado",
+      "Lapa",
+      "Laranjeiras",
+      "Las Condes",
+      "Leblon",
+      "Leme",
+      "Liberdade",
+      "Limao",
+      "Lins de Vasconcelos",
+      "Lo Barnechea",
+      "Lo Espejo",
+      "Lo Prado",
+      "Los Martires",
+      "Macul",
+      "Madureira",
+      "Magalhães Bastos",
+      "Maipú",
+      "Mandaqui",
+      "Mangueira",
+      "Maracanã",
+      "Marechal Hermes",
+      "Maria da Graça",
+      "Marsilac",
+      "Maré",
+      "Miguel Hidalgo",
+      "Milpa Alta",
+      "Moema",
+      "Moneró",
+      "Mooca",
+      "Morumbi",
+      "Méier",
+      "Olaria",
+      "Orange Walk",
+      "Osvaldo Cruz",
+      "Paciência",
+      "Padre Miguel",
+      "Paquetá",
+      "Parelheiros",
+      "Pari",
+      "Parque Anchieta",
+      "Parque Colúmbia",
+      "Parque Do Carmo",
+      "Pavuna",
+      "Pechincha",
+      "Pedra de Guaratiba",
+      "Pedreira",
+      "Pedro Aguirre Cerda",
+      "Penha",
+      "Penha Circular",
+      "Perdizes",
+      "Perus",
+      "Peñalolén",
+      "Piedade",
+      "Pilares",
+      "Pinheiros",
+      "Pirituba",
+      "Pitangueiras",
+      "Ponte Rasa",
+      "Portuguesa",
+      "Praia da Bandeira",
+      "Praça Seca",
+      "Praça da Bandeira",
+      "Providencia",
+      "Pudahuel",
+      "Puente Aranda",
+      "Quilicura",
+      "Quinta Normal",
+      "Quintino Bocaiúva",
+      "Rafael Uribe Uribe",
+      "Ramos",
+      "Raposo Tavares",
+      "Realengo",
+      "Recoleta",
+      "Recreio dos Bandeirantes",
+      "Renca",
+      "Republica",
+      "Riachuelo",
+      "Ricardo de Albuquerque",
+      "Rio Comprido",
+      "Rio Pequeno",
+      "Rocha",
+      "Rocha Miranda",
+      "Rocinha",
+      "Sacoma",
+      "Sampaio",
+      "San Cristobal",
+      "San Joaquín",
+      "San Miguel",
+      "Santa Cecilia",
+      "Santa Cruz",
+      "Santa Fe",
+      "Santa Teresa",
+      "Santana",
+      "Santiago",
+      "Santo Amaro",
+      "Santo Cristo",
+      "Santíssimo",
+      "Sao Domingos",
+      "Sao Lucas",
+      "Sao Mateus",
+      "Sao Miguel",
+      "Sao Rafael",
+      "Sapopemba",
+      "Saude",
+      "Saúde",
+      "Se",
+      "Senador Camará",
+      "Senador Vasconcelos",
+      "Sepetiba",
+      "Socorro",
+      "Stann Creek Islands",
+      "Stann Creek Mainland",
+      "Suba",
+      "Sumapaz",
+      "São Conrado",
+      "São Cristóvão",
+      "São Francisco Xavier",
+      "Tanque",
+      "Taquara",
+      "Tatuape",
+      "Tauá",
+      "Teusaquillo",
+      "Tijuca",
+      "Tlalpan",
+      "Tláhuac",
+      "Todos os Santos",
+      "Toledo Mainland",
+      "Tomás Coelho",
+      "Tremembe",
+      "Tucuruvi",
+      "Tunjuelito",
+      "Turiaçú",
+      "Urca",
+      "Usaquen",
+      "Usme",
+      "Vargem Grande",
+      "Vargem Pequena",
+      "Vasco da Gama",
+      "Vaz Lobo",
+      "Venustiano Carranza",
+      "Vicente de Carvalho",
+      "Vidigal",
+      "Vigário Geral",
+      "Vila Andrade",
+      "Vila Curuca",
+      "Vila Formosa",
+      "Vila Guilherme",
+      "Vila Isabel",
+      "Vila Jacui",
+      "Vila Kosmos",
+      "Vila Leopoldina",
+      "Vila Maria",
+      "Vila Mariana",
+      "Vila Matilde",
+      "Vila Medeiros",
+      "Vila Militar",
+      "Vila Prudente",
+      "Vila Sonia",
+      "Vila Valqueire",
+      "Vila da Penha",
+      "Vitacura",
+      "Xochimilco",
+      "Zumbi",
+      "Água Santa",
+      "Álvaro Obregón",
+      "Ñuñoa"
+    ],
+    "room_type": [
+      "Entire home/apt",
+      "Hotel room",
+      "Private room",
+      "Shared room"
+    ],
+    "property_type": [
+      "Boat",
+      "Bus",
+      "Camper/RV",
+      "Campsite",
+      "Casa particular",
+      "Castle",
+      "Cave",
+      "Dome",
+      "Earthen home",
+      "Entire bungalow",
+      "Entire cabin",
+      "Entire chalet",
+      "Entire condo",
+      "Entire cottage",
+      "Entire guest suite",
+      "Entire guesthouse",
+      "Entire home",
+      "Entire home/apt",
+      "Entire hostel",
+      "Entire loft",
+      "Entire place",
+      "Entire rental unit",
+      "Entire serviced apartment",
+      "Entire townhouse",
+      "Entire vacation home",
+      "Entire villa",
+      "Farm stay",
+      "Holiday park",
+      "Houseboat",
+      "Hut",
+      "Island",
+      "Lighthouse",
+      "Plane",
+      "Private room",
+      "Private room in barn",
+      "Private room in bed and breakfast",
+      "Private room in boat",
+      "Private room in bungalow",
+      "Private room in bus",
+      "Private room in cabin",
+      "Private room in camper/rv",
+      "Private room in casa particular",
+      "Private room in castle",
+      "Private room in cave",
+      "Private room in chalet",
+      "Private room in condo",
+      "Private room in cottage",
+      "Private room in dome",
+      "Private room in earthen home",
+      "Private room in farm stay",
+      "Private room in floor",
+      "Private room in guest suite",
+      "Private room in guesthouse",
+      "Private room in home",
+      "Private room in hostel",
+      "Private room in houseboat",
+      "Private room in hut",
+      "Private room in island",
+      "Private room in loft",
+      "Private room in minsu",
+      "Private room in nature lodge",
+      "Private room in pension",
+      "Private room in rental unit",
+      "Private room in resort",
+      "Private room in serviced apartment",
+      "Private room in shipping container",
+      "Private room in tent",
+      "Private room in tiny home",
+      "Private room in tower",
+      "Private room in townhouse",
+      "Private room in treehouse",
+      "Private room in vacation home",
+      "Private room in villa",
+      "Private room in yurt",
+      "Ranch",
+      "Room in aparthotel",
+      "Room in bed and breakfast",
+      "Room in boutique hotel",
+      "Room in hostel",
+      "Room in hotel",
+      "Room in nature lodge",
+      "Room in rental unit",
+      "Room in resort",
+      "Room in serviced apartment",
+      "Shared room",
+      "Shared room in barn",
+      "Shared room in bed and breakfast",
+      "Shared room in boutique hotel",
+      "Shared room in cabin",
+      "Shared room in casa particular",
+      "Shared room in condo",
+      "Shared room in earthen home",
+      "Shared room in farm stay",
+      "Shared room in guest suite",
+      "Shared room in guesthouse",
+      "Shared room in home",
+      "Shared room in hostel",
+      "Shared room in hotel",
+      "Shared room in loft",
+      "Shared room in rental unit",
+      "Shared room in serviced apartment",
+      "Shared room in tiny home",
+      "Shared room in townhouse",
+      "Shared room in villa",
+      "Shipping container",
+      "Tent",
+      "Tiny home",
+      "Tipi",
+      "Tower",
+      "Treehouse",
+      "Windmill",
+      "Yurt"
+    ]
+  },
+  "most_frequent": {
+    "city": "rio-de-janeiro",
+    "neighbourhood_cleansed": "Copacabana",
+    "room_type": "Entire home/apt",
+    "property_type": "Entire rental unit"
+  },
+  "neighbourhoods_by_city": {
+    "belize": [
+      "Belize Islands",
+      "Belize Mainland",
+      "Cayo",
+      "Corozal",
+      "Orange Walk",
+      "Stann Creek Islands",
+      "Stann Creek Mainland",
+      "Toledo Mainland"
+    ],
+    "bogota": [
+      "Antonio Nariño",
+      "Barrios Unidos",
+      "Bosa",
+      "Candelaria",
+      "Chapinero",
+      "Ciudad Bolivar",
+      "Engativa",
+      "Fontibon",
+      "Kennedy",
+      "Los Martires",
+      "Puente Aranda",
+      "Rafael Uribe Uribe",
+      "San Cristobal",
+      "Santa Fe",
+      "Suba",
+      "Sumapaz",
+      "Teusaquillo",
+      "Tunjuelito",
+      "Usaquen",
+      "Usme"
+    ],
+    "mexico-city": [
+      "Azcapotzalco",
+      "Benito Juárez",
+      "Coyoacán",
+      "Cuajimalpa de Morelos",
+      "Cuauhtémoc",
+      "Gustavo A. Madero",
+      "Iztacalco",
+      "Iztapalapa",
+      "La Magdalena Contreras",
+      "Miguel Hidalgo",
+      "Milpa Alta",
+      "Tlalpan",
+      "Tláhuac",
+      "Venustiano Carranza",
+      "Xochimilco",
+      "Álvaro Obregón"
+    ],
+    "rio-de-janeiro": [
+      "Abolição",
+      "Acari",
+      "Alto da Boa Vista",
+      "Anchieta",
+      "Andaraí",
+      "Anil",
+      "Bancários",
+      "Bangu",
+      "Barra da Tijuca",
+      "Barra de Guaratiba",
+      "Barros Filho",
+      "Benfica",
+      "Bento Ribeiro",
+      "Bonsucesso",
+      "Botafogo",
+      "Brás de Pina",
+      "Cachambi",
+      "Cacuia",
+      "Caju",
+      "Camorim",
+      "Campinho",
+      "Campo Grande",
+      "Campo dos Afonsos",
+      "Cascadura",
+      "Catete",
+      "Catumbi",
+      "Cavalcanti",
+      "Centro",
+      "Cidade Nova",
+      "Cidade Universitária",
+      "Cidade de Deus",
+      "Cocotá",
+      "Coelho Neto",
+      "Colégio",
+      "Complexo do Alemão",
+      "Copacabana",
+      "Cordovil",
+      "Cosme Velho",
+      "Cosmos",
+      "Curicica",
+      "Del Castilho",
+      "Encantado",
+      "Engenheiro Leal",
+      "Engenho Novo",
+      "Engenho da Rainha",
+      "Engenho de Dentro",
+      "Estácio",
+      "Flamengo",
+      "Freguesia (Ilha)",
+      "Freguesia (Jacarepaguá)",
+      "Galeão",
+      "Gamboa",
+      "Gardênia Azul",
+      "Glória",
+      "Grajaú",
+      "Grumari",
+      "Guadalupe",
+      "Guaratiba",
+      "Gávea",
+      "Higienópolis",
+      "Honório Gurgel",
+      "Humaitá",
+      "Inhaúma",
+      "Inhoaíba",
+      "Ipanema",
+      "Irajá",
+      "Itanhangá",
+      "Jacarepaguá",
+      "Jacaré",
+      "Jardim América",
+      "Jardim Botânico",
+      "Jardim Carioca",
+      "Jardim Guanabara",
+      "Jardim Sulacap",
+      "Joá",
+      "Lagoa",
+      "Laranjeiras",
+      "Leblon",
+      "Leme",
+      "Lins de Vasconcelos",
+      "Madureira",
+      "Magalhães Bastos",
+      "Mangueira",
+      "Maracanã",
+      "Marechal Hermes",
+      "Maria da Graça",
+      "Maré",
+      "Moneró",
+      "Méier",
+      "Olaria",
+      "Osvaldo Cruz",
+      "Paciência",
+      "Padre Miguel",
+      "Paquetá",
+      "Parque Anchieta",
+      "Parque Colúmbia",
+      "Pavuna",
+      "Pechincha",
+      "Pedra de Guaratiba",
+      "Penha",
+      "Penha Circular",
+      "Piedade",
+      "Pilares",
+      "Pitangueiras",
+      "Portuguesa",
+      "Praia da Bandeira",
+      "Praça Seca",
+      "Praça da Bandeira",
+      "Quintino Bocaiúva",
+      "Ramos",
+      "Realengo",
+      "Recreio dos Bandeirantes",
+      "Riachuelo",
+      "Ricardo de Albuquerque",
+      "Rio Comprido",
+      "Rocha",
+      "Rocha Miranda",
+      "Rocinha",
+      "Sampaio",
+      "Santa Cruz",
+      "Santa Teresa",
+      "Santo Cristo",
+      "Santíssimo",
+      "Saúde",
+      "Senador Camará",
+      "Senador Vasconcelos",
+      "Sepetiba",
+      "São Conrado",
+      "São Cristóvão",
+      "São Francisco Xavier",
+      "Tanque",
+      "Taquara",
+      "Tauá",
+      "Tijuca",
+      "Todos os Santos",
+      "Tomás Coelho",
+      "Turiaçú",
+      "Urca",
+      "Vargem Grande",
+      "Vargem Pequena",
+      "Vasco da Gama",
+      "Vaz Lobo",
+      "Vicente de Carvalho",
+      "Vidigal",
+      "Vigário Geral",
+      "Vila Isabel",
+      "Vila Kosmos",
+      "Vila Militar",
+      "Vila Valqueire",
+      "Vila da Penha",
+      "Zumbi",
+      "Água Santa"
+    ],
+    "santiago": [
+      "Cerrillos",
+      "Cerro Navia",
+      "Conchalí",
+      "El Bosque",
+      "Estación Central",
+      "Huechuraba",
+      "Independencia",
+      "La Cisterna",
+      "La Florida",
+      "La Granja",
+      "La Reina",
+      "Las Condes",
+      "Lo Barnechea",
+      "Lo Espejo",
+      "Lo Prado",
+      "Macul",
+      "Maipú",
+      "Pedro Aguirre Cerda",
+      "Peñalolén",
+      "Providencia",
+      "Pudahuel",
+      "Quilicura",
+      "Quinta Normal",
+      "Recoleta",
+      "Renca",
+      "San Joaquín",
+      "San Miguel",
+      "Santiago",
+      "Vitacura",
+      "Ñuñoa"
+    ],
+    "sao-paulo": [
+      "Agua Rasa",
+      "Alto De Pinheiros",
+      "Anhanguera",
+      "Aricanduva",
+      "Artur Alvim",
+      "Barra Funda",
+      "Bela Vista",
+      "Belem",
+      "Bom Retiro",
+      "Bras",
+      "Brasilandia",
+      "Butanta",
+      "Cachoeirinha",
+      "Cambuci",
+      "Campo Belo",
+      "Campo Grande",
+      "Campo Limpo",
+      "Cangaiba",
+      "Capao Redondo",
+      "Carrao",
+      "Casa Verde",
+      "Cidade Ademar",
+      "Cidade Dutra",
+      "Cidade Lider",
+      "Cidade Tiradentes",
+      "Consolacao",
+      "Cursino",
+      "Ermelino Matarazzo",
+      "Freguesia Do O",
+      "Grajau",
+      "Guaianases",
+      "Iguatemi",
+      "Ipiranga",
+      "Itaim Bibi",
+      "Itaim Paulista",
+      "Itaquera",
+      "Jabaquara",
+      "Jacana",
+      "Jaguara",
+      "Jaguare",
+      "Jaragua",
+      "Jardim Angela",
+      "Jardim Helena",
+      "Jardim Paulista",
+      "Jardim Sao Luis",
+      "Jose Bonifacio",
+      "Lajeado",
+      "Lapa",
+      "Liberdade",
+      "Limao",
+      "Mandaqui",
+      "Marsilac",
+      "Moema",
+      "Mooca",
+      "Morumbi",
+      "Parelheiros",
+      "Pari",
+      "Parque Do Carmo",
+      "Pedreira",
+      "Penha",
+      "Perdizes",
+      "Perus",
+      "Pinheiros",
+      "Pirituba",
+      "Ponte Rasa",
+      "Raposo Tavares",
+      "Republica",
+      "Rio Pequeno",
+      "Sacoma",
+      "Santa Cecilia",
+      "Santana",
+      "Santo Amaro",
+      "Sao Domingos",
+      "Sao Lucas",
+      "Sao Mateus",
+      "Sao Miguel",
+      "Sao Rafael",
+      "Sapopemba",
+      "Saude",
+      "Se",
+      "Socorro",
+      "Tatuape",
+      "Tremembe",
+      "Tucuruvi",
+      "Vila Andrade",
+      "Vila Curuca",
+      "Vila Formosa",
+      "Vila Guilherme",
+      "Vila Jacui",
+      "Vila Leopoldina",
+      "Vila Maria",
+      "Vila Mariana",
+      "Vila Matilde",
+      "Vila Medeiros",
+      "Vila Prudente",
+      "Vila Sonia"
+    ]
+  },
+  "neighbourhood_coords": {
+    "belize": {
+      "Belize Islands": [
+        17.909765537339116,
+        -87.97214566727914
+      ],
+      "Belize Mainland": [
+        17.511468429579114,
+        -88.2223821
+      ],
+      "Cayo": [
+        17.160835,
+        -89.064425
+      ],
+      "Corozal": [
+        18.3841115,
+        -88.37256
+      ],
+      "Orange Walk": [
+        18.068365,
+        -88.56158839550086
+      ],
+      "Stann Creek Islands": [
+        16.8735,
+        -88.122185
+      ],
+      "Stann Creek Mainland": [
+        16.61207948879183,
+        -88.35869807196974
+      ],
+      "Toledo Mainland": [
+        16.09421,
+        -88.80946
+      ]
+    },
+    "bogota": {
+      "Antonio Nariño": [
+        4.590946457836928,
+        -74.104889
+      ],
+      "Barrios Unidos": [
+        4.671866742008293,
+        -74.0653609596901
+      ],
+      "Bosa": [
+        4.6025727,
+        -74.17450829999999
+      ],
+      "Candelaria": [
+        4.597007670789957,
+        -74.07105
+      ],
+      "Chapinero": [
+        4.6653886,
+        -74.05676
+      ],
+      "Ciudad Bolivar": [
+        4.5848305499999995,
+        -74.15895010767213
+      ],
+      "Engativa": [
+        4.684044999999999,
+        -74.10945280370483
+      ],
+      "Fontibon": [
+        4.669853499999999,
+        -74.12602
+      ],
+      "Kennedy": [
+        4.639358850000001,
+        -74.14289709791308
+      ],
+      "Los Martires": [
+        4.6079712,
+        -74.08619
+      ],
+      "Puente Aranda": [
+        4.61174,
+        -74.11263053087063
+      ],
+      "Rafael Uribe Uribe": [
+        4.58727,
+        -74.11401963068847
+      ],
+      "San Cristobal": [
+        4.5790665,
+        -74.0849222
+      ],
+      "Santa Fe": [
+        4.609439398194851,
+        -74.06958509800673
+      ],
+      "Suba": [
+        4.7120546,
+        -74.0616013
+      ],
+      "Sumapaz": [
+        4.087882924489458,
+        -74.24302904045587
+      ],
+      "Teusaquillo": [
+        4.634739,
+        -74.0765135
+      ],
+      "Tunjuelito": [
+        4.575827003157328,
+        -74.13071602536559
+      ],
+      "Usaquen": [
+        4.69814,
+        -74.04177703832117
+      ],
+      "Usme": [
+        4.490017427673607,
+        -74.1167914509511
+      ]
+    },
+    "mexico-city": {
+      "Azcapotzalco": [
+        19.477212040055164,
+        -99.1839217
+      ],
+      "Benito Juárez": [
+        19.38575,
+        -99.1634
+      ],
+      "Coyoacán": [
+        19.34270665,
+        -99.159245
+      ],
+      "Cuajimalpa de Morelos": [
+        19.36121,
+        -99.2741902
+      ],
+      "Cuauhtémoc": [
+        19.42075,
+        -99.16334
+      ],
+      "Gustavo A. Madero": [
+        19.4851,
+        -99.120805
+      ],
+      "Iztacalco": [
+        19.4011,
+        -99.08651243895292
+      ],
+      "Iztapalapa": [
+        19.362005,
+        -99.08271483276367
+      ],
+      "La Magdalena Contreras": [
+        19.3195813,
+        -99.22608
+      ],
+      "Miguel Hidalgo": [
+        19.434105000000002,
+        -99.1883261
+      ],
+      "Milpa Alta": [
+        19.20029445803862,
+        -99.05594958999636
+      ],
+      "Tlalpan": [
+        19.29081,
+        -99.16451
+      ],
+      "Tláhuac": [
+        19.29425,
+        -99.04021
+      ],
+      "Venustiano Carranza": [
+        19.42535,
+        -99.09314
+      ],
+      "Xochimilco": [
+        19.2603,
+        -99.11375035
+      ],
+      "Álvaro Obregón": [
+        19.35479,
+        -99.19857
+      ]
+    },
+    "rio-de-janeiro": {
+      "Abolição": [
+        -22.8889858,
+        -43.2973323
+      ],
+      "Acari": [
+        -22.81439,
+        -43.33356
+      ],
+      "Alto da Boa Vista": [
+        -22.9687788,
+        -43.2754466
+      ],
+      "Anchieta": [
+        -22.823970000000003,
+        -43.398505
+      ],
+      "Andaraí": [
+        -22.92336,
+        -43.24780579999999
+      ],
+      "Anil": [
+        -22.956069999999997,
+        -43.337599999999995
+      ],
+      "Bancários": [
+        -22.79799,
+        -43.17413
+      ],
+      "Bangu": [
+        -22.859836496975323,
+        -43.47333
+      ],
+      "Barra da Tijuca": [
+        -23.00868,
+        -43.342524999999995
+      ],
+      "Barra de Guaratiba": [
+        -23.05907,
+        -43.56157
+      ],
+      "Barros Filho": [
+        -22.84283,
+        -43.36046
+      ],
+      "Benfica": [
+        -22.89169115,
+        -43.23719560000001
+      ],
+      "Bento Ribeiro": [
+        -22.86455,
+        -43.35765
+      ],
+      "Bonsucesso": [
+        -22.8710611,
+        -43.25195
+      ],
+      "Botafogo": [
+        -22.9504916,
+        -43.18287
+      ],
+      "Brás de Pina": [
+        -22.83539,
+        -43.30663707214356
+      ],
+      "Cachambi": [
+        -22.88889,
+        -43.27868
+      ],
+      "Cacuia": [
+        -22.82071,
+        -43.18790018804073
+      ],
+      "Caju": [
+        -22.88447,
+        -43.224315000000004
+      ],
+      "Camorim": [
+        -22.9805226,
+        -43.422244
+      ],
+      "Campinho": [
+        -22.8862964,
+        -43.34772
+      ],
+      "Campo Grande": [
+        -22.90512,
+        -43.56724
+      ],
+      "Campo dos Afonsos": [
+        -22.87969,
+        -43.37531
+      ],
+      "Cascadura": [
+        -22.88498475,
+        -43.32704495
+      ],
+      "Catete": [
+        -22.925719835946126,
+        -43.17859
+      ],
+      "Catumbi": [
+        -22.91824775,
+        -43.195199450000004
+      ],
+      "Cavalcanti": [
+        -22.8753646,
+        -43.3141257
+      ],
+      "Centro": [
+        -22.90977,
+        -43.1802
+      ],
+      "Cidade Nova": [
+        -22.911611399999998,
+        -43.20027719900437
+      ],
+      "Cidade Universitária": [
+        -22.86882,
+        -43.21771
+      ],
+      "Cidade de Deus": [
+        -22.950400000000002,
+        -43.358395
+      ],
+      "Cocotá": [
+        -22.80637,
+        -43.17952
+      ],
+      "Coelho Neto": [
+        -22.82943935,
+        -43.34872265
+      ],
+      "Colégio": [
+        -22.84458,
+        -43.33299
+      ],
+      "Complexo do Alemão": [
+        -22.85788,
+        -43.26385
+      ],
+      "Copacabana": [
+        -22.97087,
+        -43.18809288650818
+      ],
+      "Cordovil": [
+        -22.820521,
+        -43.298350549999995
+      ],
+      "Cosme Velho": [
+        -22.941580000000002,
+        -43.19967
+      ],
+      "Cosmos": [
+        -22.906528218226875,
+        -43.61231911801481
+      ],
+      "Curicica": [
+        -22.955045,
+        -43.387465500000005
+      ],
+      "Del Castilho": [
+        -22.8769316,
+        -43.2685527
+      ],
+      "Encantado": [
+        -22.897699296264648,
+        -43.30288145
+      ],
+      "Engenheiro Leal": [
+        -22.87643,
+        -43.32727
+      ],
+      "Engenho Novo": [
+        -22.9079995,
+        -43.268592834472656
+      ],
+      "Engenho da Rainha": [
+        -22.8689788,
+        -43.2984
+      ],
+      "Engenho de Dentro": [
+        -22.89449,
+        -43.293446
+      ],
+      "Estácio": [
+        -22.91602,
+        -43.20673
+      ],
+      "Flamengo": [
+        -22.93373,
+        -43.1759135
+      ],
+      "Freguesia (Ilha)": [
+        -22.7897081,
+        -43.1654341
+      ],
+      "Freguesia (Jacarepaguá)": [
+        -22.94006,
+        -43.34481
+      ],
+      "Galeão": [
+        -22.78962008626259,
+        -43.219094549999994
+      ],
+      "Gamboa": [
+        -22.89625,
+        -43.1936
+      ],
+      "Gardênia Azul": [
+        -22.95773,
+        -43.3491
+      ],
+      "Glória": [
+        -22.92157,
+        -43.17567
+      ],
+      "Grajaú": [
+        -22.92345585,
+        -43.2590229
+      ],
+      "Grumari": [
+        -23.04723465117705,
+        -43.53577145
+      ],
+      "Guadalupe": [
+        -22.84393,
+        -43.377525
+      ],
+      "Guaratiba": [
+        -22.98084,
+        -43.5824833
+      ],
+      "Gávea": [
+        -22.9772,
+        -43.2295614
+      ],
+      "Higienópolis": [
+        -22.8748,
+        -43.26266
+      ],
+      "Honório Gurgel": [
+        -22.843385,
+        -43.358385
+      ],
+      "Humaitá": [
+        -22.95678,
+        -43.19983
+      ],
+      "Inhaúma": [
+        -22.868439735278322,
+        -43.27963603259683
+      ],
+      "Inhoaíba": [
+        -22.905038755940485,
+        -43.587705
+      ],
+      "Ipanema": [
+        -22.98452,
+        -43.1996210861907
+      ],
+      "Irajá": [
+        -22.83892485567479,
+        -43.3236028
+      ],
+      "Itanhangá": [
+        -22.9893195,
+        -43.3073774
+      ],
+      "Jacarepaguá": [
+        -22.96941,
+        -43.394945
+      ],
+      "Jacaré": [
+        -22.894075,
+        -43.253195
+      ],
+      "Jardim América": [
+        -22.80994765350058,
+        -43.32527172327882
+      ],
+      "Jardim Botânico": [
+        -22.96293,
+        -43.21968
+      ],
+      "Jardim Carioca": [
+        -22.80941,
+        -43.1909632
+      ],
+      "Jardim Guanabara": [
+        -22.81243,
+        -43.20473
+      ],
+      "Jardim Sulacap": [
+        -22.8884131,
+        -43.392385
+      ],
+      "Joá": [
+        -23.01123,
+        -43.2901478
+      ],
+      "Lagoa": [
+        -22.96846,
+        -43.2035358
+      ],
+      "Laranjeiras": [
+        -22.935133744322044,
+        -43.1888235
+      ],
+      "Leblon": [
+        -22.9834172,
+        -43.2231213
+      ],
+      "Leme": [
+        -22.96263,
+        -43.1704055
+      ],
+      "Lins de Vasconcelos": [
+        -22.910503249999998,
+        -43.282382299999995
+      ],
+      "Madureira": [
+        -22.87877,
+        -43.33922479301691
+      ],
+      "Magalhães Bastos": [
+        -22.8727417,
+        -43.4130686
+      ],
+      "Mangueira": [
+        -22.908485231906802,
+        -43.233573433672994
+      ],
+      "Maracanã": [
+        -22.91451,
+        -43.23103
+      ],
+      "Marechal Hermes": [
+        -22.866,
+        -43.37662450969219
+      ],
+      "Maria da Graça": [
+        -22.88470257516062,
+        -43.27019
+      ],
+      "Maré": [
+        -22.859607873212052,
+        -43.2426227162956
+      ],
+      "Moneró": [
+        -22.797265,
+        -43.19798815
+      ],
+      "Méier": [
+        -22.89925,
+        -43.27998
+      ],
+      "Olaria": [
+        -22.845754999999997,
+        -43.26498
+      ],
+      "Osvaldo Cruz": [
+        -22.87055,
+        -43.3473375
+      ],
+      "Paciência": [
+        -22.883811127186192,
+        -43.6324093
+      ],
+      "Padre Miguel": [
+        -22.877209999999998,
+        -43.450815000000006
+      ],
+      "Paquetá": [
+        -22.75878,
+        -43.10822
+      ],
+      "Parque Anchieta": [
+        -22.83371,
+        -43.39839
+      ],
+      "Parque Colúmbia": [
+        -22.813783189375144,
+        -43.33872891805305
+      ],
+      "Pavuna": [
+        -22.8144,
+        -43.37723
+      ],
+      "Pechincha": [
+        -22.93063,
+        -43.356629999999996
+      ],
+      "Pedra de Guaratiba": [
+        -23.00205,
+        -43.63555
+      ],
+      "Penha": [
+        -22.83469,
+        -43.27337
+      ],
+      "Penha Circular": [
+        -22.832158,
+        -43.28315
+      ],
+      "Piedade": [
+        -22.891445,
+        -43.3103857
+      ],
+      "Pilares": [
+        -22.885289399999998,
+        -43.29522
+      ],
+      "Pitangueiras": [
+        -22.817735,
+        -43.17968
+      ],
+      "Portuguesa": [
+        -22.79718,
+        -43.20659637451172
+      ],
+      "Praia da Bandeira": [
+        -22.81079,
+        -43.179035
+      ],
+      "Praça Seca": [
+        -22.89666,
+        -43.3505274
+      ],
+      "Praça da Bandeira": [
+        -22.9127085,
+        -43.21238204028886
+      ],
+      "Quintino Bocaiúva": [
+        -22.88631,
+        -43.31372
+      ],
+      "Ramos": [
+        -22.852905,
+        -43.255425
+      ],
+      "Realengo": [
+        -22.87452,
+        -43.43866
+      ],
+      "Recreio dos Bandeirantes": [
+        -23.0266153,
+        -43.474115
+      ],
+      "Riachuelo": [
+        -22.9032908,
+        -43.25463
+      ],
+      "Ricardo de Albuquerque": [
+        -22.83792,
+        -43.40437
+      ],
+      "Rio Comprido": [
+        -22.925625,
+        -43.2093883
+      ],
+      "Rocha": [
+        -22.9019519,
+        -43.248585
+      ],
+      "Rocha Miranda": [
+        -22.849463264699352,
+        -43.3475883
+      ],
+      "Rocinha": [
+        -22.988214999999997,
+        -43.24846950018883
+      ],
+      "Sampaio": [
+        -22.900182200000003,
+        -43.25965975
+      ],
+      "Santa Cruz": [
+        -22.91363,
+        -43.678833
+      ],
+      "Santa Teresa": [
+        -22.918264999999998,
+        -43.185585
+      ],
+      "Santo Cristo": [
+        -22.9005537,
+        -43.20582
+      ],
+      "Santíssimo": [
+        -22.87464794174518,
+        -43.524189554778346
+      ],
+      "Saúde": [
+        -22.89812,
+        -43.18395
+      ],
+      "Senador Camará": [
+        -22.882685000000002,
+        -43.482915
+      ],
+      "Senador Vasconcelos": [
+        -22.8938801,
+        -43.5341396
+      ],
+      "Sepetiba": [
+        -22.97813606262207,
+        -43.68966
+      ],
+      "São Conrado": [
+        -22.998026403536755,
+        -43.2568208
+      ],
+      "São Cristóvão": [
+        -22.90244,
+        -43.22056
+      ],
+      "São Francisco Xavier": [
+        -22.905561499999997,
+        -43.2434117
+      ],
+      "Tanque": [
+        -22.9194721,
+        -43.3555242
+      ],
+      "Taquara": [
+        -22.925075,
+        -43.376940000000005
+      ],
+      "Tauá": [
+        -22.79641378112793,
+        -43.18511933837891
+      ],
+      "Tijuca": [
+        -22.9250846,
+        -43.23002
+      ],
+      "Todos os Santos": [
+        -22.8947973,
+        -43.28603
+      ],
+      "Tomás Coelho": [
+        -22.8706,
+        -43.30440402030945
+      ],
+      "Turiaçú": [
+        -22.8659279,
+        -43.3463873
+      ],
+      "Urca": [
+        -22.949031050000002,
+        -43.16500705
+      ],
+      "Vargem Grande": [
+        -22.9936277,
+        -43.50068
+      ],
+      "Vargem Pequena": [
+        -22.987469334854712,
+        -43.46358
+      ],
+      "Vasco da Gama": [
+        -22.8908337,
+        -43.22633
+      ],
+      "Vaz Lobo": [
+        -22.86027,
+        -43.32954
+      ],
+      "Vicente de Carvalho": [
+        -22.85056,
+        -43.31318
+      ],
+      "Vidigal": [
+        -22.99558864172227,
+        -43.238775000000004
+      ],
+      "Vigário Geral": [
+        -22.8150469,
+        -43.31097
+      ],
+      "Vila Isabel": [
+        -22.91715,
+        -43.2428
+      ],
+      "Vila Kosmos": [
+        -22.858510000000003,
+        -43.30612
+      ],
+      "Vila Militar": [
+        -22.88235435,
+        -43.405090200000004
+      ],
+      "Vila Valqueire": [
+        -22.893905,
+        -43.365390000000005
+      ],
+      "Vila da Penha": [
+        -22.84544,
+        -43.30882
+      ],
+      "Zumbi": [
+        -22.82069,
+        -43.17527
+      ],
+      "Água Santa": [
+        -22.9064959,
+        -43.3046088
+      ]
+    },
+    "santiago": {
+      "Cerrillos": [
+        -33.49507885,
+        -70.70820531643082
+      ],
+      "Cerro Navia": [
+        -33.4289435,
+        -70.72432890000002
+      ],
+      "Conchalí": [
+        -33.39828,
+        -70.66841
+      ],
+      "El Bosque": [
+        -33.556676158424445,
+        -70.67495
+      ],
+      "Estación Central": [
+        -33.45483,
+        -70.696116419382
+      ],
+      "Huechuraba": [
+        -33.365255399999995,
+        -70.667165
+      ],
+      "Independencia": [
+        -33.41391,
+        -70.66204
+      ],
+      "La Cisterna": [
+        -33.520279765667425,
+        -70.66059135
+      ],
+      "La Florida": [
+        -33.52011,
+        -70.59972
+      ],
+      "La Granja": [
+        -33.52243,
+        -70.62043716931153
+      ],
+      "La Reina": [
+        -33.447885,
+        -70.56333900058638
+      ],
+      "Las Condes": [
+        -33.4115344,
+        -70.57269
+      ],
+      "Lo Barnechea": [
+        -33.349410000000006,
+        -70.2915
+      ],
+      "Lo Espejo": [
+        -33.5321,
+        -70.69116
+      ],
+      "Lo Prado": [
+        -33.454806,
+        -70.71086777340808
+      ],
+      "Macul": [
+        -33.488635,
+        -70.60741166285675
+      ],
+      "Maipú": [
+        -33.49634905,
+        -70.75814016253591
+      ],
+      "Pedro Aguirre Cerda": [
+        -33.4840051,
+        -70.6646087
+      ],
+      "Peñalolén": [
+        -33.48467,
+        -70.54059871971283
+      ],
+      "Providencia": [
+        -33.428415,
+        -70.61569962698817
+      ],
+      "Pudahuel": [
+        -33.45054,
+        -70.76688634881585
+      ],
+      "Quilicura": [
+        -33.3652391,
+        -70.72838855
+      ],
+      "Quinta Normal": [
+        -33.43739588618983,
+        -70.69308099999999
+      ],
+      "Recoleta": [
+        -33.432045,
+        -70.64083
+      ],
+      "Renca": [
+        -33.39872,
+        -70.7517341
+      ],
+      "San Joaquín": [
+        -33.48802,
+        -70.6196696
+      ],
+      "San Miguel": [
+        -33.49697,
+        -70.65255
+      ],
+      "Santiago": [
+        -33.4466,
+        -70.6491668
+      ],
+      "Vitacura": [
+        -33.3972938,
+        -70.57486
+      ],
+      "Ñuñoa": [
+        -33.4541533,
+        -70.612275
+      ]
+    },
+    "sao-paulo": {
+      "Agua Rasa": [
+        -23.56346,
+        -46.56880225986242
+      ],
+      "Alto De Pinheiros": [
+        -23.5461793,
+        -46.69771
+      ],
+      "Anhanguera": [
+        -23.432301928570297,
+        -46.79663662801407
+      ],
+      "Aricanduva": [
+        -23.56894,
+        -46.50866686669308
+      ],
+      "Artur Alvim": [
+        -23.53919,
+        -46.48725
+      ],
+      "Barra Funda": [
+        -23.5287783,
+        -46.6740235
+      ],
+      "Bela Vista": [
+        -23.55709,
+        -46.65047
+      ],
+      "Belem": [
+        -23.5419657,
+        -46.591605
+      ],
+      "Bom Retiro": [
+        -23.524124999999998,
+        -46.63757
+      ],
+      "Bras": [
+        -23.5488,
+        -46.61738
+      ],
+      "Brasilandia": [
+        -23.46572685,
+        -46.69270610831619
+      ],
+      "Butanta": [
+        -23.573359449999998,
+        -46.71204664882812
+      ],
+      "Cachoeirinha": [
+        -23.46471,
+        -46.655982971191406
+      ],
+      "Cambuci": [
+        -23.564283076174107,
+        -46.619979
+      ],
+      "Campo Belo": [
+        -23.6240821,
+        -46.6715756
+      ],
+      "Campo Grande": [
+        -23.67190275,
+        -46.68526131286621
+      ],
+      "Campo Limpo": [
+        -23.6286956,
+        -46.7594304
+      ],
+      "Cangaiba": [
+        -23.5092795,
+        -46.51753
+      ],
+      "Capao Redondo": [
+        -23.66295,
+        -46.76990161766725
+      ],
+      "Carrao": [
+        -23.54084795,
+        -46.54969261753641
+      ],
+      "Casa Verde": [
+        -23.5034025,
+        -46.656885
+      ],
+      "Cidade Ademar": [
+        -23.65940482681794,
+        -46.669465849999995
+      ],
+      "Cidade Dutra": [
+        -23.707655,
+        -46.6973903
+      ],
+      "Cidade Lider": [
+        -23.5591,
+        -46.4848088
+      ],
+      "Cidade Tiradentes": [
+        -23.58224,
+        -46.39927
+      ],
+      "Consolacao": [
+        -23.55236,
+        -46.6558876
+      ],
+      "Cursino": [
+        -23.60299956235429,
+        -46.6168008
+      ],
+      "Ermelino Matarazzo": [
+        -23.501697641110663,
+        -46.48861191927621
+      ],
+      "Freguesia Do O": [
+        -23.4939139,
+        -46.69398
+      ],
+      "Grajau": [
+        -23.77826891426704,
+        -46.66747
+      ],
+      "Guaianases": [
+        -23.552590000000002,
+        -46.405091150000004
+      ],
+      "Iguatemi": [
+        -23.614276493769953,
+        -46.418248373888794
+      ],
+      "Ipiranga": [
+        -23.5947884,
+        -46.608986200000004
+      ],
+      "Itaim Bibi": [
+        -23.59914,
+        -46.681525
+      ],
+      "Itaim Paulista": [
+        -23.5158,
+        -46.38338
+      ],
+      "Itaquera": [
+        -23.531555,
+        -46.4603491
+      ],
+      "Jabaquara": [
+        -23.64415,
+        -46.63932
+      ],
+      "Jacana": [
+        -23.470363418188423,
+        -46.56664656821911
+      ],
+      "Jaguara": [
+        -23.51484689226003,
+        -46.75079
+      ],
+      "Jaguare": [
+        -23.54494,
+        -46.74866
+      ],
+      "Jaragua": [
+        -23.453616686602707,
+        -46.7407525
+      ],
+      "Jardim Angela": [
+        -23.68652,
+        -46.75803
+      ],
+      "Jardim Helena": [
+        -23.4851455,
+        -46.4280315
+      ],
+      "Jardim Paulista": [
+        -23.561226035914448,
+        -46.66528
+      ],
+      "Jardim Sao Luis": [
+        -23.67462,
+        -46.738967299461365
+      ],
+      "Jose Bonifacio": [
+        -23.55764,
+        -46.43526
+      ],
+      "Lajeado": [
+        -23.54156732249542,
+        -46.409926407125134
+      ],
+      "Lapa": [
+        -23.52487885,
+        -46.6979846
+      ],
+      "Liberdade": [
+        -23.56367,
+        -46.63603
+      ],
+      "Limao": [
+        -23.5029062,
+        -46.68034565151597
+      ],
+      "Mandaqui": [
+        -23.47755,
+        -46.63635
+      ],
+      "Marsilac": [
+        -23.90509,
+        -46.75819179080142
+      ],
+      "Moema": [
+        -23.6052756,
+        -46.6638933
+      ],
+      "Mooca": [
+        -23.556759181518554,
+        -46.601387700000004
+      ],
+      "Morumbi": [
+        -23.60133619794199,
+        -46.7140429
+      ],
+      "Parelheiros": [
+        -23.80927,
+        -46.755169
+      ],
+      "Pari": [
+        -23.52795,
+        -46.61534727772822
+      ],
+      "Parque Do Carmo": [
+        -23.55713,
+        -46.461267004251575
+      ],
+      "Pedreira": [
+        -23.695996253685173,
+        -46.67109097279185
+      ],
+      "Penha": [
+        -23.527757450000003,
+        -46.524967
+      ],
+      "Perdizes": [
+        -23.5339777,
+        -46.6778893
+      ],
+      "Perus": [
+        -23.4114638,
+        -46.7648873
+      ],
+      "Pinheiros": [
+        -23.5639479,
+        -46.6901257
+      ],
+      "Pirituba": [
+        -23.4999945,
+        -46.71898956218162
+      ],
+      "Ponte Rasa": [
+        -23.516246911189928,
+        -46.49661858256048
+      ],
+      "Raposo Tavares": [
+        -23.593737750000003,
+        -46.7961503
+      ],
+      "Republica": [
+        -23.5435408,
+        -46.64312
+      ],
+      "Rio Pequeno": [
+        -23.566988549999998,
+        -46.745185
+      ],
+      "Sacoma": [
+        -23.63451,
+        -46.6033694
+      ],
+      "Santa Cecilia": [
+        -23.53653,
+        -46.6525657
+      ],
+      "Santana": [
+        -23.50104,
+        -46.6260314
+      ],
+      "Santo Amaro": [
+        -23.629334862841837,
+        -46.6964299
+      ],
+      "Sao Domingos": [
+        -23.4972414360128,
+        -46.7413635
+      ],
+      "Sao Lucas": [
+        -23.5933938,
+        -46.544735
+      ],
+      "Sao Mateus": [
+        -23.59904,
+        -46.48012
+      ],
+      "Sao Miguel": [
+        -23.492049386085597,
+        -46.450638366822915
+      ],
+      "Sao Rafael": [
+        -23.625663073309823,
+        -46.46682131727262
+      ],
+      "Sapopemba": [
+        -23.59699,
+        -46.5248368
+      ],
+      "Saude": [
+        -23.605621,
+        -46.64009
+      ],
+      "Se": [
+        -23.5522923,
+        -46.632715
+      ],
+      "Socorro": [
+        -23.69377,
+        -46.70958068221808
+      ],
+      "Tatuape": [
+        -23.54039435,
+        -46.56896239197765
+      ],
+      "Tremembe": [
+        -23.44576,
+        -46.61368
+      ],
+      "Tucuruvi": [
+        -23.4812666,
+        -46.60214013660972
+      ],
+      "Vila Andrade": [
+        -23.62649085,
+        -46.734669667861084
+      ],
+      "Vila Curuca": [
+        -23.503500000000003,
+        -46.424065
+      ],
+      "Vila Formosa": [
+        -23.5626729,
+        -46.5528877
+      ],
+      "Vila Guilherme": [
+        -23.50573705,
+        -46.6105294
+      ],
+      "Vila Jacui": [
+        -23.506861,
+        -46.45635
+      ],
+      "Vila Leopoldina": [
+        -23.531464736123212,
+        -46.731258607639255
+      ],
+      "Vila Maria": [
+        -23.50789,
+        -46.58938
+      ],
+      "Vila Mariana": [
+        -23.58388485,
+        -46.639846950000006
+      ],
+      "Vila Matilde": [
+        -23.534271979674152,
+        -46.52754
+      ],
+      "Vila Medeiros": [
+        -23.4893,
+        -46.5817892
+      ],
+      "Vila Prudente": [
+        -23.58679,
+        -46.5743023
+      ],
+      "Vila Sonia": [
+        -23.59543354047119,
+        -46.73864304999999
+      ]
+    }
+  },
+  "city_box": {
+    "belize": [
+      16.090526527900035,
+      18.46721,
+      -89.14328,
+      -87.59314
+    ],
+    "bogota": [
+      4.028165548978916,
+      4.82218,
+      -74.31473398091173,
+      -74.00389
+    ],
+    "mexico-city": [
+      19.17344679255978,
+      19.553926926720795,
+      -99.35274,
+      -98.96645
+    ],
+    "rio-de-janeiro": [
+      -23.07262,
+      -22.75051,
+      -43.70129,
+      -43.103816986083984
+    ],
+    "santiago": [
+      -33.58169,
+      -33.28754,
+      -70.86822,
+      -70.23438
+    ],
+    "sao-paulo": [
+      -23.95317,
+      -23.407226001945624,
+      -46.806358,
+      -46.38041
+    ]
+  },
+  "valid_range": {
+    "accommodates": [
+      1.0,
+      16.0
+    ],
+    "bedrooms": [
+      0.0,
+      10.0
+    ],
+    "beds": [
+      0.0,
+      50.0
+    ],
+    "bathrooms_count": [
+      0.0,
+      20.0
+    ],
+    "minimum_nights": [
+      1.0,
+      29.0
+    ],
+    "maximum_nights": [
+      1.0,
+      1125.0
+    ],
+    "latitude": [
+      -90.0,
+      90.0
+    ],
+    "longitude": [
+      -180.0,
+      180.0
+    ],
+    "bathroom_shared": [
+      0.0,
+      1.0
+    ]
+  },
+  "observed_range": {
+    "latitude": [
+      -33.58169,
+      19.553926926720795
+    ],
+    "longitude": [
+      -99.35274,
+      -43.103816986083984
+    ],
+    "accommodates": [
+      1.0,
+      16.0
+    ],
+    "bedrooms": [
+      0.0,
+      16.0
+    ],
+    "beds": [
+      1.0,
+      64.0
+    ],
+    "bathrooms_count": [
+      0.0,
+      50.0
+    ],
+    "minimum_nights": [
+      1.0,
+      29.0
+    ],
+    "maximum_nights": [
+      1.0,
+      1125.0
+    ],
+    "bathroom_shared": [
+      0.0,
+      1.0
+    ]
+  },
+  "median": {
+    "latitude": -22.9807,
+    "longitude": -46.68342439510651,
+    "accommodates": 3.0,
+    "bedrooms": 1.0,
+    "beds": 2.0,
+    "bathrooms_count": 1.0,
+    "minimum_nights": 1.0,
+    "maximum_nights": 365.0,
+    "bathroom_shared": 0.0
+  },
+  "integer_columns": [
+    "accommodates",
+    "bedrooms",
+    "beds",
+    "minimum_nights",
+    "maximum_nights",
+    "bathroom_shared"
+  ],
+  "correction_factor": 1.0,
+  "price_range_ratios": {
+    "belize": [
+      0.7435974214048218,
+      1.354310864360523
+    ],
+    "bogota": [
+      0.7807826731517542,
+      1.1488848806321084
+    ],
+    "mexico-city": [
+      0.773233198943505,
+      1.2496683883924333
+    ],
+    "rio-de-janeiro": [
+      0.7243554190916085,
+      1.2770835957290048
+    ],
+    "santiago": [
+      0.8148869439937387,
+      1.1524243295605825
+    ],
+    "sao-paulo": [
+      0.8223631052002849,
+      1.2085660435674401
+    ]
+  },
+  "city_warnings": {
+    "belize": "En Belice el modelo se equivoca mucho más: en la prueba, 246 USD por noche en promedio (frente a 41 USD en las seis ciudades), y suele quedarse corto en los inmuebles caros. Úsalo solo como una referencia inicial."
+  },
+  "city_mae": {
+    "belize": 245.95860847448583,
+    "bogota": 22.322457224994004,
+    "mexico-city": 45.37855363734302,
+    "rio-de-janeiro": 53.251782848014344,
+    "santiago": 23.799797264891776,
+    "sao-paulo": 21.34774861047997
+  },
+  "neighbourhood_price": {
+    "belize": {
+      "Belize Islands": [
+        403.5,
+        1168
+      ],
+      "Belize Mainland": [
+        232.0,
+        262
+      ],
+      "Cayo": [
+        242.5,
+        410
+      ],
+      "Corozal": [
+        208.0,
+        55
+      ],
+      "Orange Walk": [
+        165.5,
+        36
+      ],
+      "Stann Creek Mainland": [
+        399.75,
+        626
+      ],
+      "Toledo Mainland": [
+        126.0,
+        37
+      ]
+    },
+    "bogota": {
+      "Antonio Nariño": [
+        38.890136609087094,
+        68
+      ],
+      "Barrios Unidos": [
+        49.58353269732152,
+        711
+      ],
+      "Candelaria": [
+        43.9414504584558,
+        471
+      ],
+      "Chapinero": [
+        67.3505258326905,
+        3209
+      ],
+      "Ciudad Bolivar": [
+        45.92847145595927,
+        30
+      ],
+      "Engativa": [
+        40.94545726775316,
+        809
+      ],
+      "Fontibon": [
+        47.19637271463771,
+        673
+      ],
+      "Kennedy": [
+        45.568911586546754,
+        142
+      ],
+      "Los Martires": [
+        42.33449534057879,
+        119
+      ],
+      "Puente Aranda": [
+        47.73886084230879,
+        159
+      ],
+      "Rafael Uribe Uribe": [
+        42.33449534057879,
+        47
+      ],
+      "San Cristobal": [
+        31.247253659346345,
+        39
+      ],
+      "Santa Fe": [
+        49.80958704801336,
+        966
+      ],
+      "Suba": [
+        51.4277716476742,
+        679
+      ],
+      "Teusaquillo": [
+        48.12174711207023,
+        1866
+      ],
+      "Usaquen": [
+        67.3505258326905,
+        2191
+      ]
+    },
+    "mexico-city": {
+      "Azcapotzalco": [
+        52.19200647342716,
+        336
+      ],
+      "Benito Juárez": [
+        69.30034968066353,
+        2493
+      ],
+      "Coyoacán": [
+        69.99393116203797,
+        1632
+      ],
+      "Cuajimalpa de Morelos": [
+        103.69043146547986,
+        235
+      ],
+      "Cuauhtémoc": [
+        97.35167471028522,
+        10583
+      ],
+      "Gustavo A. Madero": [
+        47.12481576741901,
+        452
+      ],
+      "Iztacalco": [
+        65.02326387885444,
+        453
+      ],
+      "Iztapalapa": [
+        47.342715949484145,
+        306
+      ],
+      "La Magdalena Contreras": [
+        58.925526688437415,
+        80
+      ],
+      "Miguel Hidalgo": [
+        107.73632344016414,
+        3258
+      ],
+      "Tlalpan": [
+        56.81588301592348,
+        723
+      ],
+      "Tláhuac": [
+        37.22220616709534,
+        39
+      ],
+      "Venustiano Carranza": [
+        56.75808455914227,
+        837
+      ],
+      "Xochimilco": [
+        63.92509320001156,
+        140
+      ],
+      "Álvaro Obregón": [
+        78.02791665462532,
+        705
+      ]
+    },
+    "rio-de-janeiro": {
+      "Alto da Boa Vista": [
+        103.59453489963056,
+        33
+      ],
+      "Andaraí": [
+        50.33130705029221,
+        39
+      ],
+      "Anil": [
+        77.4027090948183,
+        40
+      ],
+      "Barra da Tijuca": [
+        122.16336662692284,
+        2506
+      ],
+      "Barra de Guaratiba": [
+        78.18455464123062,
+        159
+      ],
+      "Botafogo": [
+        76.8808271925881,
+        1369
+      ],
+      "Camorim": [
+        58.63841598092296,
+        769
+      ],
+      "Campo Grande": [
+        43.392427825883,
+        169
+      ],
+      "Catete": [
+        66.19593049393092,
+        318
+      ],
+      "Centro": [
+        56.21469478704482,
+        2455
+      ],
+      "Copacabana": [
+        89.91223783741522,
+        10715
+      ],
+      "Cosme Velho": [
+        92.84415863646134,
+        50
+      ],
+      "Curicica": [
+        68.41148531107679,
+        74
+      ],
+      "Engenho de Dentro": [
+        86.00301010535368,
+        49
+      ],
+      "Estácio": [
+        54.72918824886143,
+        63
+      ],
+      "Flamengo": [
+        78.18455464123062,
+        703
+      ],
+      "Freguesia (Jacarepaguá)": [
+        74.2753269091691,
+        89
+      ],
+      "Gamboa": [
+        48.67965833349621,
+        31
+      ],
+      "Glória": [
+        78.18455464123062,
+        301
+      ],
+      "Grajaú": [
+        53.12151834405113,
+        54
+      ],
+      "Guaratiba": [
+        68.41148531107679,
+        127
+      ],
+      "Gávea": [
+        140.73219835421511,
+        155
+      ],
+      "Humaitá": [
+        87.95762397138445,
+        135
+      ],
+      "Ipanema": [
+        145.18187682023415,
+        2770
+      ],
+      "Itanhangá": [
+        85.59156388655421,
+        128
+      ],
+      "Jacarepaguá": [
+        91.98119661460878,
+        1486
+      ],
+      "Jardim Botânico": [
+        108.7742616446121,
+        157
+      ],
+      "Jardim Guanabara": [
+        58.63841598092296,
+        37
+      ],
+      "Joá": [
+        586.3841598092297,
+        77
+      ],
+      "Lagoa": [
+        146.59603995230742,
+        204
+      ],
+      "Laranjeiras": [
+        75.98561404194601,
+        390
+      ],
+      "Leblon": [
+        159.5619710326225,
+        1310
+      ],
+      "Leme": [
+        93.91919626277827,
+        612
+      ],
+      "Maracanã": [
+        70.75702195031371,
+        91
+      ],
+      "Méier": [
+        57.66110904790758,
+        31
+      ],
+      "Paquetá": [
+        61.57033677996911,
+        51
+      ],
+      "Pechincha": [
+        63.03629717949219,
+        46
+      ],
+      "Portuguesa": [
+        36.16035652156916,
+        37
+      ],
+      "Praça da Bandeira": [
+        40.851429800043,
+        64
+      ],
+      "Recreio dos Bandeirantes": [
+        85.24461992533375,
+        1832
+      ],
+      "Rio Comprido": [
+        46.36930474384785,
+        106
+      ],
+      "Rocinha": [
+        45.347041691913766,
+        68
+      ],
+      "Santa Cruz": [
+        43.58788921248607,
+        51
+      ],
+      "Santa Teresa": [
+        61.013271828150344,
+        1158
+      ],
+      "Santo Cristo": [
+        68.90013877758449,
+        401
+      ],
+      "Saúde": [
+        60.20210707374758,
+        41
+      ],
+      "São Conrado": [
+        173.0683528468951,
+        324
+      ],
+      "São Cristóvão": [
+        64.61953441097711,
+        122
+      ],
+      "Taquara": [
+        63.13402787279372,
+        116
+      ],
+      "Tijuca": [
+        54.72918824886143,
+        309
+      ],
+      "Urca": [
+        92.58321768534624,
+        124
+      ],
+      "Vargem Grande": [
+        82.09378237329216,
+        129
+      ],
+      "Vargem Pequena": [
+        68.50921600437833,
+        128
+      ],
+      "Vidigal": [
+        75.35036453548601,
+        364
+      ],
+      "Vila Isabel": [
+        58.89837962510505,
+        103
+      ]
+    },
+    "santiago": {
+      "Estación Central": [
+        41.231881759649845,
+        337
+      ],
+      "Huechuraba": [
+        59.54068740947488,
+        42
+      ],
+      "Independencia": [
+        46.266400245276834,
+        119
+      ],
+      "La Cisterna": [
+        51.521704885449374,
+        74
+      ],
+      "La Florida": [
+        53.23141657944538,
+        301
+      ],
+      "La Reina": [
+        53.609904109444216,
+        96
+      ],
+      "Las Condes": [
+        92.18708702041506,
+        2141
+      ],
+      "Lo Barnechea": [
+        396.02376647953736,
+        642
+      ],
+      "Macul": [
+        47.27605273451954,
+        182
+      ],
+      "Maipú": [
+        44.39827883324347,
+        70
+      ],
+      "Peñalolén": [
+        43.98067387695984,
+        71
+      ],
+      "Providencia": [
+        70.29260363474896,
+        2248
+      ],
+      "Pudahuel": [
+        45.46079270935752,
+        67
+      ],
+      "Quinta Normal": [
+        38.06019854736909,
+        37
+      ],
+      "Recoleta": [
+        48.14271517227526,
+        202
+      ],
+      "San Joaquín": [
+        49.81657098755643,
+        57
+      ],
+      "San Miguel": [
+        50.234175943840064,
+        139
+      ],
+      "Santiago": [
+        47.57524818421136,
+        5499
+      ],
+      "Vitacura": [
+        127.28775624557284,
+        253
+      ],
+      "Ñuñoa": [
+        60.55483311660164,
+        1448
+      ]
+    },
+    "sao-paulo": {
+      "Agua Rasa": [
+        55.710306406685234,
+        208
+      ],
+      "Alto De Pinheiros": [
+        67.76733209532652,
+        203
+      ],
+      "Artur Alvim": [
+        49.98452491488703,
+        37
+      ],
+      "Barra Funda": [
+        68.98212627669452,
+        454
+      ],
+      "Bela Vista": [
+        64.51176106468586,
+        1815
+      ],
+      "Belem": [
+        48.55307954193748,
+        219
+      ],
+      "Bom Retiro": [
+        47.924404209223155,
+        186
+      ],
+      "Bras": [
+        56.38734138037759,
+        715
+      ],
+      "Butanta": [
+        59.34695140823275,
+        540
+      ],
+      "Cambuci": [
+        36.75332714329929,
+        49
+      ],
+      "Campo Belo": [
+        64.9953574744661,
+        1103
+      ],
+      "Campo Grande": [
+        55.99175951717734,
+        144
+      ],
+      "Cangaiba": [
+        57.54797276385021,
+        41
+      ],
+      "Carrao": [
+        37.7524373259053,
+        30
+      ],
+      "Casa Verde": [
+        37.983596409780255,
+        80
+      ],
+      "Cidade Ademar": [
+        50.825982667904675,
+        60
+      ],
+      "Cidade Dutra": [
+        76.50495202723616,
+        192
+      ],
+      "Cidade Lider": [
+        40.62209842154132,
+        43
+      ],
+      "Consolacao": [
+        65.84648715567936,
+        1459
+      ],
+      "Cursino": [
+        49.907149489322194,
+        113
+      ],
+      "Freguesia Do O": [
+        41.138579387186624,
+        37
+      ],
+      "Grajau": [
+        164.42277932528629,
+        35
+      ],
+      "Ipiranga": [
+        53.85329619312907,
+        230
+      ],
+      "Itaim Bibi": [
+        83.41070875889817,
+        3542
+      ],
+      "Itaquera": [
+        41.00897554936552,
+        48
+      ],
+      "Jabaquara": [
+        52.704271123491175,
+        461
+      ],
+      "Jardim Paulista": [
+        79.06704580625194,
+        2778
+      ],
+      "Jardim Sao Luis": [
+        72.15258433921386,
+        59
+      ],
+      "Lapa": [
+        50.9942742185082,
+        212
+      ],
+      "Liberdade": [
+        59.38563912101517,
+        521
+      ],
+      "Moema": [
+        74.60345094398019,
+        2235
+      ],
+      "Mooca": [
+        55.80702568864129,
+        112
+      ],
+      "Morumbi": [
+        96.71928195605076,
+        392
+      ],
+      "Parelheiros": [
+        166.5506035283194,
+        41
+      ],
+      "Pari": [
+        47.39244815846487,
+        40
+      ],
+      "Pedreira": [
+        64.31832250077376,
+        45
+      ],
+      "Penha": [
+        56.58077994428969,
+        82
+      ],
+      "Perdizes": [
+        68.86412875270814,
+        1535
+      ],
+      "Pinheiros": [
+        71.18539151965336,
+        2246
+      ],
+      "Pirituba": [
+        36.55215103683071,
+        44
+      ],
+      "Republica": [
+        53.58248220365212,
+        2808
+      ],
+      "Rio Pequeno": [
+        45.30331166821418,
+        122
+      ],
+      "Sacoma": [
+        44.29743113587125,
+        51
+      ],
+      "Santa Cecilia": [
+        56.870937790157846,
+        539
+      ],
+      "Santana": [
+        60.35283194057568,
+        453
+      ],
+      "Santo Amaro": [
+        64.54077684927267,
+        1484
+      ],
+      "Sao Domingos": [
+        33.72214484679666,
+        35
+      ],
+      "Sao Lucas": [
+        35.59269575982668,
+        38
+      ],
+      "Sao Miguel": [
+        64.31832250077376,
+        34
+      ],
+      "Saude": [
+        55.20736614051377,
+        597
+      ],
+      "Se": [
+        53.97516248839369,
+        416
+      ],
+      "Socorro": [
+        94.78489631692976,
+        115
+      ],
+      "Tatuape": [
+        68.9608480346642,
+        436
+      ],
+      "Tremembe": [
+        23.792943361188488,
+        59
+      ],
+      "Tucuruvi": [
+        53.65018570102136,
+        178
+      ],
+      "Vila Andrade": [
+        60.59463014546581,
+        172
+      ],
+      "Vila Formosa": [
+        44.400920767564216,
+        108
+      ],
+      "Vila Guilherme": [
+        58.32172701949861,
+        142
+      ],
+      "Vila Leopoldina": [
+        62.09377901578459,
+        54
+      ],
+      "Vila Mariana": [
+        63.73800680903745,
+        2160
+      ],
+      "Vila Matilde": [
+        46.038378211080165,
+        83
+      ],
+      "Vila Prudente": [
+        32.30424017332095,
+        80
+      ],
+      "Vila Sonia": [
+        52.03497369235531,
+        128
+      ]
+    }
+  },
+  "city_price": {
+    "belize": [
+      333.16499999999996,
+      2604
+    ],
+    "bogota": [
+      55.33367835509249,
+      12205
+    ],
+    "mexico-city": [
+      86.11970060399386,
+      22291
+    ],
+    "rio-de-janeiro": [
+      87.95762397138445,
+      34091
+    ],
+    "santiago": [
+      58.54504318775307,
+      14128
+    ],
+    "sao-paulo": [
+      65.96255029402661,
+      33194
+    ]
+  },
+  "labels": {
+    "city": "Ciudad",
+    "neighbourhood_cleansed": "Barrio",
+    "room_type": "Tipo de alojamiento",
+    "property_type": "Tipo de propiedad",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "accommodates": "Huéspedes",
+    "bedrooms": "Habitaciones",
+    "beds": "Camas",
+    "bathrooms_count": "Baños",
+    "minimum_nights": "Noches mínimas",
+    "maximum_nights": "Noches máximas",
+    "bathroom_shared": "¿El baño es compartido? (1 = sí, 0 = no)"
+  },
+  "city_labels": {
+    "rio-de-janeiro": "Río de Janeiro",
+    "sao-paulo": "São Paulo",
+    "mexico-city": "Ciudad de México",
+    "bogota": "Bogotá",
+    "santiago": "Santiago",
+    "belize": "Belice"
+  },
+  "app_title": "TarifaLatam · precio sugerido por noche",
+  "responsible_use": "- Es un **precio de referencia**: la tarifa la fija el anfitrión.\n- Para el inversionista es un insumo más: el modelo **no dice si un inmueble se paga** (no conoce la ocupación, los costos ni el valor de compra).\n- Se entrenó con anuncios de Inside Airbnb de septiembre de 2026 en seis ciudades. Predice el precio **publicado**, no el que se cobra, y no ve la temporada.\n- El rango muestra dónde quedó la mitad de los precios reales en anfitriones que el modelo no vio.\n- Revisa los límites del modelo en `models/ficha_modelo.md` antes de usarlo."
+}

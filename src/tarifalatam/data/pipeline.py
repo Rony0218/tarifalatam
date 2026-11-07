@@ -46,14 +46,8 @@ def log_step(log: list, step: str, split: str, before_df: pd.DataFrame, after_df
         )
 
 
-def build_datasets(raw_dir=RAW_DIR, rates: dict = FX_RATES):
-    """Genera entrenamiento y prueba desde los archivos crudos.
-
-    Devuelve (train, test, exclusions, bounds): exclusions es el registro de filas quitadas por cada regla y
-    bounds son los límites de precio por ciudad aprendidos en entrenamiento. Se detiene si falta una tasa de
-    cambio (nunca usa un valor supuesto).
-    """
-    log: list = []
+def _clean_and_split(log: list, raw_dir, rates: dict):
+    """Pasos 1 a 15: limpieza que no aprende de los datos y partición por anfitrión. Devuelve (train, test)."""
     df = load_raw(raw_dir)  # 1: carga sin datos personales ni texto libre
     df = _logged(log, "excluded_city", df, drop_excluded_cities)  # 2: Buenos Aires (decisión del 2026-10-31)
     df = check_currencies(df)  # 3
@@ -68,8 +62,18 @@ def build_datasets(raw_dir=RAW_DIR, rates: dict = FX_RATES):
     df = _logged(log, "monthly_rental", df, drop_monthly_rentals)  # 12
     df = mark_impossible_values(df)  # 13
     df = add_review_flags(df)  # 14
+    return split_by_host(df)  # 15: nada de lo anterior aprende de los datos
 
-    train, test = split_by_host(df)  # 15: nada de lo anterior aprende de los datos
+
+def build_datasets(raw_dir=RAW_DIR, rates: dict = FX_RATES):
+    """Genera entrenamiento y prueba desde los archivos crudos.
+
+    Devuelve (train, test, exclusions, bounds): exclusions es el registro de filas quitadas por cada regla y
+    bounds son los límites de precio por ciudad aprendidos en entrenamiento. Se detiene si falta una tasa de
+    cambio (nunca usa un valor supuesto).
+    """
+    log: list = []
+    train, test = _clean_and_split(log, raw_dir, rates)
 
     bounds = fit_price_bounds(train)  # 16: solo con entrenamiento
     cleaned = {}
@@ -83,6 +87,17 @@ def build_datasets(raw_dir=RAW_DIR, rates: dict = FX_RATES):
     exclusions = pd.DataFrame(log, columns=["step", "split", "city", "before", "removed", "after", "low_usd", "high_usd"])
     exclusions = exclusions.astype({"before": "Int64", "removed": "Int64", "after": "Int64"})  # enteros con vacíos
     return cleaned["train"], cleaned["test"], exclusions, bounds
+
+
+def build_unfiltered_test(raw_dir=RAW_DIR, rates: dict = FX_RATES) -> pd.DataFrame:
+    """La prueba SIN el filtro de precios extremos (paso 16), para la sensibilidad de la etapa 7.
+
+    Son los mismos anfitriones de la prueba (misma partición) con todos sus anuncios. Se usa una sola vez, después de
+    abrir la prueba, y nunca para decidir: la app no filtra nada, así que hay que saber cuánto se equivoca con todo.
+    Un precio de 0 daría log_price_usd = -inf: quien lo use debe medir el error en USD con price_usd.
+    """
+    _, test = _clean_and_split([], raw_dir, rates)
+    return add_target(test).reset_index(drop=True)
 
 
 def _logged(log: list, step: str, df: pd.DataFrame, rule) -> pd.DataFrame:

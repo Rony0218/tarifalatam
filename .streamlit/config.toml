@@ -1,0 +1,17 @@
+# Tema de la app (colores suaves y bordes redondeados, al estilo de un tablero de viajes).
+# Streamlit lo lee desde la carpeta donde se ejecuta `streamlit run` (la raíz del repo, también en Streamlit Cloud).
+[theme]
+base = "light"
+primaryColor = "#7C83FD"
+backgroundColor = "#FDF3E7"
+secondaryBackgroundColor = "#F4F5FB"
+textColor = "#2D3142"
+borderColor = "#E6E8F2"
+showWidgetBorder = true
+baseRadius = "large"
+buttonRadius = "full"
+font = "Nunito:https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+headingFont = "Nunito:https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+
+[client]
+toolbarMode = "minimal"

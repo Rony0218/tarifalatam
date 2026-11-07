@@ -1,0 +1,72 @@
+{
+  "modelo_final": "lightgbm",
+  "parametros": {
+    "n_estimators": 522,
+    "learning_rate": 0.016724373591399267,
+    "num_leaves": 215,
+    "min_child_samples": 19,
+    "subsample": 0.9281081091680619,
+    "colsample_bytree": 0.542468127069249,
+    "reg_lambda": 2.8855004473017765
+  },
+  "parametros_fijos": {
+    "subsample_freq": 1,
+    "random_state": 42,
+    "n_jobs": -1,
+    "verbose": -1
+  },
+  "origen_parametros": "optimizados",
+  "excepcion_t047": "Excepción a la regla escrita, decidida por el grupo el 2026-10-31 después de ver el resultado (T047): los dos finalistas optimizados empatan en los anfitriones reservados y la regla elegiría al más rápido de ajustar; el grupo eligió LightGBM porque tiene el MAE más bajo en los reservados (dentro del ruido) y lo considera más simple de operar en la app, que carga models/model.joblib desde el repositorio.",
+  "correccion_log": {
+    "evaluada": true,
+    "factor": 1.1243432354691008,
+    "mae_sin": 38.52331318457415,
+    "mae_con": 41.15993239627204,
+    "media": 2.6366192116978873,
+    "low": 2.2078183801447473,
+    "high": 3.06081820658829,
+    "se_usa": false,
+    "anfitriones_reservados": 13347,
+    "anuncios_reservados": 29023,
+    "factor_aplicado": 1.0
+  },
+  "rango_tipico": {
+    "belize": [
+      0.7435974214048218,
+      1.354310864360523
+    ],
+    "bogota": [
+      0.7807826731517542,
+      1.1488848806321084
+    ],
+    "mexico-city": [
+      0.773233198943505,
+      1.2496683883924333
+    ],
+    "rio-de-janeiro": [
+      0.7243554190916085,
+      1.2770835957290048
+    ],
+    "santiago": [
+      0.8148869439937387,
+      1.1524243295605825
+    ],
+    "sao-paulo": [
+      0.8223631052002849,
+      1.2085660435674401
+    ]
+  },
+  "metrica_principal": "MAE en USD por noche",
+  "metricas_de_control": [
+    "MAPE",
+    "R² (logaritmo)",
+    "RMSE",
+    "sesgo",
+    "sesgo por ciudad",
+    "costo 2 a 1 (1,5 y 3 a 1)"
+  ],
+  "forma_del_precio": "precio puntual redondeado al dólar + rango típico de su ciudad (p25–p75 de real / sugerido en los reservados)",
+  "meta": "(a) MAE al menos 20 % menor que la línea base; (b) intervalo del 95 % de la diferencia entero bajo cero; (c) ninguna ciudad con MAE mayor que el de la línea base",
+  "congeladas_el": "2026-11-05 17:42 (UTC−5)",
+  "escritas_el": "2026-11-05 18:09:30"
+}

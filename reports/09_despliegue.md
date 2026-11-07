@@ -25,12 +25,15 @@
 
 ## 3. Pruebas del enlace público
 
+> **En local (2026-11-05, antes del despliegue):** los cuatro casos se probaron con `streamlit.testing` sobre
+> `app/streamlit_app.py` y el modelo exportado. Mañana se repiten en el enlace público y se agrega la columna de ese resultado.
+
 | Caso | Datos usados | Resultado esperado | Resultado real |
 |---|---|---|---|
-| Normal | | | |
-| Límite (cambia la decisión) | | | |
-| Inválido (debe rechazarse con un mensaje claro) | | | |
-| Con un campo en «No sé» | | | |
+| Normal | Bogotá, barrio Antonio Nariño, vivienda entera (*Entire rental unit*), 2 huéspedes; lo demás con sus valores por defecto | precio y rango en USD | local: 41 USD por noche, rango típico 32 a 48 USD, sin advertencias |
+| Límite (cambia la decisión) | Belice, barrio Belize Islands, vivienda entera, 4 huéspedes (la ciudad donde el modelo falla más) | precio, rango y aviso de error alto | local: 279 USD, rango 207 a 377 USD y el aviso de Belice (246 USD de error medio en la prueba) |
+| Inválido (debe rechazarse con un mensaje claro) | 40 huéspedes | no da precio y dice qué corregir | local: el campo de huéspedes solo admite de 1 a 16; con `predict_price` (notebook 09) responde «Huéspedes (accommodates): debe estar entre 1 y 16» |
+| Con un campo en «No sé» | el caso normal con «No sé» en baños, camas y tipo de propiedad | precio sin error | local: 52 USD, rango 41 a 60 USD, sin errores |
 
 ## 4. Problemas encontrados y plan B
 

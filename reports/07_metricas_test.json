@@ -1,0 +1,194 @@
+{
+  "decisiones": {
+    "modelo_final": "lightgbm",
+    "parametros": {
+      "n_estimators": 522,
+      "learning_rate": 0.016724373591399267,
+      "num_leaves": 215,
+      "min_child_samples": 19,
+      "subsample": 0.9281081091680619,
+      "colsample_bytree": 0.542468127069249,
+      "reg_lambda": 2.8855004473017765
+    },
+    "parametros_fijos": {
+      "subsample_freq": 1,
+      "random_state": 42,
+      "n_jobs": -1,
+      "verbose": -1
+    },
+    "origen_parametros": "optimizados",
+    "excepcion_t047": "Excepción a la regla escrita, decidida por el grupo el 2026-10-31 después de ver el resultado (T047): los dos finalistas optimizados empatan en los anfitriones reservados y la regla elegiría al más rápido de ajustar; el grupo eligió LightGBM porque tiene el MAE más bajo en los reservados (dentro del ruido) y lo considera más simple de operar en la app, que carga models/model.joblib desde el repositorio.",
+    "correccion_log": {
+      "evaluada": true,
+      "factor": 1.1243432354691008,
+      "mae_sin": 38.52331318457415,
+      "mae_con": 41.15993239627204,
+      "media": 2.6366192116978873,
+      "low": 2.2078183801447473,
+      "high": 3.06081820658829,
+      "se_usa": false,
+      "anfitriones_reservados": 13347,
+      "anuncios_reservados": 29023,
+      "factor_aplicado": 1.0
+    },
+    "rango_tipico": {
+      "belize": [
+        0.7435974214048218,
+        1.354310864360523
+      ],
+      "bogota": [
+        0.7807826731517542,
+        1.1488848806321084
+      ],
+      "mexico-city": [
+        0.773233198943505,
+        1.2496683883924333
+      ],
+      "rio-de-janeiro": [
+        0.7243554190916085,
+        1.2770835957290048
+      ],
+      "santiago": [
+        0.8148869439937387,
+        1.1524243295605825
+      ],
+      "sao-paulo": [
+        0.8223631052002849,
+        1.2085660435674401
+      ]
+    },
+    "metrica_principal": "MAE en USD por noche",
+    "metricas_de_control": [
+      "MAPE",
+      "R² (logaritmo)",
+      "RMSE",
+      "sesgo",
+      "sesgo por ciudad",
+      "costo 2 a 1 (1,5 y 3 a 1)"
+    ],
+    "forma_del_precio": "precio puntual redondeado al dólar + rango típico de su ciudad (p25–p75 de real / sugerido en los reservados)",
+    "meta": "(a) MAE al menos 20 % menor que la línea base; (b) intervalo del 95 % de la diferencia entero bajo cero; (c) ninguna ciudad con MAE mayor que el de la línea base",
+    "congeladas_el": "2026-11-05 17:42 (UTC−5)",
+    "escritas_el": "2026-11-05 18:09:30"
+  },
+  "prueba": {
+    "marca": "Primera apertura: 2026-11-05 18:09:33 · propósito: evaluación única de la etapa 7 (decisiones congeladas el 2026-11-05 17:42 (UTC−5))",
+    "anuncios": 29721,
+    "anfitriones": 13345,
+    "factor_aplicado": 1.0,
+    "modelo": {
+      "mae": 41.399173045947926,
+      "mape": 31.77891372740766,
+      "rmse": 120.52726529598448,
+      "bias": -14.361939966566785,
+      "r2_log": 0.6657176921718728,
+      "cost_2_1": 54.9177895856385,
+      "cost_1.5_1": 48.15848131579322,
+      "cost_3_1": 68.43640612532907,
+      "mae_ic95": [
+        38.285569246772965,
+        45.0102496685491
+      ]
+    },
+    "linea_base": {
+      "mae": 57.4366113531568,
+      "mape": 42.38651654190742,
+      "rmse": 159.5696342429569,
+      "bias": -34.85628725327133,
+      "r2_log": 0.33268005716653604,
+      "cost_2_1": 68.72677340309954,
+      "cost_1.5_1": 63.08169237812817,
+      "cost_3_1": 80.01693545304228,
+      "mae_ic95": [
+        53.175991854937024,
+        62.50064681628782
+      ]
+    },
+    "diferencia_mae": {
+      "media": -16.037438307208873,
+      "ic95": [
+        -17.84211535438078,
+        -14.357090486013522
+      ]
+    },
+    "meta": {
+      "mejora_pct": 27.92197855928601,
+      "a_20pct": true,
+      "b_intervalo": true,
+      "c_ciudades": true,
+      "ciudades_peores": [],
+      "cumple": true
+    },
+    "por_ciudad": [
+      {
+        "city": "belize",
+        "mae_model": 245.95860847448583,
+        "mae_baseline": 350.8799296600235
+      },
+      {
+        "city": "bogota",
+        "mae_model": 22.322457224994004,
+        "mae_baseline": 27.67047180228227
+      },
+      {
+        "city": "mexico-city",
+        "mae_model": 45.37855363734302,
+        "mae_baseline": 59.88484150940133
+      },
+      {
+        "city": "rio-de-janeiro",
+        "mae_model": 53.251782848014344,
+        "mae_baseline": 74.0951241211331
+      },
+      {
+        "city": "santiago",
+        "mae_model": 23.799797264891776,
+        "mae_baseline": 41.91268330922285
+      },
+      {
+        "city": "sao-paulo",
+        "mae_model": 21.34774861047997,
+        "mae_baseline": 28.175576489424163
+      }
+    ],
+    "sensibilidad_sin_filtro": {
+      "anuncios": 29807,
+      "anuncios_extremos": 86,
+      "mae_modelo": 56.805508702589314,
+      "mae_linea_base": 73.93925154416777,
+      "precios_no_positivos": 0
+    },
+    "ejemplos_shap": {
+      "error mediano": {
+        "ciudad": "sao-paulo",
+        "room_type": "Entire home/apt",
+        "property_type": "Entire rental unit",
+        "accommodates": 2,
+        "precio_real": 89.3686165273909,
+        "precio_sugerido": 73.45083253626898,
+        "aportes": {
+          "bathrooms_count": -0.0778,
+          "bedrooms": -0.0726,
+          "accommodates": -0.068,
+          "city": -0.0642,
+          "neighbourhood_cleansed": 0.0609
+        }
+      },
+      "mayor error": {
+        "ciudad": "belize",
+        "room_type": "Private room",
+        "property_type": "Room in hotel",
+        "accommodates": 16,
+        "precio_real": 6000.0,
+        "precio_sugerido": 390.9865628168928,
+        "aportes": {
+          "city": 0.7868,
+          "accommodates": 0.5524,
+          "latitude": 0.2461,
+          "neighbourhood_cleansed": 0.2155,
+          "bathrooms_count": 0.1857
+        }
+      }
+    }
+  }
+}
