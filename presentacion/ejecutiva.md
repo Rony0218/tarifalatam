@@ -45,13 +45,13 @@ footer: "Casos Avanzados · Maestría en Ingeniería Analítica"
 
 # 4 · Demo de la app
 
-**Enlace:** ⚠️ **la app todavía no está desplegada** (hito H3 pendiente). Hoy se muestra **en local** (`streamlit run app/streamlit_app.py`).
+**Enlace:** **https://tarifalatam-unaula.streamlit.app** (abrirla unos minutos antes: si estuvo sin visitas, tarda en despertar)
 
 1. **Un caso normal:** Bogotá, barrio Antonio Nariño, vivienda entera, 2 huéspedes → **41 USD por noche**, rango típico **32 a 48 USD**
 2. **Un caso límite:** Belice, vivienda entera, 4 huéspedes → **279 USD** (rango 207 a 377) **con un aviso**: en Belice el modelo se equivoca 246 USD en promedio y no debe usarse sin revisión
 3. **Un dato inválido:** 40 huéspedes → la app **no da precio** y dice que debe estar entre 1 y 16
 
-> **Plan B:** captura de pantalla con fecha y la app en local. Estos casos se probaron en local el 2026-11-05; faltan en el enlace público.
+> **Plan B:** captura con fecha (`reports/09_captura_app_2026-11-06.jpg`) y la app en local. Los casos se probaron en local (2026-11-05) y en el enlace público, sin sesión (2026-11-06).
 
 ---
 
@@ -60,4 +60,4 @@ footer: "Casos Avanzados · Maestría en Ingeniería Analítica"
 - **Qué NO hace el modelo:** no predice lo que se **cobrará**, sino el precio **publicado**. No dice si un inmueble **se paga** (no hay ocupación, costos ni valor de compra en los datos). El anfitrión decide; el modelo es una referencia
 - **Límites de los datos:** una foto de **septiembre de 2026**, sin temporada, de **seis ciudades**. Falla en **Belice** (246 USD de error), en habitaciones de hotel y en compartidas (peor que la regla simple)
 - **Uso responsable:** no usa datos del anfitrión. Sí usa la **ubicación**, así que el precio refleja las desigualdades de cada barrio: hay que revisar que no se use para discriminar zonas
-- **Siguientes pasos:** (1) **desplegar la app** y probar el enlace en ventana privada; (2) tratar Belice aparte o restringirlo; (3) en producción, **vigilar el error por ciudad** con precios nuevos
+- **Siguientes pasos:** (1) **mantener la app pública** (desplegada el 2026-11-06) y probar el enlace en ventana privada antes de cada exposición; (2) tratar Belice aparte o restringirlo; (3) en producción, **vigilar el error por ciudad** con precios nuevos

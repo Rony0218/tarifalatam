@@ -15,8 +15,8 @@ que el modelo nunca vio, el precio sugerido se equivoca en promedio **41,40 USD 
 regla simple (mediana por ciudad y tipo de habitación): **16,04 USD menos (27,9 %)**, con intervalo del 95 % de 14,36 a 17,84 USD,
 y las seis ciudades mejoran. Los anuncios con un error mayor a la mitad de su precio bajan de 31,0 % a 18,7 %. El límite
 principal es **Belice** (error de 246 USD por noche), además de las habitaciones de hotel y las compartidas. El modelo predice
-el precio **publicado**, no el cobrado, y no responde si un inmueble se paga. **La app todavía no está desplegada** (solo corre
-en local); el despliegue es el pendiente principal del hito H3.
+el precio **publicado**, no el cobrado, y no responde si un inmueble se paga. **La app está desplegada** en https://tarifalatam-unaula.streamlit.app
+(Streamlit Community Cloud, 2026-11-06).
 
 ## 1. Caso de negocio
 
@@ -163,15 +163,16 @@ en local); el despliegue es el pendiente principal del hito H3.
 
 > Fuente: `reports/09_despliegue.md`.
 
-- **Estado: la app NO está desplegada** (confirmado por Dulce Vargas el 2026-11-06). No hay enlace público; el hito H3 está
-  pendiente. La app corre **en local** (`streamlit run app/streamlit_app.py`).
+- **Estado: desplegada** el 2026-11-06 en Streamlit Community Cloud: **https://tarifalatam-unaula.streamlit.app** (repo `Rony0218/tarifalatam`, rama
+  `main`, `app/streamlit_app.py`, Python 3.12). En local corre con `streamlit run app/streamlit_app.py`.
 - **Decisiones de despliegue (ya aplicadas en el código):** la app carga `models/model.joblib` del repositorio y **no consulta
   Databricks**; valida las entradas y muestra un aviso de «Uso responsable».
 - **Pruebas hechas (en local, 2026-11-05):** caso normal (Bogotá: 41 USD, rango 32 a 48), caso límite (Belice: 279 USD, rango 207
-  a 377, con aviso de error alto), caso inválido (40 huéspedes: se rechaza) y un campo en «No sé» (52 USD, sin error). **Falta
-  repetirlas en el enlace público y en una ventana privada.**
-- **Plan B y plan de despliegue:** captura de pantalla con fecha y app en local. El plan de despliegue paso a paso está en
-  `reports/09_despliegue.md`. Requisito: el repositorio debe ser **público**.
+  a 377, con aviso de error alto), caso inválido (40 huéspedes: se rechaza) y un campo en «No sé» (52 USD, sin error). **En el
+  enlace público, sin sesión (2026-11-06):** Río con los valores por defecto, 80 USD (rango 58 a 102); Belice, 254 USD con el
+  aviso; «No sé» en baños, 263 USD sin error; el campo de huéspedes no admite más de 16.
+- **Plan B:** captura con fecha (`reports/09_captura_app_2026-11-06.jpg`) y la app en local. Cómo se desplegó, los ajustes
+  que hubo (subdominio ocupado, Python 3.12 en lugar de 3.14) y el registro están en `reports/09_despliegue.md`.
 
 ## 9. Riesgos, límites y siguientes pasos
 
@@ -204,5 +205,5 @@ en local); el despliegue es el pendiente principal del hito H3.
 - [ ] Las **9 secciones** tienen contenido y **cada decisión lleva su motivo**.
 - [ ] Las cifras **coinciden** con `reports/07_validacion.md` y con la presentación.
 - [ ] No hay credenciales, `.env` ni datos personales.
-- [ ] El enlace de la app abre en una ventana privada.
+- [x] El enlace de la app abre en una ventana privada. *(Comprobado el 2026-11-06 en un navegador sin sesión.)*
 - [ ] Un tercero puede reproducir el proyecto con el anexo.

@@ -3,7 +3,7 @@
 > Sugiere a anfitriones e inversionistas de Airbnb en América Latina cuánto cobrar por noche, según las
 > características del inmueble, su barrio y su ciudad.
 
-**App desplegada:** _enlace público de Streamlit (se completa en la clase 5)_
+**App desplegada:** https://tarifalatam-unaula.streamlit.app
 
 ## Qué contiene
 Estructura obligatoria del curso. Cada carpeta tiene un propósito:
