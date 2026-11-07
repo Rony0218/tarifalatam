@@ -3,7 +3,7 @@
 > Sugiere a anfitriones e inversionistas de Airbnb en América Latina cuánto cobrar por noche, según las
 > características del inmueble, su barrio y su ciudad.
 
-**App desplegada:** _enlace público de Streamlit (se completa en la clase 5)_
+**App desplegada:** https://tarifalatam-unaula.streamlit.app
 
 ## Qué contiene
 Estructura obligatoria del curso. Cada carpeta tiene un propósito:
@@ -61,10 +61,10 @@ clonan **este** repositorio. Para arrancar, sigue `material-del-curso/guias/mont
 ## Equipo
 | Integrante | Rol |
 |---|---|
-| Rony Guerrero | Por definir |
-| Carolina Jiménez | Por definir |
-| Jesica Tarazona | Por definir |
-| Dulce Vargas | Por definir |
-| Rafael Jaramillo | Por definir |
+| Rony Guerrero | app |
+| Carolina Jiménez | modelado |
+| Jesica Tarazona | app |
+| Dulce Vargas | datos |
+| Rafael Jaramillo | negocio |
 
 Especificación del proyecto: [`especificacion-proyecto.md`](especificacion-proyecto.md) · Especificaciones por etapa: [`especificaciones/`](especificaciones/)

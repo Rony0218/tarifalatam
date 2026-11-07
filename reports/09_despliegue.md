@@ -22,12 +22,16 @@
 | Versiones fijadas en `app/requirements.txt` (además del `requirements.txt` de la raíz) | Streamlit Cloud lee primero el archivo que está junto a `app/streamlit_app.py`. Solo trae lo que la app carga (streamlit, pydeck, pandas, numpy, scipy, scikit-learn, lightgbm, joblib), con las mismas versiones con que se guardó el modelo: otra versión de scikit-learn o LightGBM puede fallar al cargarlo o predecir distinto. Sin MLflow, Optuna, SHAP ni Databricks la instalación tarda menos de un minuto |
 | `packages.txt` con `libgomp1` | Es la librería del sistema que necesita LightGBM en Linux |
 | Qué NO se subió al repo (y por qué) | `.env` (credenciales), `data/` (datos crudos y procesados: tienen `host_id` y licencia de terceros; se regeneran con el notebook 03), `mlflow_local.db` y `mlruns/` (registro local) y `models/final_pipeline.joblib` (intermedio). La app no los necesita |
+| `models/model.joblib` (10 MB) **sí** se sube y no está ignorado | Es lo único que la app necesita para predecir; se comprobó con `git check-ignore` que `.gitignore` no lo cubre |
+| `.streamlit/config.toml` | Fija el tema de la app (colores, bordes y fuente); Streamlit Cloud lo lee desde la raíz del repo |
+| La app valida las entradas y muestra «Uso responsable» y avisos por ciudad | Regla 8 de `CLAUDE.md`; el modelo falla más en Belice y debe decirse en la propia app |
 | Subdominio `tarifalatam-unaula` | `tarifalatam.streamlit.app` ya estaba ocupado |
 | Mapa con Carto y fuente de Google Fonts | Se cargan de internet sin token. Sin conexión la app funciona, pero sin el fondo del mapa |
 
 ## 3. Pruebas del enlace público
 
-> **Local (2026-11-05):** con `streamlit.testing` sobre `app/streamlit_app.py`. **Enlace público (2026-11-06):** en
+> **Local (2026-11-05):** con `streamlit.testing` sobre `app/streamlit_app.py`; Dulce Vargas los repitió el 2026-11-06
+> sobre la app rediseñada (PR #8) y dieron lo mismo. **Enlace público (2026-11-06):** en
 > https://tarifalatam-unaula.streamlit.app, desde un navegador sin sesión, con los valores por defecto del formulario
 > (3 huéspedes, 1 habitación, 2 camas, 1 baño, vivienda entera, *Entire rental unit*). El modelo es el mismo; los datos de
 > cada columna son los que dice la tabla.
@@ -60,7 +64,12 @@
 | Cierre | 1 min | |
 | **Total** | **10 min** | |
 
-- ¿Se pasó de 10 minutos? ☐ no  ☐ sí → qué se recortó: _______________
-- Retroalimentación recibida (lo mejor y la corrección que propusieron): _______________
-- **Corrección concreta que hicimos por ella:** _______________
-- Quién habla de qué y quién responde las preguntas técnicas: _______________
+> **El ensayo no se ha hecho** (no hay tiempos reales ni retroalimentación). Estos campos se llenan con el ensayo, no antes.
+> Para la demo en vivo: abrir https://tarifalatam-unaula.streamlit.app unos minutos antes (si estuvo sin visitas, tarda en despertar).
+
+- ¿Se pasó de 10 minutos? **Pendiente** (falta el ensayo)
+- Retroalimentación recibida (lo mejor y la corrección que propusieron): **pendiente**
+- **Corrección concreta que hicimos por ella:** **pendiente**
+- Quién habla de qué y quién responde las preguntas técnicas: **por acordar en el grupo.** Los roles sorteados (`especificacion-proyecto.md`,
+  sección 1) pueden servir de punto de partida: negocio (Rafael) para el caso, app (Rony y Jesica) para la demo, modelado (Carolina)
+  para resultados y datos (Dulce) para las preguntas sobre la limpieza.
