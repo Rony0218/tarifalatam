@@ -1,0 +1,4 @@
+# Solo para generar el PDF del informe técnico (scripts/build_report_pdf.py). La app no lo necesita.
+# Instalar, además de requirements.txt:  uv pip install -r requirements-informe.txt
+markdown==3.11.3
+pypdf==6.14.2
