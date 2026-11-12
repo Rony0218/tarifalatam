@@ -1,0 +1,10 @@
+{
+  "mae": 39.211871997105746,
+  "mape": 32.0594913404134,
+  "rmse": 110.031094737009,
+  "bias": -13.364795737592031,
+  "r2_log": 0.6484102318309781,
+  "n": 118513,
+  "pct_error_over_half": 18.933787854496977,
+  "fuente": "predicciones fuera de pliegue en el entrenamiento, 5 pliegues por anfitrión; la prueba no se abre"
+}

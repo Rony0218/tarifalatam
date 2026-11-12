@@ -33,3 +33,6 @@ mlruns/
 
 # Modelo intermedio (pesado): solo se sube models/model.joblib
 models/final_pipeline.joblib
+
+# Paquete .zip que se envía al instructor (se arma con los PDF que ya están en el repo)
+entrega/
